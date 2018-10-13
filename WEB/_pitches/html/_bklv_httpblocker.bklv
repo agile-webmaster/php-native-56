@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Integrated by BKLV-Robo [RBOX-3]
+ * Version: 3.0.2
+ * Sysmtem URL: http://bklv.ru/robo/
+ * User: webmaster.rentabox@bklv.ru
+ * Date: 23.05.2017
+ * Time: 13:02
+ * Tech support:
+ *  - url: http://bklv.ru/tech_support/
+ *  - email: rbox.support.tech@bklv.ru
+ *  - phone: +7(495)220-17-27
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+/** @var $this App */
+/** @var $m array */
+
+if (!$this instanceof App) {
+    exit;
+}
+$m = A::d($this, 'm');
+$st = 'background: orangered; color: #fff; padding: 12px; border-radius: 12px; text-decoration: none;';
+$st .= 'text-transform: uppercase';
+$n = $m['extHTTPblockerMessageNote'];
+
+$this->redirectUnsafe();
+
+?>
+
+<h3 style="text-align: center; padding-top: 32px"><b><?= $m['extHTTPblockerHeader'] ?></b></h3>
+<p style="text-align: center;">
+<table align="center" style="max-width: 400px">
+    <tr>
+        <td style="text-align: center">
+            <?= $m['extHTTPblockerMessageText'] ?>
+        </td>
+    </tr>
+</table></p>
+<p style="text-align: center"><a style="<?= $st ?>" title="<?= $n ?>" href="<?= $h ?>"><?= $n ?></a></p>

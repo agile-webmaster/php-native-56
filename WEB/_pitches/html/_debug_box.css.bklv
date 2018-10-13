@@ -1,0 +1,46 @@
+<
+style type
+
+=
+"text/css"
+>
+    /**
+     * ---------------------------------------------------------------------------------------------------------------------
+     * Integrated by BKLV-Robo [RBOX-3]
+     * Version: 3.0.2
+     * Sysmtem URL: http://bklv.ru/robo/
+     * User: webmaster.rentabox@bklv.ru
+     * Date: 23.05.2017
+     * Time: 13:02
+     * Tech support:
+     *  - url: http://bklv.ru/tech_support/
+     *  - email: rbox.support.tech@bklv.ru
+     *  - phone: +7(495)220-17-27
+     * ---------------------------------------------------------------------------------------------------------------------
+     */
+.log_screen_main {
+    padding: 10px 12px;
+    background: #ffa;
+    border-radius: 12px;
+}
+
+.log_screen_header {
+    font-weight: 900;
+    font-size: 120%;
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+
+.log_screen_txt {
+    font-size: 90%;
+    font-weight: 100;
+}
+
+.log_screen_note {
+    font-style: italic;
+    font-size: 90%;
+}
+
+<
+/
+style >

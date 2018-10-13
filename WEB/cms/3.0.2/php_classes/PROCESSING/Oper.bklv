@@ -1,0 +1,84 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Integrated by BKLV-Robo [RBOX-3]
+ * Version: 3.0.2
+ * Sysmtem URL: http://bklv.ru/robo/
+ * User: webmaster.rentabox@bklv.ru
+ * Date: 23.05.2017
+ * Time: 13:02
+ * Tech support:
+ *  - url: http://bklv.ru/tech_support/
+ *  - email: rbox.support.tech@bklv.ru
+ *  - phone: +7(495)220-17-27
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+#=======================================================================================================================
+$path = $_SERVER['DOCUMENT_ROOT'] . '/.bklv';
+/** @noinspection PhpIncludeInspection */
+include($path);
+#=======================================================================================================================
+
+/** Basic filePart/db operations class */
+class Oper
+{
+
+    #===================================================================================================================
+    /**
+     * Select usefil emails
+     * @var $app App
+     * @var $scena_key string
+     * @var $dept string
+     * @return array
+     */
+    public static function getSystemEmails(App &$app, $scena_key, $dept = NULL)
+    {
+        $r = array();
+        $em = $app->d['system_emails'];
+        foreach ($em as $k => $v) {
+            if (isset($v[$scena_key]) && $v[$scena_key]) {
+                if ($dept) {
+                    if (array_key_exists($scena_key, $v) && (in_array($dept, explode('|', $v[$scena_key])) || $v[$scena_key] === 1)) {
+                        $r[$k] = '';
+                    }
+                } else {
+                    $r[$k] = '';
+                }
+            }
+        }
+        return array_keys($r);
+    }
+    #===================================================================================================================
+....................
+    #===================================================================================================================
+    /**
+     * Send SMS after some Procedures
+     * @var $app App
+     * @var $sm_task_id string Task ID
+     * @var $trace bool "Show url and exit"
+     * @return string
+     */
+    public static function smsTask(App &$app, $sm_task_id, $trace = NULL)
+    {
+        $y = INI::YES;
+        $n = INI::NO;
+        $tbl = 'tbTask';
+        if ($trace) {
+            echo TOUCH::getSMSURL($app, $sm_task_id);
+            exit;
+        }
+        if (TOUCH::touchURLwithCookie($app, TOUCH::getSMSURL($app, $sm_task_id)) == $y) {
+            $t = $app->t[$tbl];
+            if (DB::getStatusByIndexValue($app, $t, $sm_task_id) == $app->d['db']['status_fields'][$t]['list']['ENDED']) {
+                return $y;
+            }
+        }
+        return $n;
+    }
+    #==============
+
+
+......................................
+}

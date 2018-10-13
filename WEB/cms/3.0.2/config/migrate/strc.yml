@@ -1,0 +1,88 @@
+tables_single:
+  #---------------------------------------------------------------------------------------------------------------------
+  __log_one:
+    table: "standalone :: Логирование (кратко) / Log (brief) / Logging (kurz)"
+    fields:
+      _log_counter_: "i3+ :: Счетчик записи логов / Log record counter / [!DE]"
+      _ma_method: "v255+ :: Класс и метод микрособытия / Microaction class and method / [!DE]"
+      _ma_group: "v255+ :: Группа микрособытия / Microaction group / [!DE]"
+      _ma_header: "v255+ :: Заголовок микрособытия / Microacrtion header / [!DE]"
+      _ma_msg: "v255+ :: Сообщение микрособытия / Microacrtion message / [!DE]"
+      _ma_note: "v255 :: Дополнительное описание микрособытия / Additional information about microaction / [!DE]"
+      _ma_fatal: "v1 :: Индикатор КРИТИЧНОЙ остановки обработчика / FATAL stop-scripting indicator / [!DE]"
+      log_initRoute: "v255 :: Начальный роутинг / Initial routing / Anfangsrouting"
+      log_initUser: "v24 :: Суперглобальный штамп для трекинга пользователя / Super global stamp for user tracking / [!DE]"
+   ...........................
+      log_userCode: "v24 :: Штамп пользователя / User stamp / [!DE]"
+      log_trCode: "v24 :: Штамп транзакции / Transaction stamp"
+      log_eventIndex: "v255 :: Идентификаторы класса и метода события / Action class and method identities / [!DE]"
+      log_eventHandler: "v24 :: Идентификатор класса события / Action class identity / [!DE]"
+      log_eventMethod: "v24 :: Идентификатор метода события / Action method identity / [!DE]"
+      log_eventLayout: "v24 :: Макет события / Action layout / Ereignis-Layout"
+      log_eventOper: "v24 :: Операция события / Action operation / Ereignis-Vorgang"
+  #---------------------------------------------------------------------------------------------------------------------
+  __log_all:
+    table: "standalone :: Логирование (детально) / Log (detail)"
+    fields:
+      _log_counter_: "i3+ :: Log record counter"
+....................................
+      log_trCode: "v24 :: Unique code of site transaction"
+      log_eventIndex: "v255 :: Идентификатор класса и метода события"
+      log_eventHandler: "v24 :: Идентификатор класса события"
+      log_eventMethod: "v24 :: Идентификатор метода события"
+      log_eventLayout: "v24 :: Макет события"
+      log_eventOper: "v24 :: Операция события"
+  #---------------------------------------------------------------------------------------------------------------------
+  sd_user:
+    table: "dictionary :: Идентификаторы пользователей (хранимые в браузере) / User identities (stored in browser) :: user_code"
+    fields:
+      user_code: "v24u+_ :: Идентификатор пользователя (хранимый в браузере) / User ID (stored in browser)"
+    _note_fields: '_wsi::_ats'
+  #---------------------------------------------------------------------------------------------------------------------
+  sd_user_access_recover:
+    table: "standalone :: Восстановление доступа / Access recover"
+    fields:
+      email_attempts: "i2 :: Счетчик восстановлений доступа по email / Access recover attempts by email"
+      email_lastattempt_ts: "time :: Время последней попытки - email / Timestamp for last attempt - email"
+      mobile_attempts: "i2 :: Счетчик восстановлений доступа с помощью мобильного телефона / Access recover attempts by mobile phone"
+      mobile_attempts_ts: "time :: Время последней попытки - mobile / Timestamp for last attempt - mobile"
+      x_access_account_id: "v16u+_ :: ID аккаунта доступа / Access account ID"
+  #---------------------------------------------------------------------------------------------------------------------
+  site_routes:
+   .......................
+  #---------------------------------------------------------------------------------------------------------------------
+  site_events:
+    table: "standalone :: Атрибуты событий / Event attributes"
+    key:
+      event: "INDEX `i_site_events_eventa` (`event`)"
+      hm: "INDEX `i_site_events_ha` (`r_handler`, `r_method`)"
+    fields:
+      event: "v64+ :: Событие (Класс.метод) / Event (Handler.Method)"
+      setLocality: "v16 :: Атрибут - локальность / Setting - locality"
+      setModality: "v16 :: Атрибут - модальность / Setting - modality"
+      optLogSQLOne: "v1 :: Опция - логирование в базу (одиночное) / Option - DB logging (simple)"
+      optLogSQLAll: "v1 :: Опция - логирование в базу (расширенное) / Option - DB logging (extended)"
+      optLogFileOne: "v1 :: Опция - логирование в файл (одиночное) / Option - File logging (simple)"
+      optLogFileAll: "v1 :: Опция - логирование в файл (расширенное) / Option - File logging (extended)"
+    refs:
+      r_handler: 'tables_single::site_routes::handler'
+      r_method: 'tables_single::site_routes::method'
+    _note_fields: '_sts'
+  #---------------------------------------------------------------------------------------------------------------------
+tables_multi:
+  #---------------------------------------------------------------------------------------------------------------------
+  d_person:
+    table: "dictionary :: Персоны / Persons :: person_id"
+    sh_name_ru: "Персоны"
+    fields:
+      person_id: "v16u+_ :: ID персоны / Person ID :: v16+_ :: ID персоны / person ID [d_person:person_id]"
+      person_grup: "v16 :: Группа персоны / Person group"
+      person_role: "v16 :: Роль персоны / Person role"
+      person_status: "sts :: Статус персоны / Person status"
+      person_status_ts: "time :: Время присвоения статуса персоны / Timestamp for person status acquisition"
+      person_subscriptions: "text :: Подписки персоны / Person subscriptions"
+      person_unsubscriptions: "text :: Отписки персоны / Person un-subscriptions"
+    _note_fields: '_wsi::_ats::_uid::_tid::_sid::_pid::_lid::_rid'
+  #---------------------------------------------------------------------------------------------------------------------
+.............................
+  #---------------------------------------------------------------------------------------------------------------------

@@ -1,0 +1,88 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Integrated by BKLV-Robo [RBOX-3]
+ * Version: 3.0.2
+ * Sysmtem URL: http://bklv.ru/robo/
+ * User: webmaster.rentabox@bklv.ru
+ * Date: 23.05.2017
+ * Time: 13:02
+ * Tech support:
+ *  - url: http://bklv.ru/tech_support/
+ *  - email: rbox.support.tech@bklv.ru
+ *  - phone: +7(495)220-17-27
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+#=======================================================================================================================
+$path = $_SERVER['DOCUMENT_ROOT'] . '/.bklv';
+/** @noinspection PhpIncludeInspection */
+include($path);
+#=======================================================================================================================
+
+/** Class for preparing Init config patams */
+class CFGFunc
+{
+
+    #===================================================================================================================
+    /**
+     * Get WEB-SITE Route - initial [начальный URI сайта]
+     * @var $uri string Action URI
+     * @return string
+     */
+    public static function parseRoute($uri)
+    {
+        $i = explode('?', $uri);
+        $i = $i[0];
+        $i = explode(INI::DELIMITER_ROUTE, $i);
+        unset($i[max(array_keys($i))]);
+        foreach ($i as $k => $v) {
+            if (!$v) {
+                unset($i[$k]);
+            }
+        }
+        return $i;
+    }
+    #===================================================================================================================
+
+    #===================================================================================================================
+    /**
+     * Get WEB-SITE Params - initial [начальный URI сайта]
+     * @var $uri string Action URI
+     * @return string
+     */
+    public static function parseGet($uri)
+    {
+        $r = array();
+        $i = explode('?', $uri);
+        if (!isset($i[1])) {
+            return $r;
+        }
+        $i = explode(INI::DELIMITER_GET_1, $i[1]);
+        $i2 = INI::DELIMITER_GET_2;
+        $i3 = INI::DELIMITER_GET_3;
+        foreach ($i as $k => $v) {
+            $x = explode('=', $v);
+            if (isset($x[1]) && $x[1]) {
+                if ((int)substr_count($x[1], $i3) < 1) {
+                    $r[$x[0]] = $x[1];
+                } else {
+                    foreach (explode($i2, $x[1]) as $z) {
+                        $z = explode($i3, $z);
+                        $zz = NULL;
+                        if (isset($z[1]) && $z[1]) {
+                            $zz = $z[1];
+                        }
+                        $r[$x[0]][$z[0]] = $zz;
+                    }
+                }
+            } else {
+                $r[$x[0]] = NULL;
+            }
+        }
+        return $r;
+    }
+    #===================================================================================================================
+
+}

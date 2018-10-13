@@ -1,0 +1,31 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Integrated by BKLV-Robo [RBOX-3]
+ * Version: 3.0.2
+ * Sysmtem URL: http://bklv.ru/robo/
+ * User: webmaster.rentabox@bklv.ru
+ * Date: 23.05.2017
+ * Time: 13:02
+ * Tech support:
+ *  - url: http://bklv.ru/tech_support/
+ *  - email: rbox.support.tech@bklv.ru
+ *  - phone: +7(495)220-17-27
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+#=======================================================================================================================
+/** @var $this App */ /** @var $layout_prefs array */  /** @var $layout_code array */ /** @var $layout_index string */
+/** @var $layout_event string */ /** @var $layout_template string */  /** @var $layout_ids array */
+/** @var $layout_js string */ /** @var $layout_styles array */ /** @var $layout_classes array */
+/** @var $custom_js array */ /** @var $template RboxTemplateJS */ /** @var $lp array Layout params */
+/** @var $gs string Gets safe */
+#=======================================================================================================================
+
+
+
+?>
+
+function search_all_pages() {
+}

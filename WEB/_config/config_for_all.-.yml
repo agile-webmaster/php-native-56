@@ -1,0 +1,401 @@
+auth:
+  attempts_limit:
+    email: 4
+    mobile: 2
+  attempts_period:
+    email: 10
+    mobile: 86400
+pref:
+  ref: '#'
+  ...........................
+task:
+  messages:
+    init: '_'
+    fault: '-'
+    success: '+'
+    final: '.'
+process:
+  scenarios:
+    i_feedback: i_feedback
+    i_callback: i_callback
+    i_cbr: i_cbr
+    i_deutschebank: deb
+    make_order: make_order
+    ...........................
+    sendmail_opinion: sm_opinion
+    sendmail_reserve: sm_reserve
+    request_chpprof: ch_pprofile
+    request_getuaac: getuaac
+    ...........................
+    tsts_login: tsts_login
+    tsts_email: tsts_email
+    tsts_mobile: tsts_mobile
+    add_email: add_email
+    add_mobile: add_mobile
+    att_mobile: att_mobile
+    sendmail_migrate_pass: sm_migrate_pass
+    sendmail_send_uaac: sm_send_uaac
+    procedure_aar: aar
+    procedure_gra: gra
+    sendmail_aar_att_email: aar_att_email
+    sendsms_aar_att_mobile: aar_att_mobile
+    sendsms_att_mobile: att_mobile
+    sendmail_aar_email_activate: aar_email_act
+    sendsms_aar_mobile_activate: aar_mobile_act
+    sendsms_mobile_activate: mobile_act
+    sendmail_aar_email_activate_and_sub: aar_email_act_s
+    sendmail_aar_email_block: aar_email_block
+    sendmail_email_block: email_block
+    ...........................
+    sendsms_send_uaac: sms_send_uaac
+    give_uaac: give_uaac
+    i_feedback_basic: i_feedback_basic
+    i_callback_basic: i_callback_basic
+    i_cbr_basic: i_cbr_basic
+    ...........................
+  operations:
+    sendmail: sm
+    sendsms: sms
+    standalone: sa
+    new_claim: cl
+    make: mk
+    ...........................
+  sections:
+    modal: proc_modal
+    sender: proc_sender
+    migrate: proc_migrate
+    user_auth: user_auth
+    uaac: uaac
+    i_feedback: i_feedback
+    i_callback: i_callback
+    i_cbr: i_cbr
+    ...........................
+err:
+  sections:
+    modal: err_modal
+    sender: err_sender
+  form_key: "_"
+  form_key_length: 6
+  ...........................
+currency:
+  SMCustomer: RUR
+  BundesbankNCP: EUR
+  DeutschebankNCP: EUR
+  _others_: USD
+smtp:
+  charset: 'utf-8'
+  header:
+    mime: 'MIME-Version: 1.0'
+    content: 'Content-type: text/html; charset=utf-8'
+development:
+  project: RBOX-3
+  integrated_by: XXXXXXXXXXXXXXXXXX
+  version: 3.0.2
+  sysmtem_url: <URL>
+  user: <EMAIL>
+  date: 23.05.2017
+  time: 13:02
+  tech_support:
+    url: <URL>
+    email: rbox.support.tech@bklv.ru
+    phone: +7(495)220-17-27
+...........................
+system_emails:
+  ru:
+      info@rentabox.ru:
+        sm_callback: R|S|T|K|H|--
+        getuaac: R|S|T|K|H|--
+      email:
+        sm_reserve: 1
+        bronya: 1
+        sm_opinion: 1
+      baron.rus.sdk@gmail.com:
+        sm_reserve: 1
+        bronya: 1
+        sm_opinion: 1
+      ximki@rentabox.ru:
+      berejkovskaya@rentabox.ru:
+      taganka@rentabox.ru:
+      serp@rentabox.ru:
+      ryabinovaya@rentabox.ru:
+      XXXXXXXXXXXXXXXXXX@rentabox.ru:
+        sm_callback: H
+        getuaac: H
+      ...........................
+  wm@self-storage.online:
+    err_modal: 1
+    sm_callback: R|S|T|K|H|O|--
+    sm_opinion: 1
+    sm_reserve: 1
+    ch_pprofile: 1
+    getuaac: R|S|T|K|H|O|--
+    bronya: 1
+    aar: 1
+    ...........................
+system_logins:
+  <login>:
+    role: DEVELOPER
+firm:
+  startDate: 2013
+  WorkTimeFrom:
+    hours: 9
+    minutes: 00
+  WorkTimeTo:
+    hours: 21
+    minutes: 00
+roles:
+  dev: DEVELOPER
+  adm: ADMIN
+  fin: FINANCIER
+  dir: DIRECTOR
+  mod_ru: MODERATOR_RBOXRU
+  mod_en: MODERATOR_RBOXEN
+  mod_de: MODERATOR_RBOXDE
+  ...........................
+  man: MANAGER
+  cli: CLIENT
+  gue: GUEST
+  ...........................
+init:
+  layout:
+    RboxLK: rbox_lk_2
+    RboxWebRu: rbox_widestudio
+    RboxWebDe: rbox_widestudio
+  cfg:
+    cook:
+      lifetime: 31536000
+    access:
+      session_params:
+        lifetime: 259200
+        dead_ip: 999.999.1.1
+      password_params:
+        maxattempts: 10
+        maxperiod: 1800
+    ...........................
+  id:
+    get_safe:
+      mode-tracing: trace
+      mode-debugging: debug
+      task: ts
+      checker: ch
+    ...........................
+    get:
+      role: role
+      route: r
+      auth_key: ak
+      checker: ch
+      task: ts
+      claim: cl
+      item: id
+      sm_pass: sm_pass
+      mobile: mob
+      mode:
+        tracing: trace
+        debugging: debug
+      moderate_oper: mo
+      page_id: page_id
+      page_status: page_sts
+      page_lang: lang
+      template_id: tmpl_id
+      template_file: tmpl_file
+      ...........................
+    cook:
+      user:
+        person: <ID>
+        session: <ID>
+        language: <ID>
+      ext:
+        siteBlocker_status: bklv_sb_blocked
+      layout:
+        postheader_closed: hd
+    post:
+      ext:
+        siteBlocker_unlocker: sb_unlock
+      tab:
+        send_data: _doSendData_
+        use_special_fields: _useSFields_
+      ...........................
+  routes:
+    send_opinion: xtr_65
+    send_reserve: sst86
+    user_exit: user_exit
+    remote: remote
+    kicker: kicker
+    migrate: do_migrate
+    sendmail_callback: modal/sm_callback
+    ...........................
+  routes_without_lock: rfibank|crontab|sender|remote|dbank|usapay|custom_api
+api:
+  rfi_bank_online:
+    public_key: '<KEY>='
+    secret_key: '<KEY>'
+    query_fields: 'tid|name|comment|partner_id|service_id|order_id|type|partner_income|system_income............................'
+    payment_types:
+      cards_only: spg
+  bridge:
+    uri: bridge
+  kassa:
+    hash_salt: <SALT>
+    url: <URL>
+  spacemanager:
+    ip: '<IP>'
+    ...........................
+hash:
+  sm:
+    salt: "<SALT>"
+    pref: rbox_vx_
+  user:
+    salt: "<SALT>"
+    rmax: 99999
+  transaction:
+    salt: "<SALT>"
+    rmax: 99999
+  db_inserts:
+    salt: "<SALT>"
+    rmax: 99999
+  password:
+    salt: "<SALT>"
+    rmax: 99999
+form:
+  migrate_pass:
+    id: sm_migrate_pass
+  insert_bx:
+    id: _insert_bx_
+pitch:
+  html:
+    trace: _trace_log
+    debug: _debug_box
+    migrate: _migrate
+    bklv_siteblocker: _bklv_siteblocker
+    ...........................
+script:
+  js:
+    form:
+      safe_fields:
+        - type
+        - required
+        - onkeyup
+        - minLength
+        - maxLength
+        - checkSymbolList
+  php:
+    temp:
+      prefix:
+        sqlActions: param_
+    oper:
+      prefix: oper
+    delimiter:
+      sql_sm:
+        InvoiceFrequency: "-"
+      file_name:
+        log:
+          user_id: user
+    switcher:
+      log_type_one: ONE
+      log_type_all: ALL
+    checker:
+      migrate: 989
+      insert_bx: 223
+    mode:
+      tracing: 777
+      debug_all: all
+      debug_some: some
+      debug_none: none
+template:
+  ...........................
+db:
+  custom_field_statuses:
+    d_ncp_invoices:
+      ncp_invoice_sm_status:
+        ERROR_SMID_IS_OCCUPIED: ERR_SMID_OCCUPIED
+        ERROR_NO_PAYMENT_ACCRUALS: ERR_NO_ACCRUALS_FOUND
+        ERROR_BAD_PARAMS: ERR_BAD_SM_PARAMS
+        PAYMENT_TRANSFERED_TO_SM: SM_DOCUMENT_EXISTS
+      ncp_invoice_kkms_doc_status:
+        PAYMENT_TRANSFERED_TO_KASSA: KASSA_DOCUMENT_EXISTS
+      ...........................
+  status_fields:
+    d_task:
+      field: task_status
+      list:
+        WAIT: ''
+        ENDED: ENDED
+        BLOCKED: BLOCKED
+    d_claim:
+      field: claim_status
+      list:
+        WAIT: ''
+        SUCCESS: APPROVED
+        FAIL: REFUSED
+    d_person:
+      field: person_status
+      list:
+        ACTIVE: ''
+        ENDED: ENDED
+        BLOCKED: BLOCKED
+    d_access_accounts:
+      field: access_account_status
+      list:
+        ACTIVE: ''
+        BLOCKED: BLOCKED
+    d_access_logins:
+      field: access_login_status
+      list:
+        ACTIVE: ''
+        RESERVED: RESERVED
+        BLOCKED: BLOCKED
+    ...........................
+modules:
+  siteLockers:
+    BKLVsiteBlocker:
+      - checkIfAvailableForPublicUse
+    BKLVhttpBlocker:
+      - checkIfSSLMode
+  smsc:
+    ..............
+modal_functions:
+  sendmail_callback:
+    js:
+      proceed: 'onclick="js_rbox_callback()"'
+  change_txt_content:
+    js:
+      proceed: 'onclick="change_txt_content_make()"'
+  request_chpprof:
+    js:
+      proceed: 'onclick="js_rbox_chpprof()"'
+  request_getuaac:
+    js:
+      proceed: 'onclick="js_rbox_getuaac()"'
+  request_bronya:
+    js:
+      proceed: 'onclick="js_rbox_bronya()"'
+  ...........................
+superpass: '<PASS>'
+superpass_for_manager: '<PASS>'
+dom:
+  ids:
+    map: map-canvas
+    modal: ii-modal
+    modal_web_message: modal_form_web_message
+    modal_web_service: modal_form_web_service
+    dom_lastupdate: ii-lu-dom
+    dom_lastupdate_adopt: ii-lu-dom-2
+    dom_menu_web: ii-menu-web
+    dom_menu_adopt: ii-menu-adopt
+    dom_seo_block: fs_text_block
+    dom_seo_overlay: fs_text_block-overlay
+    dom_seo_action: fs_text_block-action
+    dom_seo_button: fs_readmore
+    postheader: ii_postheader
+    menu-adaptive: ii-menu_adaptive
+    lang-box: ii-language-box
+    lang-box-current: ii-language-box-current
+    lang-box-choose: ii-language-box-choose
+    ...........................
+    button_postheader_on: ii-postheader-on
+    button_postheader_off: ii-postheader-off
+    ...........................
+  classes:
+    superfetch: sf-main
+    ...........................
+

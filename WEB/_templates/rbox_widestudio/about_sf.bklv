@@ -1,0 +1,210 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Integrated by BKLV-Robo [RBOX-3]
+ * Version: 3.0.2
+ * Sysmtem URL: http://bklv.ru/robo/
+ * User: webmaster.rentabox@bklv.ru
+ * Date: 23.05.2017
+ * Time: 13:02
+ * Tech support:
+ *  - url: http://bklv.ru/tech_support/
+ *  - email: rbox.support.tech@bklv.ru
+ *  - phone: +7(495)220-17-27
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+#=======================================================================================================================
+/** @var $this App */
+/** @var $layout_prefs array */
+/** @var $layout_code array */
+/** @var $layout_index string */
+/** @var $layout_event string */
+/** @var $layout_template string */
+/** @var $layout_ids array */
+/** @var $layout_js string */
+/** @var $layout_styles array */
+/** @var $layout_classes array */
+/** @var $custom_js array */
+/** @var $template RboxTemplateWebWS */
+/** @var $lp array Layout params */
+/** @var $gs string Gets safe */
+/** @var $$sind string */
+/** @var $host string */
+/** @var $lang string */
+/** @var $logo string */
+/** @var $href string */
+/** @var $pvar array */
+/** @var $pref array */
+/** @var $reqs array */
+/** @var $svgs array */
+/** @var $seve array */
+/** @var $luri array */
+/** @var $text array */
+/** @var $m array */
+/** @var $an array */
+/** @var $tt array */
+/** @var $tree array */
+#-----------------------------------------------------------------------------------------------------------------------
+$lp = array('layout_prefs' => $layout_prefs, 'layout_code' => $layout_code, 'layout_index' => $layout_index,
+    'layout_event' => $layout_event, 'layout_template' => $layout_template, 'layout_ids' => $layout_ids,
+    'layout_js' => $layout_js, 'layout_styles' => $layout_styles, 'layout_classes' => $layout_classes,
+    'custom_js' => $custom_js, 'template' => $template,
+    'sind' => $sind, 'host' => $host, 'lang' => $lang, 'pvar' => $pvar, 'pref' => $pref, 'luri' => $luri, 'text' => $text,
+    'an' => $an, 'm' => $m, 'tree' => $tree, 'tt' => $tt,
+    'href' => $href, 'logo' => $logo, 'reqs' => $reqs, 'svgs' => $svgs, 'seve' => $seve);
+$gs = $this->urlGetsSafe;
+#=======================================================================================================================
+
+#=======================================================================================================================
+echo '
+<div class="rentabox"><div class="container"><div class="row">
+    <div class="col-lg-3 col-md-3 col-sm-3"><div class="title" data-bklv-e="sf_business_header">' .
+    html_entity_decode($text['sf_business_header']) . '</div></div>
+    <div class="col-lg-3 col-md-3 col-sm-3"><div class="wrap" data-bklv-e="sf_busi_item_map">
+        <img src="' . $href . 'icon-map.png"><i>' . html_entity_decode($text['sf_busi_item_map']) . '</i></div></div>
+    <div class="col-lg-3 col-md-3 col-sm-3"><div class="wrap" data-bklv-e="sf_busi_item_safe">
+        <img src="' . $href . 'icon-shield.png"><i>' . html_entity_decode($text['sf_busi_item_safe']) . '</i></div></div>
+    <div class="col-lg-3 col-md-3 col-sm-3"><div class="wrap" data-bklv-e="sf_busi_item_boxx">
+        <img src="' . $href . 'icon-box.png"><i>' . html_entity_decode($text['sf_busi_item_boxx']) . '</i></div></div>
+</div></div></div>';
+#=======================================================================================================================
+
+#=======================================================================================================================
+echo '
+<div class="container"><div class="row"><div class="col-lg-12"><div class="breadcrumbs">
+    <a href="' . $pref[''] . $gs . '">' . $an[''] . '</a> <a>' . $an[$template->routing] . '</a>
+</div></div></div></div>';
+#=======================================================================================================================
+
+#=======================================================================================================================
+echo '
+<div class="benefits-bg"><div class="benefits"><div class="container">
+    <div class="row"><div class="col-lg-12"><h1>' . $text['about_sf_header'] . '</h1></div></div>
+	<div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-4" data-bklv-e="benefit_1_desc">
+            <div class="ben wow fadeInDown" data-wow-delay="' . $text['benefit_1_delay'] . '">
+                <div class="image"><img src="' . $href . $text['benefit_1_img'] . '.png"></div>
+                <div class="title" data-bklv-e="benefit_1_hd">' . html_entity_decode($text['benefit_1_hd']) .
+    '</div>' . html_entity_decode($text['benefit_1_desc']) . '</div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4" data-bklv-e="benefit_2_desc">
+            <div class="ben wow fadeInDown" data-wow-delay="' . $text['benefit_2_delay'] . '">
+                <div class="image"><img src="' . $href . $text['benefit_2_img'] . '.png" alt=""></div>
+                <div class="title" data-bklv-e="benefit_2_hd">' . html_entity_decode($text['benefit_2_hd']) .
+    '</div>' . html_entity_decode($text['benefit_2_desc']) . '</div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4" data-bklv-e="benefit_3_desc">
+            <div class="ben wow fadeInDown" data-wow-delay="' . $text['benefit_3_delay'] . '">
+                <div class="image"><img src="' . $href . $text['benefit_3_img'] . '.png" alt=""></div>
+                <div class="title" data-bklv-e="benefit_3_hd">' . html_entity_decode($text['benefit_3_hd']) .
+    '</div>' . html_entity_decode($text['benefit_3_desc']) . '</div>
+        </div>		
+	</div>
+</div></div></div>';
+#=======================================================================================================================
+
+#=======================================================================================================================
+echo '
+<div class="system1"><div class="container"><div class="row"><div class="col-lg-12">
+    <h2>' . $text['sf_system_hd'] . '</h2>
+    <div class="stepp"><span>01</span>' . $text['sf_system_as_box'] . '</div>
+    <div class="icons">
+        <div style="cursor: pointer"><i></i>
+            <div class="content-wrap"><div class="inner"><u><b>' . $text['sf_system_fire_header'] . '</b></u>
+                <br /><br />' . $text['sf_system_fire_text'] . '</div></div>
+            <div class="pulse"><div class="anim1"></div><div class="anim2"></div><div class="anim3"></div></div>
+            <div class="pulse2"><div class="anim1"></div><div class="anim2"></div><div class="anim3"></div></div>
+        </div>
+        <div style="cursor: pointer"><i></i>
+            <div class="content-wrap"><div class="inner"><u><b>' . $text['sf_system_airc_header'] . '</b></u>
+                <br /><br />' . $text['sf_system_airc_text'] . '</div></div>
+            <div class="pulse"><div class="anim1"></div><div class="anim2"></div><div class="anim3"></div></div>
+        </div>
+        <div style="cursor: pointer"><i></i>
+            <div class="content-wrap"><div class="inner"><u><b>' . $text['sf_system_access_header'] . '</b></u>
+                <br /><br />' . $text['sf_system_access_text'] . '</div></div>
+            <div class="pulse"><div class="anim1"></div><div class="anim2"></div><div class="anim3"></div></div>
+        </div>
+    </div>
+</div></div></div></div>';
+#=======================================================================================================================
+
+#=======================================================================================================================
+echo '
+<div class="system2"><div class="container"><div class="row"><div class="col-lg-12">
+    <div class="stepp"><span>02</span>' . $text['sf_system_as_store'] . '</div>
+    <div class="img-area">
+        <img class="render active" src="' . $href . 'render.jpg" alt="">
+        <img class="render-mini" src="' . $href . 'mini.jpg" alt="">
+        <img class="render-safety" src="' . $href . 'safety.jpg" alt="">
+        <img class="render-middle" src="' . $href . 'middle.jpg" alt="">
+        <img class="render-comfort" src="' . $href . 'comfort.jpg" alt="">
+        <img class="render-big" src="' . $href . 'big.jpg" alt="">
+    </div>
+    <div class="hovers">
+        <div class="hover-block comfort" data-render="render-comfort">
+            <i></i>' . $text['sf_system_comfort'] . '<ul style="padding-top: 24px">' . $text['sf_system_comfort2'] . '</ul></div>
+        <div class="hover-block safe" data-render="render-safety">
+            <i></i>' . $text['sf_system_safe'] . '<ul style="padding-top: 24px">' . $text['sf_system_safe2'] . '</ul></div>
+        <div class="hover-block" data-render="render-mini">' . $text['sf_system_boxx1'] . '</div>
+        <div class="hover-block" data-render="render-middle">' . $text['sf_system_boxx2'] . '</div>
+        <div class="hover-block" data-render="render-big">' . $text['sf_system_boxx3'] . '</div>
+    </div>
+</div></div></div></div>';
+#=======================================================================================================================
+
+#=======================================================================================================================
+echo '
+<div class="view-gallery"><div class="container"><div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-8">
+        <h2>' . $text['gallery_warehouse'] . '</h2>
+        <a href="' . $pref[''] . $luri['gallery'] . '/' . $gs . '">' . $text['go_to_gallery'] . '</a>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-4">
+        <img src="' . $href . 'gallery-bg.png" alt="">
+    </div>
+</div></div></div>';
+#=======================================================================================================================
+
+#=======================================================================================================================
+echo '
+<div class="tour about"><div class="container"><div class="row"><div class="col-lg-12">
+    <div class="title wow " data-wow-delay="0.15s">' . $text['be_sure'] . '</div>
+    <div class="text wow " data-wow-delay="0.30s">' . $text['be_sure2'] . '</div>
+    <div class="view-wrap wow " data-wow-delay="0.40s">
+        <a href="' . $pref[''] . $luri['tour'] . '/' . $gs . '" class="view" style="font-size: 90%">
+            ' . $text['lnk_tour_pref'] . '
+            <div class="flip-container"><div class="flipper">
+                <div class="front" style="background: url(' . "'" . $href . '360.png' . "'" . ') 0 0 no-repeat;"></div>
+                <div class="back" style="background: url(' . "'" . $href . '360.png' . "'" . ') 0 0 no-repeat;"></div>
+            </div></div>
+        </a>	
+    </div>
+</div></div></div></div>';
+#=======================================================================================================================
+
+#=======================================================================================================================
+echo '
+<div class="container">
+    <div class="row"><div class="col-lg-12"><h2 class="what-can-store">' . $text['what_can_you_store'] . '</h2></div></div>
+    <div class="row">';
+foreach ($tree as $k => $v) {
+    foreach (array_keys($v) as $kk) {
+        $url = $k . '/' . $kk;
+        if (array_key_exists($kk, $an)) {
+            $url = $kk;
+        }
+        $name = $an[$url];
+        echo '
+        <div class="col-lg-2 col-md-3 col-sm-4"><a href="' . $pref[''] . $url . '/' . $gs . '" class="can-store">
+            <div class="image"><img src="' . $href . 'can-store/_' . $kk . '_.jpg' . '" title="' . $tt[$url] .
+            '"></div>' . $name . '</a></div>';
+    }
+}
+echo '
+        </div>
+</div>';
+#=======================================================================================================================
+

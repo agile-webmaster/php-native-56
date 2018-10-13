@@ -1,0 +1,38 @@
+:
+  title: Selfstorage services in Moscow | Rent an individual box or temporary storage area | Self storage
+  name: Home
+  short_title: Selfstorage services in Moscow
+  author: '"Rentabox" LLC | Russia | Moscow'
+  description: Rentabox - selfstorage company for your family and business
+  keywords: Rentabox - selfstorage company for your family and business
+  copyrights: 2013 © RentaBox.ru - selfstorage for business and family
+  anchor_title: Self-storage | selfstorage service from {{domain}}
+storage/box:
+  title: Rent a box
+  name: Rent a box
+  anchor_title: Self-storage | selfstorage service from {{domain}}
+storage:
+  title: Storage
+  name: Storage
+  anchor_title: Self-storage | selfstorage service from {{domain}}
+moving:
+  title: Moving
+  name: Moving
+  anchor_title: Transportation of things | Transportation services at {{domain}}
+about:
+  title: About Us
+  name: About Us
+  anchor_title: About company {{domain}}
+contacts:
+  title: Contacts
+  name: Contacts
+  anchor_title: Contacts data for {{domain}}
+
+selfstorage:
+  title: Rent a box
+  name: Rent a box
+  anchor_title: ~ Self-storage ~
+payments:
+  title: Payments
+  name: Payments
+  anchor_title: ~ Pay for services ~

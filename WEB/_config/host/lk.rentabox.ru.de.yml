@@ -1,0 +1,7 @@
+mail_sender:
+  webmaster:
+    name: 'RENTABOX Russland'
+    sign: >
+      Mit freundlichen Grüßen,<br />
+      Website-Betreiber Rentabox <br />
+      wm@self-storage.online

@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Integrated by BKLV-Robo [RBOX-3]
+ * Version: 3.0.2
+ * Sysmtem URL: http://bklv.ru/robo/
+ * User: webmaster.rentabox@bklv.ru
+ * Date: 23.05.2017
+ * Time: 13:02
+ * Tech support:
+ *  - url: http://bklv.ru/tech_support/
+ *  - email: rbox.support.tech@bklv.ru
+ *  - phone: +7(495)220-17-27
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+/** @var $this App */
+/** @var $params array */
+
+#-------------------------------------------------------------------------------------------------------------------
+$m = A::m($this, 'm');
+#-------------------------------------------------------------------------------------------------------------------
+if ($params['_fatal_']) {
+    $params['_p_fatal_'] = INI::NL_NIX . '<span class="trace_fatal">' . $params['_fatal_'] . '</span>';
+}
+#-------------------------------------------------------------------------------------------------------------------
+if ($params['_ma_note_']) {
+    $params['_p_note_'] = INI::NL_NIX . INI::NL_BR .
+        '<span class="trace_note">' . $params['_ma_note_'] . '</span>';
+}
+#-------------------------------------------------------------------------------------------------------------------
+foreach ($params as $k => $v) {
+    $params[$k] = strtr($v, A::m($this, 'm'));
+}
+#-------------------------------------------------------------------------------------------------------------------
+$pitch = '
+    <div class="trace">
+        <div class="trace_inner">
+            <span class="trace_message_body">{{_trace_counter_}}) {{_ma_msg_}} </span>{{_p_fatal_}}<br />
+            <span class="trace_message_header">{{_ma_header_}}</span> ::
+            <span class="trace_message_group">[{{_ma_method_}} // {{_ma_group_}}]</span>
+            <span class="trace_time">{{_time_current_}} [{{_delta_}}={{_time_diff_}}]</span>
+            {{_p_note_}}
+        </div>
+    </div>';
+echo strtr($pitch, TOOL::makeMasked($params));
+#-------------------------------------------------------------------------------------------------------------------

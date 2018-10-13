@@ -1,0 +1,101 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Integrated by BKLV-Robo [RBOX-3]
+ * Version: 3.0.2
+ * Sysmtem URL: http://bklv.ru/robo/
+ * User: webmaster.rentabox@bklv.ru
+ * Date: 23.05.2017
+ * Time: 13:02
+ * Tech support:
+ *  - url: http://bklv.ru/tech_support/
+ *  - email: rbox.support.tech@bklv.ru
+ *  - phone: +7(495)220-17-27
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+#=======================================================================================================================
+/** @var $this App */
+/** @var $layout_prefs array */
+/** @var $layout_code array */
+/** @var $layout_index string */
+/** @var $layout_event string */
+/** @var $layout_template string */
+/** @var $layout_ids array */
+/** @var $layout_js string */
+/** @var $layout_styles array */
+/** @var $layout_classes array */
+/** @var $custom_js array */
+/** @var $template RboxTemplateHTML */
+/** @var $lp array Layout params */
+/** @var $gs string Gets safe */
+/** @var $user_email string User email */
+/** @var $user_name string User name */
+#-----------------------------------------------------------------------------------------------------------------------
+$lp = array('layout_prefs' => $layout_prefs, 'layout_code' => $layout_code, 'layout_index' => $layout_index,
+    'layout_event' => $layout_event, 'layout_template' => $layout_template, 'layout_ids' => $layout_ids,
+    'layout_js' => $layout_js, 'layout_styles' => $layout_styles, 'layout_classes' => $layout_classes,
+    'custom_js' => $custom_js, 'template' => $template);
+$gs = $this->urlGetsSafe;
+#=======================================================================================================================
+
+#=======================================================================================================================
+$m = A::d($this, 'm');
+$debt_curr = $m['rbox_balance_cur_rub'];
+$debt_amoun = $this->SMBalance;
+$da = 0;
+if ($debt_amoun > 0) {
+    $da = $debt_amoun;
+}
+#=======================================================================================================================
+if ($this->userSMCustomers) {
+#=======================================================================================================================
+    echo '
+<script>window.debt = \'' . $da . '\' * 1;</script>
+<p style="padding-top: 20px">' . $m['txt_your_debt'] . ': ' . $da . ' ' . $debt_curr . ' ' . $m['txt_pay'] . '</p>
+<p>' . $m['txt_pay_2'] . ' "' . $m['rbox_btn_pay_online'] . '"</p>
+<div id="' . $layout_ids['inputs_pay_txt'] . '" style="display: none">
+    <p style="">' . $m['summ'] . ': <span id="' . $layout_ids['input_pay_cost_amount_init'] . '_" 
+        style="width: 80px; text-align: right; padding-right: 20px"></span></p>
+    <p style="">' . $m['email'] . ': <span id="' . $layout_ids['input_pay_email_address_init'] . '_"
+        style="width: 200px; text-align: center"></span></p>
+</div>
+<p style="display: table-cell; float: left;">
+    <form method="POST" action="https://partner.rficb.ru/alba/input/">
+            <div id="' . $layout_ids['inputs_pay'] . '" style="white-space: nowrap; vertical-align: middle; float: left; line-height: 25px; padding-right: 10px">
+                <input class="rbx-input" name="cost" value="' . $da . '" id="' . $layout_ids['input_pay_cost_amount_init'] . '" style="width: 80px; text-align: right; margin-top: 6px" />
+                <input class="rbx-input" name="cost" value="' . $user_email . '" id="' . $layout_ids['input_pay_email_address_init'] . '" style="width: 200px; text-align: center; margin-top: 6px" />
+            </div>
+            <div style="white-space: nowrap; vertical-align: middle; float: left; margin-top: 6px;">
+                <input type="hidden" name="key" id="' . $layout_ids['input_pay_key'] . '" value="' . $this->d['api']['rfi_bank_online']['public_key'] . '" />
+                <input type="hidden" name="cost" id="' . $layout_ids['input_pay_cost_amount'] . '" value="' . $debt_amoun . '" />
+                <input type="hidden" name="name" id="' . $layout_ids['input_pay_name'] . '" value="' . $m['txt_rent'] . '" />
+                <input type="hidden" name="email" id="' . $layout_ids['input_pay_email_address'] . '" value="' . $user_email . '" />
+                <input type="hidden" name="order_id" id="' . $layout_ids['input_pay_order_id'] . '" />
+                <input type="hidden" name="comment" id="' . $layout_ids['input_pay_comment'] . '" />
+                <input type="hidden" name="payment_type" id="' . $layout_ids['input_pay_type_id'] . '" value="' . $this->d['api']['rfi_bank_online']['payment_types']['cards_only'] . '" />
+                <input type="hidden" name="check" id="' . $layout_ids['input_pay_check'] . '" />
+                <input type="submit" bklv="" id="' . $layout_ids['input_pay_submit'] . '" value="' . $m['rbox_btn_pay_online'] . '" onclick=" return js_make_payment($(this));" />
+            </div>
+    </form>
+</p>';
+}
+#=======================================================================================================================
+
+#=======================================================================================================================
+else {
+    echo '
+        <p class="rblk_wrap"><div class="rbxh-getuaac-p">' . $m['txt_getuaac_no_contracts'] . '</div></p>
+        <p class="rblk_wrap" style="text-align: center"><button bklv-for="profile/profile_summary" class="btn btn-danger btn-lg" id="' .
+        $layout_ids['button_goto_uaac_from_contracts_pay'] . '">' . $m['rbox_go_get_uaac'] . '</button>
+            
+                          &nbsp; &nbsp; &nbsp;
+                            
+                            <a href="/profile/profile_summary/uaac/">
+                            <span class="btn btn-default btn-sm" id="' . $layout_ids['button_use_uaac_1_init'] . '">' . $m['i_have_uaac'] . '</span>  
+  </a>    
+        </p>';
+
+}
+#=======================================================================================================================

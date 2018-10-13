@@ -1,0 +1,37 @@
+:
+  title: Aufbewahrungsdeinstleistungen in Moskau | Individuelle Box oder Lager für zeitweilige Aufbewahrung | Self storage
+  name: Startseite
+  short_title: Aufbewahrungsdeinstleistungen in Moskau
+  author: 'ООО "Rentabox" | Russland | Moskau'
+  description: Rentabox – Minilager für Familie und Business
+  keywords: Rentabox – Minilager für Familie und Business
+  copyrights: 2013 © RentaBox.ru - Minilager für Familie und Business
+  anchor_title: Self-storage | selfstorage service from {{domain}}
+storage/box:
+  title: Box mieten
+  name: Box mieten
+  anchor_title: Zeitweilige Sachenaufbewahrung | Service „Aufbewahrung von persönlichen Sachen“ von  {{domain}}
+storage:
+  title: Aufbewahrung
+  name: Aufbewahrung
+  anchor_title: Zeitweilige Sachenaufbewahrung | Service „Aufbewahrung von persönlichen Sachen“ von {{domain}}
+moving:
+  title: Umzug
+  name: Umzug
+  anchor_title: Sachen-Transport | Transportdeinstleistungen  {{domain}}
+about:
+  title: Über uns
+  anchor_title: Über uns {{domain}}
+contacts:
+  title: Kontakte
+  name: Kontakte
+  anchor_title: Kontaktinformationen der Firma {{domain}}
+
+selfstorage:
+  title: Box mieten
+  name: Box mieten
+  anchor_title: ~ Individuelle Aufbewahrung ~
+payments:
+  title: Dienstleistung bezahlen
+  name: Dienstleistung bezahlen
+  anchor_title: ~ Deinstleistungen bezahlen~

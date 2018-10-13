@@ -1,0 +1,20 @@
+mail_sender:
+  webmaster:
+    email: 'wm@self-storage.online'
+socials:
+  vk:
+    href: https://vk.com/rentabox
+  facebook:
+    href: https://www.facebook.com/rentaboxcompany
+  instagram:
+    href: https://instagram.com/rentabox
+state_default: de
+ncp_gateway_default: deutschebank_online
+firm:
+  requisites:
+    tel_main_pref: 0800
+    tel_main_code: 900 8 300
+    tel_main_full: '0800 900 8 300'
+    tel_messangers: '+491755349975'
+    skype_main: rentabox_selfstorage
+    mailbox_main: info@rentabox24.de

@@ -1,0 +1,111 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Integrated by BKLV-Robo [RBOX-3]
+ * Version: 3.0.2
+ * Sysmtem URL: http://bklv.ru/robo/
+ * User: webmaster.rentabox@bklv.ru
+ * Date: 23.05.2017
+ * Time: 13:02
+ * Tech support:
+ *  - url: http://bklv.ru/tech_support/
+ *  - email: rbox.support.tech@bklv.ru
+ *  - phone: +7(495)220-17-27
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+#=======================================================================================================================
+$path = $_SERVER['DOCUMENT_ROOT'] . '/.bklv';
+/** @noinspection PhpIncludeInspection */
+include($path);
+#=======================================================================================================================
+
+/** Logger class for logging */
+class Logger
+{
+
+    #===================================================================================================================
+    /** @var $microActions array Array of micro actions logged */
+    static $microActions = array();
+    #-------------------------------------------------------------------------------------------------------------------
+    /** @var $traceAllow bool trace making indicator */
+    static $traceAllow = FALSE;
+    #-------------------------------------------------------------------------------------------------------------------
+    /** @var $traceAllow bool debug making indicator */
+    static $debugAllow = TRUE;
+    #-------------------------------------------------------------------------------------------------------------------
+    /** @var $traceCounter integer Counter for Trace elements */
+    static $traceCounter;
+    #-------------------------------------------------------------------------------------------------------------------
+    /** @var $fixFEstopper bool FixFE STOP indicator (для того чтобы не зацикливалось логирование) */
+    static $fixFEstopper = FALSE;
+    #-------------------------------------------------------------------------------------------------------------------
+    /** @var $sqls array sqlActions log chain */
+    static $sqls = array();
+
+    #===================================================================================================================
+
+    #===================================================================================================================
+    /**
+     * Make initial log [Начальный лог обработчика кода]
+     * @param $app App
+     * @param $method string Class::method
+     */
+    public static function starts(App &$app, $method)
+    {
+        Logger::$microActions[] = new MA($app, $method, '{{ma_system}}',
+            '{{ma_system_timing}}', '{{appStartPoint}}', '{{appStartedAt}}: ' . date("Y-m-d H:i:s", $app->appTimeStart));
+    }
+    #===================================================================================================================
+
+    #===================================================================================================================
+    /**
+     * Fixes smth
+     * @var $app App
+     * @var $method string Class::method
+     * @var $group string Microaction group
+     * @var $header string Microaction header
+     * @var $msg string Microaction message
+     * @var $note string Additional information about microaction
+     */
+    public static function Fix(App &$app, $method, $group, $header, $msg = NULL, $note = NULL)
+    {
+        if (Logger::$debugAllow) {
+            Logger::$microActions[] = new MA($app, $method, $group, $header, $msg, $note);
+        }
+    }
+    #===================================================================================================================
+...................
+    #===================================================================================================================
+    /**
+     * Diplays log to the screen
+     * @var $app App instance of App
+     */
+    public static function showLogToScreen(App &$app)
+    {
+        $d = $app->d['pitch']['html']['debug'];
+        #---------------------------------------------------------------------------------------------------------------
+        if (!$app->siteOptDebug) {
+            return;
+        }
+        /* @var $ma MA */
+        #---------------------------------------------------------------------------------------------------------------
+        $app->renderFileForTrace(INI::DIR_PITCH_HTML . $d . INI::C . INI::X, array(), TRUE);
+        #---------------------------------------------------------------------------------------------------------------
+        foreach (Logger::$microActions as $i => $ma) {
+            $app->renderFileForTrace(INI::DIR_PITCH_HTML . $d . INI::X,
+                array('params' => array(
+                    '_time_current_' => TOOL::getFullDate($app, $ma->log->siteTime),
+                    '_time_diff_' => round($ma->log->appTimeDiff, 4),
+                    '_ma_header_' => $ma->ma_header,
+                    '_ma_method_' => $ma->ma_method,
+                    '_ma_group_' => $ma->ma_group,
+                    '_ma_msg_' => $ma->ma_msg,
+                    '_ma_note_' => $ma->ma_note)));
+        }
+    }
+    #===================================================================================================================
+..................
+
+}

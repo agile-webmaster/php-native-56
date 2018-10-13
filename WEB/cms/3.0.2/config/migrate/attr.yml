@@ -1,0 +1,119 @@
+_format:
+  inter: "-- ------------------------------------------------------------------------------------------------------------"
+  f4: "    "
+_vars:
+  collate: " COLLATE 'utf8_unicode_ci'"
+  table_attr: " ENGINE='InnoDB' CHARSET='utf8'"
+field_attr:
+  v1:
+    'SQL_UNIQ': "VARCHAR(1) NULL DEFAULT NULL COMMENT '{{name}}'"
+    'SQL_ARCH': "VARCHAR(1) NULL DEFAULT NULL COMMENT '{{name}}'"
+    'SQL_TYPE': "VARCHAR"
+    'SQL_LENG': 1
+  v1+:
+    'SQL_UNIQ': "VARCHAR(1) NOT NULL COMMENT '{{name}}'"
+    'SQL_ARCH': "VARCHAR(1) NOT NULL COMMENT '{{name}}'"
+    'SQL_TYPE': "VARCHAR"
+    'SQL_LENG': 1
+  v1u+_:
+    'SQL_UNIQ': "VARCHAR(1) UNIQUE NOT NULL COMMENT '{{name}}'"
+    'SQL_ARCH': "VARCHAR(1) NOT NULL COMMENT '{{name}}'"
+    'SQL_TYPE': "VARCHAR"
+    'SQL_LENG': 1
+    'SQL_MINV': 1
+  v1+_:
+    'SQL_UNIQ': "VARCHAR(1) NOT NULL COMMENT '{{name}}'"
+    'SQL_ARCH': "VARCHAR(1) NOT NULL COMMENT '{{name}}'"
+    'SQL_TYPE': "VARCHAR"
+    'SQL_LENG': 1
+    'SQL_MINV': 1
+  v1u:
+    'SQL_UNIQ': "VARCHAR(1) UNIQUE NULL DEFAULT NULL COMMENT '{{name}}'"
+    'SQL_ARCH': "VARCHAR(1) NULL DEFAULT NULL COMMENT '{{name}}'"
+    'SQL_TYPE': "VARCHAR"
+    'SQL_LENG': 1
+  v1u+:
+    'SQL_UNIQ': "VARCHAR(1) UNIQUE NOT NULL COMMENT '{{name}}'"
+    'SQL_ARCH': "VARCHAR(1) NOT NULL COMMENT '{{name}}'"
+    'SQL_TYPE': "VARCHAR"
+    'SQL_LENG': 1
+  v1u_:
+    'SQL_UNIQ': "VARCHAR(1) UNIQUE NULL DEFAULT NULL COMMENT '{{name}}'"
+    'SQL_ARCH': "VARCHAR(1) NULL DEFAULT NULL COMMENT '{{name}}'"
+    'SQL_TYPE': "VARCHAR"
+    'SQL_LENG': 1
+    'SQL_MINV': 1
+.............................................
+  v64:
+    'SQL_UNIQ': "VARCHAR(64) NULL DEFAULT NULL COMMENT '{{name}}'"
+    'SQL_ARCH': "VARCHAR(64) NULL DEFAULT NULL COMMENT '{{name}}'"
+    'SQL_TYPE': "VARCHAR"
+    'SQL_LENG': 64
+  v64+:
+    'SQL_UNIQ': "VARCHAR(64) NOT NULL COMMENT '{{name}}'"
+    'SQL_ARCH': "VARCHAR(64) NOT NULL COMMENT '{{name}}'"
+    'SQL_TYPE': "VARCHAR"
+    'SQL_LENG': 64
+  v64u+_:
+    'SQL_UNIQ': "VARCHAR(64) UNIQUE NOT NULL COMMENT '{{name}}'"
+    'SQL_ARCH': "VARCHAR(64) NOT NULL COMMENT '{{name}}'"
+    'SQL_TYPE': "VARCHAR"
+    'SQL_LENG': 64
+    'SQL_MINV': 64
+  v64+_:
+    'SQL_UNIQ': "VARCHAR(64) NOT NULL COMMENT '{{name}}'"
+    'SQL_ARCH': "VARCHAR(64) NOT NULL COMMENT '{{name}}'"
+    'SQL_TYPE': "VARCHAR"
+    'SQL_LENG': 64
+    'SQL_MINV': 64
+  v64u:
+    'SQL_UNIQ': "VARCHAR(64) UNIQUE NULL DEFAULT NULL COMMENT '{{name}}'"
+    'SQL_ARCH': "VARCHAR(64) NULL DEFAULT NULL COMMENT '{{name}}'"
+    'SQL_TYPE': "VARCHAR"
+    'SQL_LENG': 64
+  v64u+:
+    'SQL_UNIQ': "VARCHAR(64) UNIQUE NOT NULL COMMENT '{{name}}'"
+    'SQL_ARCH': "VARCHAR(64) NOT NULL COMMENT '{{name}}'"
+    'SQL_TYPE': "VARCHAR"
+    'SQL_LENG': 64
+  v64u_:
+    'SQL_UNIQ': "VARCHAR(64) UNIQUE NULL DEFAULT NULL COMMENT '{{name}}'"
+    'SQL_ARCH': "VARCHAR(64) NULL DEFAULT NULL COMMENT '{{name}}'"
+    'SQL_TYPE': "VARCHAR"
+    'SQL_LENG': 64
+    'SQL_MINV': 64
+  v64_:
+    'SQL_UNIQ': "VARCHAR(64) NULL DEFAULT NULL COMMENT '{{name}}'"
+    'SQL_ARCH': "VARCHAR(64) NULL DEFAULT NULL COMMENT '{{name}}'"
+    'SQL_TYPE': "VARCHAR"
+    'SQL_LENG': 64
+    'SQL_MINV': 64
+ ...........................
+_note_fields:
+  _wsi:
+    type: v16+
+    name: 'Идентификатор текущего сайта / Web-site index'
+  _ats:
+    type: time+
+    name: 'Время запуска скрипта / Timestamp for script start'
+  _uid:
+    type: v24
+    name: 'Идентификатор пользователя / User ID'
+  _tid:
+    type: v24
+    name: 'Идентификатор транзакции / Transaction ID'
+  _sid:
+    type: v32
+    name: 'Идентификатор сессии / Session ID'
+  _pid:
+    type: v16
+    name: 'Идентификатор персоны / Person ID'
+  _lid:
+    type: v2
+    name: 'Код локализации / Language code'
+  _rid:
+    type: v16
+    name: 'Код роли / Role code'
+  _sts:
+    type: v1
+    name: 'Статус записи / Record status'

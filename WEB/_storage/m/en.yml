@@ -1,0 +1,441 @@
+# -------------- Application messages
+appStartPoint: Application initialization Timepoint
+appStopPoint: Application stop Timepoint
+appStartedAt: Time calculation has been started at
+appStoppedAt: Time calculation has been stopped at
+
+# -------------- Fix chainMethod => Fix->$mess (messages)
+cm_app_start: APP - App Started normally
+cm_app_stop: APP - App Stopped normally
+cm_app_loadInitEnvParams: APP - Load Initial Environment Parameters
+cm_app_updateEnvParams: APP - Update Application Environment Parameters
+cm_app_getRoutingParams: APP - Get Routing Parameters
+cm_app_renderFile: APP - Make rendering of a routes
+cm_app_useRemoteAction: APP - Use Remote Action
+cm_db_chDBProfileName: DB - Check-out DB connection Profile Name
+cm_merge_deepYML4: MERGE - make merge of YML with the deep of 4 levels of an array values tree
+cm_tool_getServer: USE CUSTOM TOOL - get parameters of the $_SERVER
+cm_tool_getParamFromArray: USE CUSTOM TOOL - get not empty parameter from an array
+cm_tool_getTime: USE CUSTOM TOOL - get timestamp for the point of time
+cm_tool_getFullDate: USE CUSTOM TOOL - get the point of time formatted as Y-m-d H:i:s
+cm_tool_pickNotEmptyValue: USE CUSTOM TOOL - Checkout if not empty value for a param, otherwise use from a chain of dummy values
+cm_BKLV_BKLVsiteBlocker_checkIfAvailableForPublicUse: Use method checkIfAvailableForPublicUse of module BKLV/BKLVsiteBlocker
+cm_fix_insertbx: 'INSERT DATA FROM BX ::'
+
+# -------------- DB environment
+dbProfileName: DB connection Profile Name
+dbTableName: Name of the table
+dbErrorDesc: DB Error description
+dbFieldType: DB field type
+
+# -------------- Error typification
+errFatal: Fatal Error
+errDBcheckerFieldNotSpecified: DB field for the checker was not specified
+errRouting: Routing error
+errGetVarsForMigrateСheckerNotDefined: Vars for migrate checker procedure were not defined
+errGetVarsForInsertBXСheckerNotDefined: Vars for insert data from bitrix checker procedure were not defined
+errDBProfileNameIsEmpty: DB connection profile name is not defined
+errDBConnParamsAreWrong: DB connection parameters does not allow to connect to DB
+errDBConnProfileNameIsNotInList: DB connection profile was not identified
+errDBTableNameUnknown: Table name is unknown
+errDBTableIndexFieldTypeIsWrong: Table index column type is wrong
+errFormWrongCheckSymbolType: 'Check-out type is not registered: {{type}}!'
+errFormWrongSelectOptionKey: 'Value is wrong: {{option_key}}!'
+errFormErrFound: Errors found
+errFormErrTechDesc: There was a technical error during program execution process
+errFormErrTechNote: >
+  Attention! One of executed procedures was not finished or was executed uncorrectly.<br /><br />
+  <i>Please, if your are interested in correctness of our web-site code and you are ready to help us,
+  save and send us the reference to the current error: {{err_ref}}, for example, you can create
+  and send us a screenshot of this page - by email or in any other suitable for you way!</i><br /><br />
+  We apologize for the inconvenience and hope you will adequately perceive arisen problems.
+errOperStatusLoginIsOccupied: 'Login is occupied! Please choose another login.'
+errOperStatusURLIsOccupiedNoNewPage: 'URL is occupied! Can not add page.'
+
+errOperLangUnknown: 'Language is wrong!'
+errOperChangesAlreadyExist: 'Parameters have alredy been changed earlier!'
+errRoutingForModalWindowWrong: Routing Vars for modal window procedure were not defined
+errRoutingForModalWindowWrongScenario: Routing scenario param for modal window was not defined
+errFatalModal: >
+  <b>ATTENTION! There ia a problem in web-site scripting procedure!</b><br />
+  Most likely, we already know about this. However, you can also tell us about it in any convenient for you way!<br /><br />
+  <i>P.S. You will help us to solve this problem very quickly if you will transmit us error
+  reference that is shown below. For this, please, do not close this window before contacting us.
+  Or save screenshot of the modal window containing the reference code and transfer it to us
+  by email.</i>
+errReference: Reference to the error (error code)
+errPID: Person ID is wrong
+errIP: 'IP address does not fit the requirements!'
+errUserBrowserAgent: 'User-s Browser Agent does not fit the requiremenets!'
+errSessionLifeTime: 'User-s Browser Agent lifetime figure does not fit the requiremenets!'
+errSessSTSA: 'Session is not active!'
+errAccessItemNotFound: 'Access item was not found or You use wrong password!'
+errUAAC: 'UAAC is not valid!'
+
+# -------------- Claim typification
+claimReference: Reference to the claim (claim ID)
+
+# -------------- External
+extHTTPblockerHeader: Rentabox Personal Account
+extHTTPblockerMessageText: >
+  <i><b>ATTENTION!
+  Use are in unsafe mode now (secure connection was not initiated).</b><br ><br >
+  If you dont want to take the risk of private data loss, please,
+  follow this link to start using an ssl-certificate, which allows to carry out
+  a secure connection (that is encrypted)</i>:
+extHTTPblockerMessageNote: Go to secure mode
+extSiteblockerHeader: Restricted area
+extSiteblockerNote: Access to this web-site is temporary blocked.
+extSiteblockerAccessCodeName: Access code
+extSiteblockerBtn: CONTINUE
+
+ma_remote: Use remote action
+ma_auth: User authorization
+
+# -------------- MA Messages Headers
+ma_system_timing: Timing System
+ma_rendering_fault: Rendering procedure fault
+ma_rendering_success: Rendering procedure success
+ma_checker_db: Check form DB
+ma_checker_routing: Check routing
+ma_migrate_initialize: Migration init
+ma_migrate_make: Migration procedures
+ma_opt_change: Possible change
+ma_checker_action: Check method of the class
+ma_checker_form: Check data as form post
+ma_sql_insert: Insert data into DB
+ma_sql_update: Update data into DB
+ma_remote_success: Remote procedure success
+ma_auth_sess: User authorization session method
+
+# -------------- MODALs
+modal_head_callback: Callback
+modal_head_chpprof: Change Profile
+modal_head_getuaac: Get UAAC
+modal_head_bronya: Reserve a box
+modal_head_use_uaac: Activate UAAC
+modal_head_chupass: Change Password
+modal_body_add_mobile_top: >
+  You are going to add subscription to your mobile!
+modal_body_att_mobile_top: >
+  Please enter your mobile phone activation code!<br />
+modal_body_callback_note: We will contact you as soon as possible!
+modal_body_chpprof_note: We will cultivate executed data in the very near future!
+modal_body_getuaac_note: We will cultivate executed data in the very near future!
+modal_body_bronya_note: We will cultivate executed data in the very near future!
+modal_body_use_uaac_note: Account activation will be very short!
+modal_body_chupass_note: We will cultivate executed data in the very near future!
+modal_body_tsts_login_note: Push the putton only if You are absolutely shure on it!
+modal_body_tsts_email_note: Push the putton only if You are absolutely shure on it!
+modal_body_tsts_mobile_note: Push the putton only if You are absolutely shure on it!
+modal_body_add_email_note: A message with email usage activation code will be send to you in the near future!
+modal_body_add_mobile_note: A message with mobile usage activation code will be send to you in the near future!
+modal_body_att_mobile_note: Your mobile phone number will be activated in the near future!
+modal_footer_close: Close
+modal_proceed_ok_text: Thank You for the request!<br />We will contact you as soon as possible!
+modal_proceed_ok_btn: Continue using web-site
+modal_proceed_err_text: The data was not correct or you have no privileges to do so! FAULT!
+modal_proceed_err_btn: Continue using web-site
+modal_proceed_success_text: Your transaction was successfully executed!
+modal_proceed_err_code: Activation code fail (the code is wrong, already activated earlier or outdated)
+
+# -------------- EMAIL NOTIFICATIONS
+sendmail:
+  title:
+    text:
+      sm.err_modal.sm_callback: 'Technical error of modal window manipulations during "Callback" procedure at {{domain}}!'
+      sm.err_sender.sm_opinion: 'Technical error of modal window manipulations during "Review" procedure at {{domain}}!'
+      sm.err_sender.sm_reserve: 'Technical error of modal window manipulations during "Reserve" procedure at {{domain}}!'
+      sm.err_modal.ch_pprofile: 'Technical error of modal window manipulations during "Change user personal data" procedure at {{domain}}!'
+      sm.err_modal.getuaac: 'Technical error of modal window manipulations during "Get UAAC" procedure at {{domain}}!'
+      sm.err_modal.bronya: 'Technical error of modal window manipulations during "Reserve a box" procedure at {{domain}}!'
+      sm.err_modal.use_uaac: 'Technical error of modal window manipulations during "Activate UAAC" procedure at {{domain}}!'
+      sm.proc_modal.ch_pprofile: NEW CLAIM FOR CHANGE OF PERSON PROFILE DATA
+      sm.proc_modal.getuaac: NEW CLAIM FOR UAAC
+      sm.proc_modal.bronya: NEW CLAIM FOR BOX RESERVATION
+      sm.proc_modal.use_uaac: NEW UAAC ACTIVATION DATA
+      sm.proc_migrate.sm_migrate_pass: Super-access params on web-site {{domain}}!
+      sa.user_auth.aar: New registration of user account on web-site {{domain}}
+
+      sa.user_auth.email_block: YOUR USER EMAIL IS BLOCKED
+      sa.user_auth.sm_chpass: USER ACCOUNT ACCESS PASSWORD
+      sm.i_feedback.i_feedback_basic: 'Your request at {{domain}}'
+  content:
+    sm.user_auth.aar_att_email:
+      link_att: 'CONFIRM YOUR EMAIL'
+      link_sub: 'manage mail subscriptions'
+      link_block: 'block mailing'
+    sm.user_auth.email_act:
+      link_block: 'block mailing'
+    sa.user_auth.aar_email_act_s:
+      link_block: 'block mailing'
+    sa.user_auth.aar_email_block:
+      link_unblock: 'unblock mailing'
+    sa.user_auth.email_act:
+      link_block: 'block mailing'
+    sa.user_auth.email_block:
+      link_unblock: 'unblock mailing'
+sendsms:
+  msg:
+    sms.user_auth.aar_att_mobile: 'Your confirmation code is:'
+    sms.user_auth.att_mobile: 'Phone number is confirmed on web-site '
+    sms.user_auth.sms_chpass: 'Access password: '
+    sms.uaac.sms_send_uaac: 'Your UAAC: '
+    sms.i_callback.i_callback_basic: 'Thank you! We received Your request'
+    sms.i_cbr.i_cbr_basic: 'Thank you! Your reservation was initiated'
+
+# -------------- ПЕРЕХОД ПО ССЫЛКЕ С ЛАГОМ
+kicker:
+  aar_email_act: >
+    <p>Thank you for shoosing our company and congratulate!</p>
+    <p><b>Your email address has been just successfully confirmed.</b></p>
+    <p><i>Now you can receive email notifications and also use this email address to sign-in to your
+      personal web-site account and recover personal account access using this email!</i></p>
+  aar_email_act_s: >
+    <p>Thank you for shoosing our company and congratulate!</p>
+    <p><b>Your email address has been just successfully confirmed.</b></p>
+    <p><i>Now you can receive email notifications and also use this email address to sign-in to your
+      personal web-site account and recover personal account access using this email!</i></p>
+
+  ppc_wait_sec: >
+    <p>Unfortunately, we can not учусгеув the requested operation as you have too much number of attempts
+      in a very short period od time! <br /> <br />
+      To continue and try one more time, please, repeat your operation in {{wait_seconds}} seconds.</p>
+.........................
+
+# -------------- CONTENT
+content_arr_email_att_init: >
+  Your e-mail address was specified as a contact email while processing
+  user account registration actions on our web-site
+content_arr_email_att_submit_init: >
+  In case you are the real owner of this e-mail address and you agree to use it
+  in our web-service procedures - please,
+content_arr_email_att_submit_gotolink: follow this link
+content_arr_email_att_ignore: >
+  In case you did not do any user account registration actions on our web-site and this message
+  was sent to you by accident fortuitously - <strong>just ignore this message</strong>!
+content_arr_email_att_ps: >
+  P.S. You can always unsubscribe from receiving our web-mail service unwelcome emails.
+  For example, you can absolutely block receiving email messages from our service or just block
+  information messaging while this will not block service messaging such as recovering access to
+  user account by email.
+content_arr_email_att_confirm: >
+  In order to setup your actual e-mail subscriptions right now (this will automatically confirm
+  your willingness to use this e-mail address), please, follow this link:
+content_arr_email_att_reject: >
+  In order to stop receiving email messages from our web-server at all you have to follow
+  this link:
+content_email_activate_begin: >
+  Your e-mail address was successfully confirmed for usage on web-site
+content_email_activate_continue: >
+  Now you can receive information messages and do other actions linked with this e-mail and aimed to
+  obtaining the full range of our services and informational support in our company.
+content_email_activate_wishes: >
+  We hope that you will be pleasantly surprised by the high quality of our IT department work standards
+  and will not receive from us any unsolicited email letters or an excessive number of them.
+content_email_activate_care_1: >
+  We take care of you receive the information that is interesting exactly to you. You can simplify
+  us performing this task by choosing the elements of mailing list that are interesting to you.
+  To do this you need to authorize yourself on user account access page at
+content_email_activate_care_2: >
+  and setup your subscriptions
+content_email_activate_block: >
+  If necessary, you can always stop receiving any e-mail messages from our web-site at all. But in this
+  case you should be careful because after that it will have to make only very special actions to recover
+  your user access account on and will not receive actual info that may be very important right on time.
+  To make complete block of any e-mail messaging from our web-site, please, follow this link:
+content_aar_email_block_begin_start: >
+  Earlier your e-mail address was specified as a contact while registering a personal user account on web-site
+content_aar_email_block_begin_end: >
+  , but later it was not confirmed for any of the accounts and after following a specially created link
+  uasage of this email was FULLY BLOCKED
+content_aar_email_block_notes: >
+  This means that starting from this point of time you will not receive any information or
+  service messages as well as you will not be able to make any registration actions provided
+  by our service.
+content_aar_email_block_wishes: >
+  We hope that this lock is not associated with poor quality of our web-site servicing or any fears
+  of receiving from us a messanging spam!
+content_aar_email_block_unlock_main: >
+  Please note that you can always set up the usage and subscriptions of your e-mail address
+  after you sudenly unlock usage of this email. For this you need to follow this link
+content_aar_email_block_unlock_note: >
+  Subscription options will be activated after unlocking the e-mail address by following the link above
+  and after this in the personal account on web-site
+content_email_activate_start: >
+  Your e-mail address have been just unlocked and now it is available to use in personal user account
+  on web-site
+content_email_activate_note: >
+  This means that from this point of time and further You will be able to receive information messages and
+  do other user account registration actions using this e-mail.
+content_email_activate_wishes: >
+  We hope that you will be glad to acknowledge high quality of our service and you will no problems with
+  receiving from us a messanging spam!
+content_email_activate_final_begin: >
+  In case you will have some troubles or you will decide to reduce the number of incoming to you
+  messages, please, use the opportunity to configure your email subscriptions in personal user
+  account on our web-site
+content_email_activate_final_end: >
+  We look after our clients so that you can always block receiving from us any e-mail messages by touching
+  the link:
+content_email_block_start: >
+  Your e-mail address was just blocked for any usage on web-site
+content_email_block_content: >
+  This means that from this point of time and further You will not be receiving any information messages
+  so that you could not do any user account registration actions using this e-mail.
+content_email_block_wishes: >
+  We hope that this lock is not associated with poor quality of our web-site servicing or any fears
+  of receiving from us a messanging spam!
+content_email_block_unlock_main: >
+  Please note that you can always set up the usage and subscriptions of your e-mail address
+  after you sudenly unlock usage of this email. For this you need to follow this link
+content_email_block_unlock_note: >
+  Subscription options will be activated after unlocking the e-mail address by following the link above
+  and after this in the personal account on web-site
+content_sm_chpass_note: >
+  Somebody, probably it was You, activated our User Account Access Recovery procedure on web-site
+content_sm_chpass_pass: >
+  Please, remember or save your user account access password
+content_use_uaac_begin: >
+  Thank you for using our UAAC service!
+content_use_uaac_main: >
+  Your personal activation code for your account (UAAC)
+content_use_uaac_cont: >
+  Activisation code is needed to show
+  all information about your account, box and payments
+  in your private one in real time
+content_use_uaac_cont2: >
+  When your enter UAAC in your online account,
+  you will receive automatically a possibility to use
+   all services online!
+.............................................
+
+# -------------- ROLES
+roles_FINANCIER_header: Accountant office
+roles_FINANCIER_label: Accountant
+roles_DEVELOPER_header: Developer account
+roles_DEVELOPER_label: Devel
+roles_MODERATOR_RBOXRU_header: Moderator office
+roles_MODERATOR_RBOXRU_label: Moderator RU
+roles_MODERATOR_RBOXDE_header: Moderator office
+roles_MODERATOR_RBOXDE_label: Moderator DE
+.......................
+roles_DIRECTOR_label: Director
+roles_CLIENT_header: CLIENT personal account
+roles_CLIENT_label: Client
+
+# -------------- FINANCIALS
+txt_your_debt: Your debt
+txt_pay: You can pay to fund your account right now.
+txt_pay_2: >
+  Please checkout the amount You want to pay, email to receive the transaction result
+  and push the button
+
+txt_getuaac_no_contracts: >
+  Unfortunately we have no information about your contracts.<br /> To continue working with contracts You need
+  to request a UAAC code (User Account Activation Code.<br /> You can do it in any confortable for you way -
+  personally at our office (during your manager working time) or online - of course if you leaved us some contacts
+  data so that we can be shure that you receive what you want and no one else can do it also.<br />
+  To request your UAAC code online - please, leave us a message by clicking the button below.<br />
+  Our manager will contact with you after receiving and cultivating this request - you should believe it will be very quickly.<br />
+txt_auth_mana: Access management
+txt_tsts_login: Logins management
+txt_tsts_email: Emails management
+txt_tsts_mobile: Mobile phones management
+txt_your_debt: Your debt
+txt_mobile_att_requests: Requests to activate mobile
+....................
+event_finished: sale event finished
+text_about_us_1: >
+  <p>
+    RENTABOX is a young self-storage company that offers rent-a-box services
+    to the physical and commercial clients for any popular period that is
+    from 2-3 days to several years.
+    Modern life has its conditions, a person faces
+    the constant need to acquire new things - machinery, furniture and
+    different life-style goods. Their less perfect and more cumbersome, but still
+    having valuable precursors take up a lot of space, and extra
+    clutter in a small house no one needs. For items that are
+    still needed, but not used often, there are boxes of individual storage,
+    adapted for full provision the safety of a variety of things.
+  </p>
+  <p>
+    The service appeared 50 years ago in the USA. Today there is more
+    50 000 warehouses. This practice eventually spread to the Western
+    Europe, and in the beginning of the 21st century began to give sprouts in Eastern European
+    countries. Warehouses of individual storage, sooner or later should have been
+    appear in Russia - an urgent need for them was, it seems, always.
+    The modern Russian does not need to think about where to put a new one,
+    but still quite fit furniture to put in its place, say,
+    a cot or a sports complex for a child. With RENTABOX, you
+    you can save all existing things and buy new ones.
+  </p>
+  <p>
+    <b>You can place in RENTABOX warehouses:</ b>
+    <ul>
+      <li> Seasonal things </ li>
+      <li> Technique </ li>
+      <li> Furniture items </ li>
+      <li> Archive </ li>
+      <li> Inventory </ li>
+      <li> Sports equipment, etc. </ li>
+    </ul>
+  </p>
+  <p>
+     You can rent a box with an area of 1 square m. for any period.
+     If there is a need to change the leased premises for a larger
+     or smaller in size - let us know and we will provide boxing. Our
+     specialists are always ready to help with the choice of the best option,
+     which will be most beneficial and convenient. With RENTABOX you have everything
+     will be in place!
+  </p>
+text_about_us_2: >
+  <h3>Self-storage conditions</h3>
+  <p>
+    RENTABOX is a young self-storage company that offers rent-a-box services
+    to the physical and commercial clients for any popular period that is
+    from 2-3 days to several years.
+    Modern life has its conditions, a person faces
+    the constant need to acquire new things - machinery, furniture and
+    different life-style goods. Their less perfect and more cumbersome, but still
+    having valuable precursors take up a lot of space, and extra
+    clutter in a small house no one needs. For items that are
+    still needed, but not used often, there are boxes of individual storage,
+    adapted for full provision the safety of a variety of things.
+  </p>
+text_services: >
+  <h1>Moving and transportation services</h1>
+  <p>
+    RENTABOX Company has its own park of minivan cars Citroen Jumper with
+    a body volume of 15 cubic meters. At any convinient for You time our
+    transportation specialists will arrive, pack, load and deliver things
+    to our self-storage office. If it is necessary to transport large-sized
+    furniture they will disassemble it, securely pack it and deliver.
+  </p>
+text_insurance: >
+  <h1>Insurance for self-storage</h1>
+  <p style="text-align: justify">
+    <b>Insurance groups and conditions could not be combined.</b>
+  </p>
+  <p style="text-align: justify">
+    To protect your property you need to order an insurance certificate.
+    Our insurance partner Reason Global offers you a comprehensive
+    maintenance "Protection during storage".
+  </p>
+  <p style="text-align: justify">
+    The maximum insurance amount summ is 50 000 euros per client!
+    You may receive a higher insurance amount summ. For this we need accurate information
+    (type, quantity and terms of insurance), and also we need to
+    obtain the consent of the insurer.
+  </p>
+  <p style="text-align: justify">
+    <b> We could not insure some types of property </b>, including cash,
+     coins, precious metals, certificates, securities, animals, explosives, etc.
+  </p>
+  <p>
+  </p>
+  <p><b>Die Selbstbeteiligung beträgt pro Box 100 EUR.</b></p>
+documents_contract: 'Typical rent-a-box agreement'
+.....................
+key: Position key
+..........................

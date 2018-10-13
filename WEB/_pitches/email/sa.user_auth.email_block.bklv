@@ -1,0 +1,9 @@
+<p style="line-height: 138%; font: 900 14px Verdana; color: #222; padding-top: 0.3em">{{hd_appeal_dear_client}}</p>
+<p style="line-height: 138%; font: 900 13px Verdana; color: #222; padding-top: 0.3em">{{content_email_block_start}} {{domain}}.</p>
+<p style="line-height: 138%; font: 13px Verdana; color: #222; padding-top: 0.3em">{{content_email_block_content}}.</p>
+<p style="line-height: 138%; font: 900 12px Verdana; color: #222; padding-top: 0.3em">{{content_email_block_wishes}}</p>
+<p style="line-height: 138%; font: 12px Verdana; color: #222; padding-top: 0.3em">
+    {{content_email_block_unlock_main}} <a style="text-decoration: underline; color: #336699 !important; font-weight: 900" href="{{lnk_unblock_href}}">{{lnk_unblock_txt}}</a>.
+    {{content_email_block_unlock_note}} {{domain}}.
+</p>
+<p style="line-height: 138%; font: 11px Verdana; color: #222; padding-top: 0.3em">{{data_admin}}</p>

@@ -1,0 +1,223 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Integrated by BKLV-Robo [RBOX-3]
+ * Version: 3.0.2
+ * Sysmtem URL: http://bklv.ru/robo/
+ * User: webmaster.rentabox@bklv.ru
+ * Date: 23.05.2017
+ * Time: 13:02
+ * Tech support:
+ *  - url: http://bklv.ru/tech_support/
+ *  - email: rbox.support.tech@bklv.ru
+ *  - phone: +7(495)220-17-27
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+#=======================================================================================================================
+/** @var $this App */
+/** @var $layout_prefs array */
+/** @var $layout_code array */
+/** @var $layout_index string */
+/** @var $layout_event string */
+/** @var $layout_template string */
+/** @var $layout_ids array */
+/** @var $layout_js string */
+/** @var $layout_styles array */
+/** @var $layout_classes array */
+/** @var $custom_js array */
+/** @var $template RboxTemplateHTML */
+/** @var $lp array Layout params */
+/** @var $gs string Gets safe */
+#-----------------------------------------------------------------------------------------------------------------------
+$lp = array('layout_prefs' => $layout_prefs, 'layout_code' => $layout_code, 'layout_index' => $layout_index,
+    'layout_event' => $layout_event, 'layout_template' => $layout_template, 'layout_ids' => $layout_ids,
+    'layout_js' => $layout_js, 'layout_styles' => $layout_styles, 'layout_classes' => $layout_classes,
+    'custom_js' => $custom_js, 'template' => $template);
+$gs = $this->urlGetsSafe;
+#=======================================================================================================================
+$pixel = NULL;
+if (isset($this->pageParams['pixel']) && is_array($this->pageParams['pixel']) && $this->pageParams['pixel']) {
+    foreach ($this->pageParams['pixel'] as $px) {
+        $pixel .= '<img src="' . $px . '" height="0px" width="0px" style="margin: 0px; padding: 0px" />';
+    }
+}
+
+#=======================================================================================================================
+$lnk_event_css = NULL;
+$css = '/' . $layout_index . '/' . $layout_event . '.css';
+if (file_exists(INI::DIR_ASS . '/' . INI::DIR_ASS_CSS . '/' . $layout_code . $css)) {
+    $lnk_event_css = '
+        <link type="text/css" href="' . $layout_prefs['css'] . $layout_code . $css . '" rel="stylesheet" />';
+}
+#-----------------------------------------------------------------------------------------------------------------------
+$js = '/' . $layout_index . '/' . $layout_event . '.js';
+$lnk_event_js = '
+        <link type="text/css" href="' . $layout_prefs['css'] . $layout_code . $js . '" rel="stylesheet" />';
+#-----------------------------------------------------------------------------------------------------------------------
+$dir_css = $layout_prefs['css'] . $layout_code;
+$dir_js = $layout_prefs['js'] . $layout_code;
+#-----------------------------------------------------------------------------------------------------------------------
+if ($custom_js) {
+    foreach ($custom_js as $k => $v) {
+        $custom_js[$k] = '<script src="' . $layout_prefs['js'] . $v . '.js?' .
+            $this->d['init']['id']['get']['role'] . '=' . $this->userRole . '"></script>';
+    }
+    $custom_js = '
+        
+        <!-- / page custom js scripts -->
+        ' . implode(INI::NL . '        ', $custom_js) . '
+        <!-- // page custom js scripts -->';
+} else {
+    $custom_js = NULL;
+}
+
+#-----------------------------------------------------------------------------------------------------------------------
+if ($layout_js) {
+    $layout_js = '
+    <script src="' . $dir_js . '/' . $layout_js . '.js"></script>';
+}
+#=======================================================================================================================
+
+#=======================================================================================================================
+$modules = array('module_ckeditor' => NULL);
+$h = $layout_prefs[''] . 'assets/modules/';
+$module_scripts = array('module_ckeditor' => 'ckeditor/ckeditor.js');
+foreach ($module_scripts as $k => $v) {
+    $module_scripts[$k] = '
+        <script src="' . $h . $v . '"></script>';
+}
+foreach ($template->tabs as $k => $v) {
+    $i = 'module_ckeditor';
+    if (isset($v[$i]) && $v[$i]) {
+        $modules[$i] = $module_scripts[$i];
+    }
+}
+#=======================================================================================================================
+
+#=======================================================================================================================
+# <!DOCTYPE html>
+echo '<html lang="' . $this->userLang . '" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+
+        <!-- / Title -->
+        <title>' . $this->pageParams['title'] . '</title>
+        <!-- // Title -->
+    
+        <!-- / META TAGs -->
+        <meta charset="utf-8" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Language" content="' . $this->siteLang . '" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="title" content="' . $this->pageParams['title'] . '" />
+        <meta name="keywords" content="' . $this->pageParams['keywords'] . '" />
+        <meta name="description" content="' . $this->pageParams['description'] . '" />
+        <meta name="author" content="' . $this->pageParams['author'] . '" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="format-detection" content="address=no" />
+        <!-- // META TAGs -->
+
+        <!-- / FAVICONs -->
+        <link rel="apple-touch-icon" href="' . $layout_prefs['img'] . 'favicon.png" />
+        <link rel="shortcut icon" type="image/png" href="' . $layout_prefs['img'] . 'favicon.png" />
+        <link rel="shortcut icon" type="image/x-icon" href="' . $layout_prefs[''] . 'favicon.ico" />
+        <link rel="icon" type="image/png" href="' . $layout_prefs['img'] . 'favicon.png" />
+        <link rel="icon" type="image/x-icon" href="' . $layout_prefs[''] . 'favicon.ico" />
+        <link rel="icon" href="' . $layout_prefs[''] . 'favicon.ico" />
+        <!-- // FAVICONs -->
+
+        <!-- / ASSETS - CSS -->
+        <link type="text/css" href="' . $layout_prefs['css'] . 'bootstrap.min.css" rel="stylesheet" />
+        <link type="text/css" href="' . $layout_prefs['css'] . 'ie10-viewport-bug-workaround.css" rel="stylesheet" />
+        <link type="text/css" href="' . $layout_prefs['css'] . 'bklv/web.css" rel="stylesheet" />
+        <link type="text/css" href="' . $dir_css . '/' . $layout_index . '.css" rel="stylesheet" />
+        <link type="text/css" href="' . $dir_css . '/' . $layout_index . '.fixer.css" rel="stylesheet" />
+        <link type="text/css" href="' . $dir_css . '/' . $layout_index . '.header.css" rel="stylesheet" />
+        <link type="text/css" href="' . $dir_css . '/' . $layout_index . '.body.css" rel="stylesheet" />
+        <link type="text/css" href="' . $dir_css . '/' . $layout_index . '.footer.css" rel="stylesheet" />
+        <link type="text/css" href="' . $dir_css . '/' . $layout_index . '.modal.css" rel="stylesheet" />
+        <link type="text/css" href="' . $dir_css . '/' . $layout_code . '.css" rel="stylesheet" />' . $lnk_event_css . '
+        <!-- // ASSETS - CSS -->
+
+    </head>
+    <body leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" width="100%" height="100%">' . $pixel . '
+
+        <!-- page modal content scripts -->
+        <div id="' . $layout_ids['modal'] . '" class="modal fade"></div>
+        <!-- page modal content scripts -->
+               
+        <!-- page html content scripts -->
+        <table cellspacing="0" cellpadding="0" border="0" width="100%" height="100%">';
+
+#-----------------------------------------------------------------------------------------------------------
+$this->renderFile(INI::DIR_LAYOUTS . '/' . $layout_code . '/' . $layout_index . '.fixer' . INI::X, $lp, TRUE);
+$this->renderFile(INI::DIR_LAYOUTS . '/' . $layout_code . '/' . $layout_index . '.header' . INI::X, $lp, TRUE);
+#-----------------------------------------------------------------------------------------------------------
+echo '
+
+            <!-- / page html :: main content -->
+            <tr><td valign="top" style="height: 100%">
+                <table cellspacing="0" cellpadding="0" class="rbxc-tbl" align="center">
+                    <tr><td class="rbxc-td" style="padding-bottom: 60px; width: 100%">';
+#---------------------------------------------------------------------------------------------------
+$this->renderFile(INI::DIR_TEMPLATES . '/' . $layout_template . INI::X, $lp, TRUE);
+#---------------------------------------------------------------------------------------------------
+echo '
+                    </td></tr>
+                </table>
+            </td></tr>
+            <!-- // page html :: main content -->';
+
+#-----------------------------------------------------------------------------------------------------------
+$this->renderFile(INI::DIR_LAYOUTS . '/' . $layout_code . '/' . $layout_index . '.footer' . INI::X, $lp, TRUE);
+#-----------------------------------------------------------------------------------------------------------
+echo '
+        
+        </table>
+        <!-- page html content scripts -->
+        
+        <!-- / page main js scripts -->
+        <script src="' . $layout_prefs['js'] . 'jquery.min.js"></script>
+        <script src="' . $layout_prefs['js'] . 'bootstrap.min.js"></script>
+        <script src="' . $layout_prefs['js'] . 'use_strict.js"></script>
+        <script src="' . $layout_prefs['js'] . 'bklv/web/script.js"></script>
+        <script src="' . $dir_js . '/' . $layout_index . '/script.js"></script>' .
+    $layout_js .
+    $modules['module_ckeditor'] . '
+        <!-- // page main js scripts -->
+        
+        <!--[if lt IE 9]>
+        <script src="' . $layout_prefs['js'] . 'respond/ie8-responsive-routes-warning.js"></script>
+        <![endif]-->
+        
+        <!-- / ie-emulation -->
+        <script src="' . $layout_prefs['js'] . 'respond/ie-emulation-modes-warning.js"></script>
+        <!-- // ie-emulation -->
+
+        <!--[if lt IE 9]>
+        <script src="' . $layout_prefs['js'] . 'respond/html5shiv.min.js"></script>
+        <script src="' . $layout_prefs['js'] . 'respond/respond.min.js"></script>
+        <![endif]-->' . $custom_js . '
+
+        <script src="' . $layout_prefs['js'] . 'respond/html5shiv.min.js"></script>
+       
+        <script type="application/javascript">
+            function js_final_ckeditor() {
+                CKEDITOR.config.width = "900px";
+                CKEDITOR.config.removePlugins = "print,pastefromword,checkbox,radio,textfield,textarea,resize,about,save,preview";';
+if (RboxLK::$onDOMreadyEvents) {
+    foreach (RboxLK::$onDOMreadyEvents as $ar) {
+        if ($ar['type'] == 'wysiwyg') {
+            echo '
+                CKEDITOR.replace("' . $ar['id'] . '");';
+        }
+    }
+}
+echo '}
+            document.addEventListener("DOMContentLoaded", js_final_ckeditor);
+        </script>
+   </body>
+</html>';
+#=======================================================================================================================

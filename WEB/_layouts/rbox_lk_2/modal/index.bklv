@@ -1,0 +1,284 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Integrated by BKLV-Robo [RBOX-3]
+ * Version: 3.0.2
+ * Sysmtem URL: http://bklv.ru/robo/
+ * User: webmaster.rentabox@bklv.ru
+ * Date: 23.05.2017
+ * Time: 13:02
+ * Tech support:
+ *  - url: http://bklv.ru/tech_support/
+ *  - email: rbox.support.tech@bklv.ru
+ *  - phone: +7(495)220-17-27
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+#=======================================================================================================================
+/** @var $this App */
+/** @var $layout_prefs array */
+/** @var $layout_code array */
+/** @var $layout_index string */
+/** @var $layout_event string */
+/** @var $layout_template string */
+/** @var $layout_ids array */
+/** @var $layout_js string */
+/** @var $layout_styles array */
+/** @var $layout_classes array */
+/** @var $custom_js array */
+/** @var $template RboxTemplateHTML */
+/** @var $lp array Layout params */
+/** @var $gs string Gets safe */
+#-----------------------------------------------------------------------------------------------------------------------
+$lp = array('layout_prefs' => $layout_prefs, 'layout_code' => $layout_code, 'layout_index' => $layout_index,
+    'layout_event' => $layout_event, 'layout_template' => $layout_template, 'layout_ids' => $layout_ids,
+    'layout_js' => $layout_js, 'layout_styles' => $layout_styles, 'layout_classes' => $layout_classes,
+    'custom_js' => $custom_js, 'template' => $template);
+$gs = $this->urlGetsSafe;
+#=======================================================================================================================
+
+#=======================================================================================================================
+$sc = $this->d['process']['scenarios'];
+$scena = NULL;
+$section = 'modal';
+$ch = '';
+#=======================================================================================================================
+
+#=======================================================================================================================
+/** 1. Check modal window scenario routing */
+#-----------------------------------------------------------------------------------------------------------------------
+if (!isset(CFG::$initRouting[2]) || !CFG::$initRouting[2]) {
+    Logger::FixFE($this, __METHOD__, '{{ma_checker}}',
+        '{{ma_checker_routing}}', '{{errRouting}}', '{{errRoutingForModalWindowWrong}}');
+} #-----------------------------------------------------------------------------------------------------------------------
+else {
+    $scena = CFG::$initRouting[2];
+    if (!in_array($scena, $sc)) {
+        Logger::FixFE($this, __METHOD__, '{{ma_checker}}',
+            '{{ma_checker_routing}}', '{{errRouting}}', '{{errRoutingForModalWindowWrongScenario}}');
+    }
+}
+#-----------------------------------------------------------------------------------------------------------------------
+$proceed = NULL;
+if (isset(CFG::$initRouting[3]) && CFG::$initRouting[3]) {
+    $proceed = CFG::$initRouting[3];
+}
+#-----------------------------------------------------------------------------------------------------------------------
+$params = array();
+$use_template = FALSE;
+if ($scena == $this->d['process']['scenarios']['i_feedback']) {
+    $params = array('opers' => array('sendmail'), 'section' => $section, 'proceed' => $proceed);
+}
+if ($scena == $this->d['process']['scenarios']['i_callback']) {
+    $params = array('opers' => array('sendsms'), 'section' => $section, 'proceed' => $proceed);
+}
+if ($scena == $this->d['process']['scenarios']['i_cbr']) {
+    $params = array('opers' => array('sendsms'), 'section' => $section, 'proceed' => $proceed);
+}
+if ($scena == $this->d['process']['scenarios']['sendmail_callback']) {
+    $params = array('opers' => array('sendmail'), 'section' => $section, 'proceed' => $proceed);
+} elseif ($scena == $this->d['process']['scenarios']['request_chpprof']) {
+    $params = array('opers' => array('claim'), 'section' => $section, 'proceed' => $proceed);
+} # ..........................................................
+elseif ($scena == $this->d['process']['scenarios']['change_txt_content']) {
+    $params = array('opers' => array('change_txt_content'), 'section' => $section, 'proceed' => $proceed);
+}
+#=======================================================================================================================
+
+#=======================================================================================================================
+if ($scena == $this->d['process']['scenarios']['i_callback']) {
+    INI::ok();
+    $oper = $this->d['process']['operations']['sendsms'];
+    $section = $this->d['process']['sections']['i_callback'];
+    $scena_a = $this->d['process']['scenarios']['i_callback_basic'];
+    $tg_a = implode(INI::DELIMITER_INTER, array($oper, $section, $scena_a));
+    $data = [];
+    $data['name'] = (isset($this->post['name']) && $this->post['name']) ? $this->post['name'] : NULL;
+    $data['phone'] = (isset($this->post['phone']) && $this->post['phone']) ? $this->post['phone'] : NULL;
+    $data['message'] = (isset($this->post['message']) && $this->post['message']) ? $this->post['message'] : NULL;
+    $data['lang'] = (isset($this->post['lang']) && $this->post['lang']) ? $this->post['lang'] : NULL;
+    $data['domain'] = (isset($this->post['domain']) && $this->post['domain']) ? $this->post['domain'] : NULL;
+    $data['phone'] = str_split($data['phone']);
+    krsort($data['phone']);
+    $coun = 0;
+    $i = [];
+    $arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    foreach ($data['phone'] as $v) {
+        if ($coun < 10 && (in_array($v, $arr) || $v === "0")) {
+            $coun++;
+            $i[] = $v;
+        }
+    }
+    $data['phone'] = $i;
+    krsort($data['phone']);
+    $data['phone'] = implode($data['phone']);
+    if (isset($data['phone']) && $data['phone'] && preg_match(ChBase::MASK_MOBILE_RUS, '7' . $data['phone']) === 1) {
+        $tig_a = Task::makeNew($this, __METHOD__, $tg_a, json_encode($data, JSON_UNESCAPED_UNICODE));
+    }
+}
+#=======================================================================================================================
+
+#=======================================================================================================================
+if ($scena == $this->d['process']['scenarios']['make_order_hash'] && $this->userPID && CFG::$initPost['smc']) {
+    $$params = array();
+    $inv = DB::sqlSelectOne($this, 'tbNCPInvoices', array(array(
+        'ncp_invoice_id' => CFG::$initPost['order_id'], 'r_sm_customer' => CFG::$initPost['smc'])));
+    if (array_key_exists('ncp_invoice_id', $inv) && $inv['ncp_invoice_id'] == CFG::$initPost['order_id']) {
+        foreach (array('key', 'cost', 'name', 'email', 'order_id', 'comment', 'type') as $k) {
+            if (array_key_exists($k, CFG::$initPost)) {
+                $params[] = CFG::$initPost[$k];
+            }
+        }
+        echo md5(implode('', $params) . $this->d['api']['rfi_bank_online']['secret_key']);
+    } else {
+        echo 0000000000000;
+    }
+}
+#=======================================================================================================================
+
+#=======================================================================================================================
+elseif ($scena == $this->d['process']['scenarios']['make_order'] && $this->userPID && CFG::$initPost['smc']) {
+    if ($this->d['ncp_gateway_default']) {
+        #---------------------------------------------------------------------------------------------------------------
+        $ncp_gate = DB::sqlSelectOne($this, 'tbNCPGates', array(array('ncp_gateway_api' => $this->d['ncp_gateway_default'])));
+        $ncp_gateway_id = $ncp_gate['ncp_gateway_id'];
+        $ncp_system_id = $ncp_gate['r_ncp_system'];
+        $ncp_system = DB::sqlSelectOne($this, 'tbNCPSystems', array(array('ncp_system_id' => $ncp_system_id)));
+        $ncp_firm_id = $ncp_system['r_firm'];
+        $ncp_currency_id = $ncp_gate['ncp_gateway_currency'];
+        #---------------------------------------------------------------------------------------------------------------
+        $tb_name = 'tbNCPInvoices';
+        $sf_new = $this->d['db']['status_fields'][$this->t[$tb_name]]['list']['NOT_PAID'];
+        #---------------------------------------------------------------------------------------------------------------
+        $kkms_doc_id = $this->d['hash']['sm']['pref'] . md5($this->siteTime . $this->d['hash']['sm']['salt'] . rand(9, 9999));
+        echo DB::sqlInsertDict($this, __METHOD__, $tb_name, array(
+            'ncp_invoice_status' => $sf_new,
+            'ncp_invoice_status_ts' => $this->siteTime,
+            'ncp_invoice_amount' => CFG::$initPost['amount'],
+            'ncp_invoice_currency' => $ncp_currency_id,
+            'ncp_invoice_created_ts' => $this->siteTime,
+            'ncp_invoice_notes' => NULL,
+            'ncp_invoice_kkms_doc_id' => $kkms_doc_id,
+            'r_invoice_created_pid' => $this->userPID,
+            'r_invoice_email' => CFG::$initPost['email'],
+            'r_sm_customer' => CFG::$initPost['smc'],
+            'r_ncp_gateway' => $ncp_gateway_id,
+            't_ncp_system' => $ncp_system_id,
+            't_ncp_firm' => $ncp_firm_id,
+        ));
+    }
+}
+#=======================================================================================================================
+
+#=======================================================================================================================
+elseif ($params) {
+    $modal = new RboxModal($this, array_search($scena, $sc), $params, $this->post);
+    $ch = $modal->ch;
+    $img_src_logo = $layout_prefs['img'] . 'rbox/logo/company_logo_' . $this->siteHost . '.png';
+    $img_src_close = $layout_prefs['img'] . 'rbox/modal/close-btn.png';
+    $use_template = TRUE;
+}
+#=======================================================================================================================
+
+#=======================================================================================================================
+if ($use_template) {
+    echo '
+<div class="modal-dialog"><div class="modal-content">';
+    #-------------------------------------------------------------------------------------------------------------------
+    echo '
+    <div class="modal-header" style="padding: 8px; vertical-align: top !important"><h4 class="modal-title">
+        <img title="' . $this->pageParams['title'] . '" src="' . $img_src_logo . '" class="rbxm-header-logo" />
+        <div class="rbxm-header-text">' . $modal->mHead . '</div>
+        <div align="right"><img data-dismiss="modal" src="' . $img_src_close . '" class="rbxm-header-close" /></div>
+    </h4></div>
+    <div class="modal-body">';
+    #---------------------------------------------------------------------------------------------------------------
+    if ($modal->specialContent) {
+        echo '
+        <div class="modal-body"><p style="text-align: center">' . $modal->specialContent . '</p></div>';
+    } #---------------------------------------------------------------------------------------------------------------
+    else {
+        echo '
+        <p class="modal-title" style="padding-top: 12px">' . $modal->mContentTop . '</p>';
+        if ($modal->text) {
+            echo '
+        <p class="rblk-modal-text" style="padding-top: 2px">' . $modal->text . '</p>';
+        } elseif ($modal->form) {
+            echo '
+        <table class="rbxm-tbl" cellspacing="0" cellpadding="0" border="0">';
+            #-----------------------------------------------------------------------------------------------------------
+            foreach ($modal->form as $k => $v) {
+                $val = NULL;
+                if (isset($ch->values[$k])) {
+                    $val = $ch->values[$k];
+                }
+                if ($v['input'] == 'hidden') {
+                    echo '
+            <input type="hidden" id="' . $layout_ids['pref_input'] . $k . '" value="' . $val . '" />';
+                } elseif ($v['input'] == 'textarea') {
+                    $val = str_replace('|||$|||', INI::NL, $val);
+                    echo '
+            <tr><td colspan="2">
+                <p style="padding-top: 20px" class="rbxm-p"><label for="' . $layout_ids['pref_input'] . $k . '">' . $v['label'] . '</label></p>
+                <p><textarea rows="' . $v['rows'] . '" id="' . $layout_ids['pref_input'] . $k . '" placeholder="' .
+                        $v['pholder'] . '" style="width: 100%" class="rbxm-textarea">' . $val . '</textarea>' . $v['err'] . '</p>
+            </td></tr>';
+                } elseif ($v['input'] == 'select') {
+                    echo '
+            <tr><td>
+                <p style="padding-top: 20px" class="rbxm-p"><label for="' . $layout_ids['pref_input'] . $k . '">' . $v['label'] . '</label></p>
+            </td><td>
+                <select class="selectpicker rbx-select rbxm-select" id="' . $layout_ids['pref_input'] . $k . '">';
+                    $sk = explode('|', $v['option_keys']);
+                    $sv = explode('|', $v['option_values']);
+                    foreach ($sk as $i => $opt_key) {
+                        $selected = NULL;
+                        if (array_key_exists($val, $v['_select_'])) {
+                            if ($val == $opt_key) {
+                                $selected = ' selected';
+                            }
+                        } elseif ($v['option_def'] == $opt_key) {
+                            $selected = ' selected';
+                        }
+                        echo '
+                    <option value="' . $opt_key . '"' . $selected . '>' . $sv[$i] . '</option>';
+                    }
+                    echo '
+                </select>
+            </td></tr>';
+                } else {
+                    $type = NULL;
+                    if ($v['type'] == 'password') {
+                        $type = ' type="password"';
+                    }
+                    echo '
+            <tr>
+                <td class="rbxm-td"><label for="' . $layout_ids['pref_input'] . $k . '">' . $v['label'] . '</label></td>
+                <td class="rbxm-td"><input ' . $type . ' id="' . $layout_ids['pref_input'] . $k . '" class="rbxm-input" placeholder="' .
+                        $v['pholder'] . '" value="' . $val . '" />' . $v['err'] . '</td>
+            </tr>';
+                }
+            }
+            #-----------------------------------------------------------------------------------------------------------
+            echo '
+        </table>';
+        }
+        echo '
+        <p class="modal-title" style="padding-bottom: 12px">' . $modal->mContentNote . '</p>';
+    }
+    #---------------------------------------------------------------------------------------------------------------
+    echo '
+    </div>';
+    if (!$modal->specialContent) {
+        echo '
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">' . $modal->mButtonClose . '</button>
+        <button type="button" class="btn btn-success" ' . $modal->mJSProceedFunction . '>' . $modal->mButtonProceed . '</button>
+    </div>';
+    }
+    #-------------------------------------------------------------------------------------------------------------------
+    echo '
+</div></div>';
+}
+#=======================================================================================================================

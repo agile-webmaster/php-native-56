@@ -1,0 +1,95 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Integrated by BKLV-Robo [RBOX-3]
+ * Version: 3.0.2
+ * Sysmtem URL: http://bklv.ru/robo/
+ * User: webmaster.rentabox@bklv.ru
+ * Date: 23.05.2017
+ * Time: 13:02
+ * Tech support:
+ *  - url: http://bklv.ru/tech_support/
+ *  - email: rbox.support.tech@bklv.ru
+ *  - phone: +7(495)220-17-27
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+#=======================================================================================================================
+/** @var $this App */
+/** @var $layout_prefs array */
+/** @var $layout_code array */
+/** @var $layout_index string */
+/** @var $layout_event string */
+/** @var $layout_template string */
+/** @var $layout_ids array */
+/** @var $layout_js string */
+/** @var $layout_styles array */
+/** @var $layout_classes array */
+/** @var $custom_js array */
+/** @var $template RboxTemplateHTML */
+/** @var $lp array Layout params */
+/** @var $gs string Gets safe */
+/** @var $tab_key string */
+/** @var $tab_attr array */
+/** @var $field_key string */
+/** @var $field_attr array */
+#-----------------------------------------------------------------------------------------------------------------------
+$lp = array('layout_prefs' => $layout_prefs, 'layout_code' => $layout_code, 'layout_index' => $layout_index,
+    'layout_event' => $layout_event, 'layout_template' => $layout_template, 'layout_ids' => $layout_ids,
+    'layout_js' => $layout_js, 'layout_styles' => $layout_styles, 'layout_classes' => $layout_classes,
+    'custom_js' => $custom_js, 'template' => $template, 'tab_key' => $tab_key, 'tab_attr' => $tab_attr,
+    'field_key' => $field_key, 'field_attr' => $field_attr);
+$gs = $this->urlGetsSafe;
+#=======================================================================================================================
+
+#=======================================================================================================================
+$required = NULL;
+if (isset($field_attr['required'])) {
+    $required = ' (*)';
+}
+$dom_err = $layout_ids['pref_fld_err'] . $tab_key . '_' . $field_key;
+$dom_inp = $layout_ids['pref_fld_input'] . $tab_key . '_' . $field_key;
+$style_inp = NULL;
+if (isset($field_attr['_err'])) {
+    $style_inp = ' style="border-color: red"';
+}
+$js_inp = NULL;
+if (isset($field_attr['onkeyup'])) {
+    $js_inp = 'onkeyup="js_check_field(' . "'" . $tab_key . "'" . ', ' . "'" . $field_key . "'" . ')"';
+}
+$style_err = NULL;
+if (isset($field_attr['_err'])) {
+    $style_err = ' style="color: red"';
+}
+$txt_err = NULL;
+if (isset($field_attr['_err'])) {
+    $txt_err = $field_attr['_err'];
+}
+$type_inp = 'text';
+if (isset($field_attr['type'])) {
+    $type_inp = $field_attr['type'];
+}
+$key_inp = $tab_key . '[' . $field_key . ']';
+$val_inp = NULL;
+if (isset($field_attr['_val'])) {
+    $val_inp = $field_attr['_val'];
+}
+$ph_inp = NULL;
+if (isset($field_attr['pholder'])) {
+    $ph_inp = $field_attr['pholder'];
+}
+#=======================================================================================================================
+echo '
+<div class="rbx-top"></div>
+<div class="rbx-row">
+    <div class="rbx-label-140">' . $field_attr['label'] . $required . ': &nbsp;</div>
+    <div class="rbx-cell-input">
+        <input ' . $style_inp . ' id="' . $dom_inp . '" ' . $js_inp . ' class="rbx-input" type="' . $type_inp . '"
+                placeholder="' . $ph_inp . '" data-item="' . $field_key . '" data-group="' . $tab_key . '" name="' . $key_inp . '"
+                value="' . $val_inp . '" /><br/>
+        <div class="rbx-error-220"><span id="' . $dom_err . '" ' . $style_err . '>' . $txt_err . '</span></div>
+    </div>
+    <div class="rbx-cell-note">' . $field_attr['note'] . '</div>
+</div>';
+#=======================================================================================================================

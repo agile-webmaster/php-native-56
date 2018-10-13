@@ -1,0 +1,71 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Integrated by BKLV-Robo [RBOX-3]
+ * Version: 3.0.2
+ * Sysmtem URL: http://bklv.ru/robo/
+ * User: webmaster.rentabox@bklv.ru
+ * Date: 23.05.2017
+ * Time: 13:02
+ * Tech support:
+ *  - url: http://bklv.ru/tech_support/
+ *  - email: rbox.support.tech@bklv.ru
+ *  - phone: +7(495)220-17-27
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+#=======================================================================================================================
+$path = $_SERVER['DOCUMENT_ROOT'] . '/.bklv';
+/** @noinspection PhpIncludeInspection */
+include($path);
+#=======================================================================================================================
+
+/** Class BKLVsiteBlocker */
+class BKLVsiteBlocker
+{
+
+    #===================================================================================================================
+    /**
+     * chSite
+     * @var $app App
+     */
+    public static function checkIfAvailableForPublicUse(App &$app)
+    {
+        #---------------------------------------------------------------------------------------------------------------
+        if (isset(CFG::$initRouting[1]) &&
+            in_array(CFG::$initRouting[1], explode('|', $app->d['init']['routes_without_lock']))) {
+            return;
+        }
+        #---------------------------------------------------------------------------------------------------------------
+        Fix::cm(__METHOD__, '{{cm_BKLV_BKLVsiteBlocker_checkIfAvailableForPublicUse}}');
+        #---------------------------------------------------------------------------------------------------------------
+        $is_blocked = FALSE;
+        $a = $app->arch[$app->siteHost]['siteBlocker'];
+        $i = $app->d['init']['id']['cook']['ext']['siteBlocker_status'];
+        $x = $app->d['init']['id']['post']['ext']['siteBlocker_unlocker'];
+        $j = 'status_blocked';
+        $h = 'unlock_phrase';
+        $p = $app->post;
+        #---------------------------------------------------------------------------------------------------------------
+        if (isset($a[$j]) && $a[$j]) {
+            $h = $a[$h];
+            if (!isset($app->cook[$i]) or $app->cook[$i] != $h) {
+                $is_blocked = TRUE;
+                if ($p && isset($p[$x]) && $p[$x] == $h) {
+                    TOOL::setCookie($app, $i, $h, $app->siteTime, $app->siteHost);
+                    $is_blocked = FALSE;
+                }
+            }
+        }
+        #---------------------------------------------------------------------------------------------------------------
+        if ($is_blocked) {
+            $d = $app->d['pitch']['html']['bklv_siteblocker'];
+            $app->renderFileForTrace(INI::DIR_PITCH_HTML . $d . INI::X, array(), TRUE);
+            $app->finals(__METHOD__);
+        }
+        #---------------------------------------------------------------------------------------------------------------
+    }
+    #===================================================================================================================
+
+}

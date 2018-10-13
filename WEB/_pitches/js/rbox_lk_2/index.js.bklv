@@ -1,0 +1,423 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Integrated by BKLV-Robo [RBOX-3]
+ * Version: 3.0.2
+ * Sysmtem URL: http://bklv.ru/robo/
+ * User: webmaster.rentabox@bklv.ru
+ * Date: 23.05.2017
+ * Time: 13:02
+ * Tech support:
+ *  - url: http://bklv.ru/tech_support/
+ *  - email: rbox.support.tech@bklv.ru
+ *  - phone: +7(495)220-17-27
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+#=======================================================================================================================
+/** @var $this App */ /** @var $layout_prefs array */  /** @var $layout_code array */ /** @var $layout_index string */
+/** @var $layout_event string */ /** @var $layout_template string */  /** @var $layout_ids array */
+/** @var $layout_js string */ /** @var $layout_styles array */ /** @var $layout_classes array */
+/** @var $custom_js array */ /** @var $template RboxTemplateJS */ /** @var $lp array Layout params */
+/** @var $gs string Gets safe */
+#=======================================================================================================================
+
+$style_err = 'margin-top: 4px; background: #f00; color: #fff; border-radius: 4px; padding: 3px 8px';
+$m = A::d($this, 'm');
+$debt_amoun = $this->SMBalance;
+$da = 0; if ($debt_amoun) {
+    $da = $debt_amoun;
+}
+$smc = DB::sqlSelectOne($this, 'tbSMCustomers', array(array('r_sm_customer_person' => $this->userPID)));
+$smc = $smc['sm_customer_id'];
+
+?>
+
+var btn_sfields_hide = '<?= A::d($this, 'm')['rbox_btn_sfields_hide'] ?>';
+var btn_sfields_show = '<?= A::d($this, 'm')['rbox_btn_sfields_show'] ?>';
+
+var form_data_json = JSON.parse('<?=json_encode($template->strc);?>');
+
+var id_pref_tab_err = '<?=$layout_ids['pref_tab_form_err']?>';
+var id_pref_fld_input = '<?=$layout_ids['pref_fld_input']?>';
+var id_pref_fld_err = '<?=$layout_ids['pref_fld_err']?>';
+
+var style_err_found = '<div style="<?=$style_err?>"><?=A::d($this, 'm')['attention'] . ' ' .
+A::d($this, 'm')['errFormErrFound']?>!</div>';
+
+var symbols_standart = '<?=ChBase::SYMB_STANDART?>';
+var symbols_email = '<?=ChBase::SYMB_STANDART_EMAIL?>';
+
+var mess_err_empty = '<?=A::d($this, 'm')['errFormInputEmptyValue']?>';
+var mess_err_length_min = '<?=A::d($this, 'm')['errFormInputValueMin']?>';
+var mess_err_length_max = '<?=A::d($this, 'm')['errFormInputValueMax']?>';
+var mess_err_symb_standart = '<?=A::d($this, 'm')['errFormValidateSymbolsStandart']?>';
+var mess_err_symb_integer = '<?=A::d($this, 'm')['errFormValidateSymbolsInteger']?>';
+var mess_err_symb_email = '<?=A::d($this, 'm')['errFormInputEmail']?>';
+var mess_err_symb_duplicates = '<?=A::d($this, 'm')['errFormInputValueDiff']?>';
+
+var page_forms_errors = [];
+
+/**********************************************************************************************************************/
+/** 1. CLICK MANIPULATION FUNCTIONS */
+/**********************************************************************************************************************/
+/** 1.1. "LOCALIZATION change" */
+/** ----------------------------------------------------------------------------------------------------------------- */
+$('#<?=$layout_ids['lang-box']?>').click(function () {
+    var display = $('#<?=$layout_ids['lang-box-choose']?>').css('display');
+    if (display == 'none') {
+        $('#<?=$layout_ids['lang-box-choose']?>').css('display', 'block');
+    }
+    else {
+        $('#<?=$layout_ids['lang-box-choose']?>').css('display', 'none');
+    }
+});
+/** ----------------------------------------------------------------------------------------------------------------- */
+$(".<?=RboxLK::CLS_LANG_CHOOSE_ITEM?>").click(function () {
+    var id = $(this).attr('data-country');
+    $('#<?=$layout_ids['lang-box-current']?>').attr('src', '<?=$layout_prefs['img']?>localization/flag_' + id + '.png');
+    js_cookie_set('<?=$this->d['init']['id']['cook']['user']['language']?>', id);
+    window.location.reload(true);
+});
+/** ----------------------------------------------------------------------------------------------------------------- */
+/** 1.2. "CALLBACK" modal window */
+/** ----------------------------------------------------------------------------------------------------------------- */
+$('#<?=$layout_ids['button_callback_init']?>').click(function () {
+    var url = '<?=$layout_prefs['']?><?=$this->d['init']['routes']['sendmail_callback'];?>/';
+    $.ajax({url: url}).done(function (r) {
+        $('#<?=$layout_ids['modal']?>').html('').modal('show').html(r);
+    });
+});
+/** ----------------------------------------------------------------------------------------------------------------- */
+/** 1.3. GOTOP scrollinganimation */
+/** ----------------------------------------------------------------------------------------------------------------- */
+$('#<?=$layout_ids['button_go_top']?>').click(function () {
+    $('html, body').stop().animate({scrollTop: 0}, 500);
+    return false;
+});
+/** ----------------------------------------------------------------------------------------------------------------- */
+/** 1.4. "POSTHEADER style" maniputation */
+/** ----------------------------------------------------------------------------------------------------------------- */
+$('#<?=$layout_ids['button_postheader_off']?>').click(function () {
+    $('#<?=$layout_ids['postheader']?>').attr('style', 'display: none !important');
+    $('#<?=$layout_ids['button_postheader_off']?>').attr('style', 'display: none !important');
+    $('#<?=$layout_ids['button_postheader_on']?>').attr('style', 'display: block !important');
+    js_cookie_set('<?=$this->d['init']['id']['cook']['layout']['postheader_closed']?>',
+        '<?=Rbox::COOK_POSTHEADER_CLOSED?>');
+});
+/** ----------------------------------------------------------------------------------------------------------------- */
+$('#<?=$layout_ids['button_postheader_on']?>').click(function () {
+    $('#<?=$layout_ids['postheader']?>').attr('style', 'display: table-cell !important');
+    $('#<?=$layout_ids['button_postheader_off']?>').attr('style', 'display: block !important');
+    $('#<?=$layout_ids['button_postheader_on']?>').attr('style', 'display: none !important');
+    js_cookie_set('<?=$this->d['init']['id']['cook']['layout']['postheader_closed']?>',
+        '<?=Rbox::COOK_POSTHEADER_OPENED?>');
+});
+/** ----------------------------------------------------------------------------------------------------------------- */
+/** 1.5. "Change Person Profile Data" modal window */
+/** ----------------------------------------------------------------------------------------------------------------- */
+$('#<?=$layout_ids['button_chpprof_init']?>').click(function () {
+    var url = '<?=$layout_prefs['']?><?=$this->d['init']['routes']['request_chpprof'];?>/';
+    $.ajax({url: url}).done(function (r) {
+        $('#<?=$layout_ids['modal']?>').html('').modal('show').html(r);
+    });
+});
+/** ----------------------------------------------------------------------------------------------------------------- */
+/** 1.6. "Request UAAC" modal window */
+/** ----------------------------------------------------------------------------------------------------------------- */
+$('#<?=$layout_ids['button_getuaac_init']?>').click(function () {
+    var url = '<?=$layout_prefs['']?><?=$this->d['init']['routes']['request_getuaac'];?>/';
+    $.ajax({url: url}).done(function (r) {
+        $('#<?=$layout_ids['modal']?>').html('').modal('show').html(r);
+    });
+});
+/** ----------------------------------------------------------------------------------------------------------------- */
+/** 1.7. "Change User Pass" modal window */
+/** ----------------------------------------------------------------------------------------------------------------- */
+$('#<?=$layout_ids['button_chupass_init']?>').click(function () {
+    var url = '<?=$layout_prefs['']?><?=$this->d['init']['routes']['request_chupass'];?>/';
+    $.ajax({url: url}).done(function (r) {
+        $('#<?=$layout_ids['modal']?>').html('').modal('show').html(r);
+    });
+});
+/** ----------------------------------------------------------------------------------------------------------------- */
+/** 1.8. "Toggle STATUS Login" modal window */
+/** ----------------------------------------------------------------------------------------------------------------- */
+$('.<?=Rbox::CLS_LK_OPER_TSTS_LOGIN?>').click(function () {
+    var url = '<?=$layout_prefs['']?><?=$this->d['init']['routes']['tsts_login'];?>/';
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: {oper: $(this).attr('bklv-oper'), obj: $(this).attr('bklv-obj')}
+    }).done(function (r) {
+        $('#<?=$layout_ids['modal']?>').html('').modal('show').html(r);
+    });
+});
+/** ----------------------------------------------------------------------------------------------------------------- */
+/** 1.9. "Toggle STATUS Email" modal window */
+/** ----------------------------------------------------------------------------------------------------------------- */
+$('.<?=Rbox::CLS_LK_OPER_TSTS_EMAIL?>').click(function () {
+    var url = '<?=$layout_prefs['']?><?=$this->d['init']['routes']['tsts_email'];?>/';
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: {oper: $(this).attr('bklv-oper'), obj: $(this).attr('bklv-obj')}
+    }).done(function (r) {
+        $('#<?=$layout_ids['modal']?>').html('').modal('show').html(r);
+    });
+});
+/** ----------------------------------------------------------------------------------------------------------------- */
+/** 1.10. "Add Email" modal window */
+/** ----------------------------------------------------------------------------------------------------------------- */
+$('.<?=Rbox::CLS_LK_OPER_ADD_EMAIL?>').click(function () {
+    var url = '<?=$layout_prefs['']?><?=$this->d['init']['routes']['add_email'];?>/';
+    $.ajax({url: url}).done(function (r) {
+        $('#<?=$layout_ids['modal']?>').html('').modal('show').html(r);
+    });
+});
+/** ----------------------------------------------------------------------------------------------------------------- */
+/** 1.11. "Add Mobile" modal window */
+/** ----------------------------------------------------------------------------------------------------------------- */
+$('.<?=Rbox::CLS_LK_OPER_ADD_MOBILE?>').click(function () {
+    var url = '<?=$layout_prefs['']?><?=$this->d['init']['routes']['add_mobile'];?>/';
+    $.ajax({url: url}).done(function (r) {
+        $('#<?=$layout_ids['modal']?>').html('').modal('show').html(r);
+    });
+});
+/** ----------------------------------------------------------------------------------------------------------------- */
+/** 1.12. "Attach Mobile" modal window */
+/** ----------------------------------------------------------------------------------------------------------------- */
+$('.<?=Rbox::CLS_LK_OPER_ATT_MOBILE?>').click(function () {
+    var url = '<?=$layout_prefs['']?><?=$this->d['init']['routes']['att_mobile'];
+        ?>/?<?=$this->d['init']['id']['get']['mobile']?>=' + $(this).attr('bklv-obj');
+    $.ajax({url: url}).done(function (r) {
+        $('#<?=$layout_ids['modal']?>').html('').modal('show').html(r);
+    });
+});
+
+................................
+
+            /** ----------------------------------------------------------------------------------------------------- */
+            /** 3.2.3.4. CHECK SYMBOLS - TYPE "EMAIL"  */
+            /** ----------------------------------------------------------------------------------------------------- */
+            if (symbToCheck.hasOwnProperty(i)) {
+                if (symbToCheck[i]['type'] == 'duplicate_alter' || symbToCheck[i]['type'] == 'duplicate_init') {
+                    var input_id2 = '#' + id_pref_fld_input + form_grup + '_' + symbToCheck[i]['field'];
+                    var input_val2 = $(input_id2).val();
+                    mess = mess_err_symb_duplicates;
+                    err = null;
+                    if (input_val != input_val2) {
+                        err = mess;
+                    }
+                    else {
+                        if (input_val == input_val2) {
+                            js_mark_field_valid(form_grup, field_id);
+                            js_mark_field_valid(form_grup, symbToCheck[i]['field']);
+                        }
+                    }
+                    if (err) {
+                        custom_errors.push(err);
+                        check_field_result = false;
+                        js_mark_field_error(form_grup, symbToCheck[i]['field'], mess);
+                    }
+                }
+            }
+            /** ----------------------------------------------------------------------------------------------------- */
+
+        }
+    }
+    /** ============================================================================================================= */
+
+
+    /** ------------------------------------------------------------------------------------------------------------- */
+    /** 3.2.2. CHECK-OUT INPUT VALUE */
+    /** ------------------------------------------------------------------------------------------------------------- */
+    /** 3.2.2.1. CHECK IF REQUIRED */
+    /** ------------------------------------------------------------------------------------------------------------- */
+    if (field_requirements['required'] != undefined && field_requirements['required']) {
+        if (js_check_not_empty(input_val) == false) {
+            check_field_result = false;
+            js_mark_field_error(form_grup, field_id, mess_err_empty);
+        }
+        else {
+            js_mark_field_valid(form_grup, field_id);
+        }
+    }
+    else {
+        if (input_val == '') {
+            js_mark_field_valid(form_grup, field_id);
+        }
+    }
+    /** ------------------------------------------------------------------------------------------------------------- */
+    /** 3.2.2.2. CHECK-OUT MINIMUM LENGTH */
+    /** ------------------------------------------------------------------------------------------------------------- */
+    if (field_requirements['minLength'] != undefined && check_field_result == true && input_val != '') {
+        if (js_check_length_min(input_val, field_requirements['minLength']) == false) {
+            mess = mess_err_length_min.replace('{{v}}', field_requirements['minLength']);
+            js_mark_field_error(form_grup, field_id, mess);
+            check_field_result = false;
+        }
+        else {
+            js_mark_field_valid(form_grup, field_id);
+        }
+    }
+    /** ------------------------------------------------------------------------------------------------------------- */
+    /** 3.2.2.3. CHECK-OUT MAXIMUM LENGTH */
+    /** ------------------------------------------------------------------------------------------------------------- */
+    if (field_requirements['maxLength'] != undefined && check_field_result == true && input_val != '') {
+        if (js_check_length_max(input_val, field_requirements['maxLength']) == false) {
+            mess = mess_err_length_max.replace('{{v}}', field_requirements['maxLength']);
+            js_mark_field_error(form_grup, field_id, mess);
+            check_field_result = false;
+        }
+        else {
+            js_mark_field_valid(form_grup, field_id);
+        }
+    }
+    /** ============================================================================================================= */
+
+    /** ------------------------------------------------------------------------------------------------------------- */
+    /** 3.2.4. AGGREGATE FILTER ERRORS */
+    /** ------------------------------------------------------------------------------------------------------------- */
+    var errs = '';
+    for (i in custom_errors) {
+        if (custom_errors.hasOwnProperty(i) && custom_errors[i]) {
+            if (errs) {
+                errs += " " + custom_errors[i];
+            } else {
+                errs = custom_errors[i];
+            }
+        }
+    }
+    /** ------------------------------------------------------------------------------------------------------------- */
+    if (errs != "") {
+        js_mark_field_error(form_grup, field_id, errs);
+    }
+    /** ============================================================================================================= */
+
+    /** ------------------------------------------------------------------------------------------------------------- */
+    /** 3.2.5. FINALIZE */
+    /** ------------------------------------------------------------------------------------------------------------- */
+    return check_field_result;
+    /** ============================================================================================================= */
+
+}
+/* ================================================================================================================== */
+
+/**********************************************************************************************************************/
+/** 4. CSS MANIPULATIONS */
+/**********************************************************************************************************************/
+/** 4.1. MARK FIELDS - ERROR STYLE */
+/** ----------------------------------------------------------------------------------------------------------------- */
+function js_mark_field_error(form_grup, field_id, err_text) {
+    var id = form_grup + '_' + field_id;
+    var input_id = '#' + id_pref_fld_input + id;
+    var err_id = '#' + id_pref_fld_err + id;
+    page_forms_errors[form_grup] = true;
+    $(input_id).css('border', '1px red solid');
+    $(err_id).text(err_text).css('color', '#f00').css('margin-right', '10px');
+}
+/** ----------------------------------------------------------------------------------------------------------------- */
+/** 4.2. MARK FIELDS - VALID STYLE */
+/** ----------------------------------------------------------------------------------------------------------------- */
+function js_mark_field_valid(form_grup, field_id) {
+    var id = form_grup + '_' + field_id;
+    var input_id = '#' + id_pref_fld_input + id;
+    var err_id = '#' + id_pref_fld_err + id;
+    $(input_id).css('border', '1px #bbb solid');
+    $(err_id).html("").text(escape('-')).css('color', '#fff').css('margin-right', '10px');
+}
+/* ================================================================================================================== */
+
+var tmp_err_empty = '<?=A::d($this, 'm')['errFormInputEmptyValue']?>';
+var tmp_err_symb_email = '<?=A::d($this, 'm')['errFormInputEmail']?>';
+var tmp_err_symb_integer = '<?=A::d($this, 'm')['errFormValidateSymbolsInteger']?>';
+var tmp_pref_err_summ = '<?=$m['summ']?> - ';
+var tmp_pref_err_email = '<?=$m['email']?> - ';
+
+function js_make_payment(input) {
+
+    // Сервисные переменные / Service params
+    var err_am;
+    var err_em;
+    var x;
+
+    // сценарий завершения / final scenario
+    if (input.val() == '<?=$m['rbox_btn_continue']?>') {
+        if ($("#<?=$layout_ids['input_pay_check']?>").attr('bklv') == 'submit') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // сценарий начала / init scenario
+    // сценарий начала / init scenario ==> Сумма / Amount
+    x = "#<?=$layout_ids['input_pay_cost_amount_init']?>";
+    var am = $(x).val();
+    if (js_check_not_empty(am) == false) {
+        $(x).css('border', '1px red solid');
+        alert(tmp_pref_err_summ + tmp_err_empty);
+        return false;
+    }
+    if (err_am = js_check_symbols_integer(am, tmp_err_symb_integer)) {
+        (x).css('border', '1px red solid');
+        alert(tmp_pref_err_summ + err_am);
+        return false;
+    }
+    // if (am > window.debt) {$(x).css('border', '1px red solid'); alert('<?=$m['txt_summ_more_that_debt']?>'); return false;}
+    // сценарий начала / init scenario ==> Имейл / Email
+    x = '#<?=$layout_ids['input_pay_email_address_init']?>';
+    var em = $(x).val();
+    if (js_check_not_empty(em) == false) {
+        $(x).css('border', '1px red solid');
+        alert(tmp_pref_err_email + tmp_err_empty);
+        return false;
+    }
+    if (err_em = js_check_symbols_email(em, tmp_err_symb_email)) {
+        $(x).css('border', '1px red solid');
+        alert(tmp_pref_err_email + err_em);
+        return false;
+    }
+
+    // успешная обработка / success execution
+    $("#<?=$layout_ids['input_pay_cost_amount']?>").val(am);
+    $("#<?=$layout_ids['input_pay_email_address']?>").val(em);
+    var url = '<?=$layout_prefs[''] . $this->d['init']['routes']['make_order']?>/';
+    $.ajax({type: "POST", url: url, data: {amount: am, email: em, smc: '<?=$smc?>'}}).done(function (order_id) {
+        $("#<?=$layout_ids['input_pay_order_id']?>").val(order_id);
+        var url = '<?=$layout_prefs[''] . $this->d['init']['routes']['make_order_hash']?>/';
+        var key = $("#<?=$layout_ids['input_pay_key']?>").val();
+        var cost = $("#<?=$layout_ids['input_pay_cost_amount']?>").val();
+        var name = $("#<?=$layout_ids['input_pay_name']?>").val();
+        var email = $("#<?=$layout_ids['input_pay_email_address']?>").val();
+        var comment = $("#<?=$layout_ids['input_pay_comment']?>").val();
+        var type = $("#<?=$layout_ids['input_pay_type_id']?>").val();
+        $.ajax({
+            type: "POST", url: url, data: {
+                key: key, cost: cost, name: name, email: email, order_id: order_id,
+                comment: comment, type: type, smc: '<?=$smc?>'
+            }
+        }).done(function (order_hash) {
+            $("#<?=$layout_ids['input_pay_check']?>").val(order_hash);
+            $("#<?=$layout_ids['input_pay_check']?>").attr('bklv', 'submit');
+        });
+    });
+    $('#<?=$layout_ids['inputs_pay']?>').toggle();
+    $('#<?=$layout_ids['inputs_pay_txt']?>').toggle();
+    $('#<?=$layout_ids['input_pay_cost_amount_init']?>_').html(am);
+    $('#<?=$layout_ids['input_pay_email_address_init']?>_').html(em);
+    input.val('<?=$m['rbox_btn_continue']?>');
+
+    return false;
+
+}
+
+function change_txt_content(sind, lang, index) {
+    var url = '<?=$layout_prefs['']?><?=$this->d['init']['routes']['request_chcontent'];?>/';
+    console.log(url);
+    $.ajax({url: url}).done(function (r) {
+        $('#<?=$layout_ids['modal']?>').html('').modal('show').html(r);
+    });
+}

@@ -1,0 +1,121 @@
+#fs_text_block-overlay {
+    background: linear-gradient(rgba(255, 255, 255, 0), #eff6f8) repeat scroll 0 0 rgba(0, 0, 0, 0);
+    height: 145px;
+    margin: -145px 9px 5px 0;
+    position: relative;
+    z-index: 1;
+}
+
+.comments .send-post-wrap {
+    width: auto;
+}
+
+.comments {
+    height: 430px;
+}
+
+.steps-title ul li span {
+    border-radius: 50px;
+}
+
+ul.lang {
+    z-index: 2;
+}
+
+header .top .logo {
+    background-size: contain !important;
+}
+
+@media (max-width: 1199px) {
+    header .bottom ul.top-menu > li > a {
+        padding-top: 38px;
+    }
+
+    .steps-title ul li h2 {
+        font-size: 15px;
+    }
+
+    .steps-title ul li:before {
+        font-size: 15px;
+        width: 26px;
+        height: 26px;
+        line-height: 26px;
+        top: 20px;
+    }
+
+    .steps-title ul li {
+        padding-left: 57px;
+        padding-top: 25px;
+        padding-right: 0px;
+    }
+
+    .steps-title ul li.active span.choose,
+    .steps-title ul li.choosed span.refresh {
+        display: table-cell;
+        vertical-align: middle;
+        padding-top: 0px;
+    }
+
+    .steps-title ul li p br {
+        display: none !important;
+    }
+}
+
+/**������������� ��������� ������ **/
+
+@media (max-width: 991px) {
+    .footer_links a {
+        top: 0px !important;
+    }
+
+    header .bottom ul.top-menu > li > a {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 767px) {
+    header .top .what-is,
+    .slider-wrap,
+    header .bottom ul.top-menu {
+        display: none
+    }
+
+    header .phone {
+        text-align: left;
+    }
+
+    header .top .menu-btn {
+        margin-top: 22px;
+    }
+
+    header .top .cabinet {
+        margin-top: 0px;
+    }
+
+    header .top {
+        padding-bottom: 12px;
+    }
+
+    header .bottom .search {
+        top: -134px;
+    }
+
+    ul.lang {
+        top: 86px;
+    }
+
+    header .middle {
+        height: 45px;
+    }
+
+    .main-links {
+        margin-top: 15px;
+        z-index: 1;
+        position: relative;
+    }
+
+    .steps-title ul li {
+        padding-right: 15px;
+    }
+
+}

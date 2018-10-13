@@ -1,0 +1,7 @@
+mail_sender:
+  webmaster:
+    name: 'RENTABOX Deutschland'
+    sign: >
+      Mit freundlichen Grüßen,<br />
+      Website-Betreiber rentabox24.de<br />
+      wm@self-storage.online

@@ -1,0 +1,8 @@
+name:
+  label: Name
+phone:
+  label: Phone
+email:
+  label: Email
+message:
+  label: Message

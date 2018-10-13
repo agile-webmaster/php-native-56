@@ -1,0 +1,22 @@
+note:
+  style: ' width: 220px'
+  input: text
+  useValue: 1
+pr_for_header_left:
+  checkSymbolList:
+    - type: integer
+  style: ' width: 40px'
+  input: text
+  useValue: 1
+used_in_under_clock:
+  checkSymbolList:
+    - type: integer
+  style: ' width: 40px'
+  input: text
+  useValue: 1
+used_in_header_bottom:
+  checkSymbolList:
+    - type: integer
+  style: ' width: 40px'
+  input: text
+  useValue: 1

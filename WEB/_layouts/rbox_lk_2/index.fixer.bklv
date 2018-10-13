@@ -1,0 +1,165 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Integrated by BKLV-Robo [RBOX-3]
+ * Version: 3.0.2
+ * Sysmtem URL: http://bklv.ru/robo/
+ * User: webmaster.rentabox@bklv.ru
+ * Date: 23.05.2017
+ * Time: 13:02
+ * Tech support:
+ *  - url: http://bklv.ru/tech_support/
+ *  - email: rbox.support.tech@bklv.ru
+ *  - phone: +7(495)220-17-27
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+#=======================================================================================================================
+/** @var $this App */
+/** @var $layout_prefs array */
+/** @var $layout_code array */
+/** @var $layout_index string */
+/** @var $layout_event string */
+/** @var $layout_template string */
+/** @var $layout_ids array */
+/** @var $layout_js string */
+/** @var $layout_styles array */
+/** @var $layout_classes array */
+/** @var $custom_js array */
+/** @var $template RboxTemplateHTML */
+/** @var $lp array Layout params */
+/** @var $gs string Gets safe */
+#-----------------------------------------------------------------------------------------------------------------------
+$lp = array('layout_prefs' => $layout_prefs, 'layout_code' => $layout_code, 'layout_index' => $layout_index,
+    'layout_event' => $layout_event, 'layout_template' => $layout_template, 'layout_ids' => $layout_ids,
+    'layout_js' => $layout_js, 'layout_styles' => $layout_styles, 'layout_classes' => $layout_classes,
+    'custom_js' => $custom_js, 'template' => $template);
+$gs = $this->urlGetsSafe;
+#=======================================================================================================================
+
+
+#===================================================================================================================
+$u = $sys_index = $this->sysURLs['homepage'];
+if ($u) {
+    $u .= '/';
+}
+$sys_root = $layout_prefs['sys'] . $u;
+$sys_page = $this->pageSysSchema[$sys_index];
+#-------------------------------------------------------------------------------------------------------------------
+$lk_class = 'rbxf-goto-lk';
+$lk_lnk_title = $this->pageParams['title'];
+$lk_lnk_name = $this->pageParams['name'];
+#-------------------------------------------------------------------------------------------------------------------
+$src_img_flag_current = $layout_prefs['img'] . 'localization/flag_' . $this->userLang . '.png';
+$src_img_selector_flag = $layout_prefs['img'] . 'localization/flag_select.png';
+#-------------------------------------------------------------------------------------------------------------------
+$e = '
+        <a class="' . $lk_class . '" href="' . $layout_prefs[''] . $gs . '" title="' . $lk_lnk_title . '">' .
+    $lk_lnk_name . '</a>';
+if ($this->userPID) {
+    $e = '
+        <a href="' . $layout_prefs[''] . 'user_exit/' . $gs . '">' . mb_strtolower(A::d($this, 'm')['exit']) . '</a>';
+}
+#===================================================================================================================
+
+#===================================================================================================================
+echo '
+
+    <!-- / page html :: fixer -->
+    <tr><td><table cellspacing="0" cellpadding="0" border="0" class="rbxf">
+        <tr><td class="rbxf-area" valign="top">
+            <table cellspacing="0" cellpadding="0" border="0" class="rbxf-wrap" align="center"><tr>
+                <td nowrap class="rbxf-goto">
+                    <a class="rbxf-goto-home" href="' . $sys_root . $gs . '"
+                        title="' . $sys_page['title'] . '">' . $sys_page['name'] . '</a>
+                    | ' . $e . '
+                </td>
+                <td class="rbxf-plnk-area">
+                    <table cellspacing="0" cellpadding="0" border="0" align="right" class="rbxf-plnk-tbl"><tr>';
+#===================================================================================================
+foreach ($this->pageSysSchema as $k => $v) {
+    if (isset($v['_fixed_md']) && $v['_fixed_md']) {
+        $c = NULL;
+        if (isset($this->initSiteRouting[1]) && $k == $this->initSiteRouting[1]) {
+            $c = ' rbxf-plnk-active';
+        }
+        $i = $k;
+        if ($i) {
+            $i .= '/';
+        }
+        #-----------------------------------------------------------------------------------------------
+        echo '
+                        <td class="rbxf-plnk-item ' . $c . '"><nobr>
+                            <a class="rbxf-plnk-lnk" href="' . $layout_prefs['sys'] . $i . $gs . '" title="' . $v['title'] . '">' .
+            $v['name'] . '</a></nobr></td>
+                        <td class="rbxf-plnk-inter"></td>';
+    }
+}
+#===================================================================================================
+echo '
+                    </tr></table>
+                </td>
+                <td nowrap class="rbxf-adpm-area">
+                    <button type="button" class="rbxf-adpm-box" data-toggle="collapse"
+                            data-target="#' . $layout_ids['menu-adaptive'] . '" aria-expanded="false"
+                            aria-controls="' . $layout_ids['menu-adaptive'] . '" style="margin: 0px">
+                        <span class="rbxf-adpm-span"></span>
+                        <span class="rbxf-adpm-span"></span>
+                        <span class="rbxf-adpm-span"></span>
+                    </button>
+                </td>
+                <td class="rbxf-lang-area" id="' . $layout_ids['lang-box'] . '">
+                    <img class="rbxf-lang-flag" id="' . $layout_ids['lang-box-current'] . '" src="' . $src_img_flag_current . '" />
+                    <img class="rbxf-lang-open" src="' . $src_img_selector_flag . '" />
+                    <div id="' . $layout_ids['lang-box-choose'] . '" style="position: relative; display: none">
+                        <div class="rbxf-lang-box">';
+foreach ($this->lang as $k => $v) {
+    echo '
+                            <img title="' . $v['name'][$this->userLang] . '" 
+                                class="rbxf-lang-chse ' . RboxLK::CLS_LANG_CHOOSE_ITEM . '"
+                                src="' . $layout_prefs['img'] . 'localization/flag_' . $k . '.png" data-country="' . $k . '" />
+                            <br />';
+}
+echo '
+                        </div>
+                    </div>
+                </td>
+            </tr></table>
+        </td></tr>
+        <tr class="rbxf-mlnk-area"><td valign="top" class="rbxf-mlnk-wrap">
+            <div id="' . $layout_ids['menu-adaptive'] . '" class="navbar-collapse collapse rbxf-mlnk-navy">';
+#===========================================================================================================
+
+#===========================================================================================================
+foreach ($this->pageSysSchema as $k => $v) {
+    if (isset($v['_fixed_md']) && $v['_fixed_md']) {
+        $i = $k;
+        if ($i) {
+            $i .= '/';
+        }
+        $class_add = '';
+        if (!isset($c)) {
+            $c = 1;
+        } else {
+            $c++;
+        }
+        if (!$c) {
+            $class_add = " rbxf-mlnk-first";
+        }
+        #-------------------------------------------------------------------------------------------------------
+        echo '
+                <a class="rbxf-mlnk-lnk" href="' . $layout_prefs['sys'] . $i . $gs . '" title="' . $v['title'] . '">
+                    <p class="rbxf-mlnk-item' . $class_add . '">' . $v['name'] . '</p>
+                </a>';
+    }
+}
+#===========================================================================================================
+
+#===========================================================================================================
+echo '
+            </div>        
+        </td></tr>
+    </table></td></tr>
+    <!-- // page html :: fixer -->';
+#===================================================================================================================

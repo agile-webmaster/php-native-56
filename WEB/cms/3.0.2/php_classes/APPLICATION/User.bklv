@@ -1,0 +1,177 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Integrated by BKLV-Robo [RBOX-3]
+ * Version: 3.0.2
+ * Sysmtem URL: http://bklv.ru/robo/
+ * User: webmaster.rentabox@bklv.ru
+ * Date: 23.05.2017
+ * Time: 13:02
+ * Tech support:
+ *  - url: http://bklv.ru/tech_support/
+ *  - email: rbox.support.tech@bklv.ru
+ *  - phone: +7(495)220-17-27
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+#=======================================================================================================================
+$path = $_SERVER['DOCUMENT_ROOT'] . '/.bklv';
+/** @noinspection PhpIncludeInspection */
+include($path);
+#=======================================================================================================================
+
+/** Basic user attributes manipulation class */
+class User
+{
+
+    #===================================================================================================================
+    public static function updateSMFinanceForUser(App &$app, $customer)
+    {
+
+        #---------------------------------------------------------------------------------------------------------------
+        if ($app->siteOptModality) {
+            return;
+        }
+        if (!$customer) {
+            return;
+        }
+        #---------------------------------------------------------------------------------------------------------------
+        $smc_ = RboxRemote::getDataReal($app, 'getSMCustomer_Full_lim1_v1', $customer);
+        if (!isset($smc_[1]) || !$smc_[1]) {
+            return;
+        }
+        ...................
+
+    }
+}
+}
+}
+#===================================================================================================================
+
+#===================================================================================================================
+public
+static function updateCabinet(App &$app)
+{
+    $ak = substr($app->userPID, 0, 12) . '.' . substr($app->userSession, 0, 6) . '.' . substr($app->userSession, -6);
+    $arch_sys = $app->arch[$app->arch[$app->siteHost]['arch'][$app->sysIndex]];
+    $s = '';
+    if (isset($arch_sys['https']) && $arch_sys['https']) {
+        $s = 's';
+    }
+    $g = $app->d['init']['id']['get'];
+    $url = 'http' . $s . '://' . $app->urls[$app->sysIndex];
+    $url .= '/?' . $g['route'] . '=' . $app->d['init']['routes']['remote'] . '&' . $g['auth_key'] . '=' . $ak;
+    $app->pageParams['pixel'][] = $url;
+}
+
+#===================================================================================================================
+
+#===================================================================================================================
+public
+static function updateSMFinance(App &$app)
+{
+    User::updateCabinet($app);
+    #---------------------------------------------------------------------------------------------------------------
+    if ($app->siteOptModality) {
+        return;
+    }
+    #---------------------------------------------------------------------------------------------------------------
+    $smc = DB::sqlSelectOne($app, 'tbSMCustomers', array(array('r_sm_customer_person' => $app->userPID)));
+    if (!isset($smc['sm_customer_id']) || !$smc['sm_customer_id']) {
+        return;
+    }
+    #---------------------------------------------------------------------------------------------------------------
+    $app->SMCustomerID = $smc['sm_customer_id'];
+    $smc_ = RboxRemote::getDataReal($app, 'getSMCustomer_Full_lim1_v1', $app->SMCustomerID);
+    if (!isset($smc_[1]) || !$smc_[1]) {
+        return;
+    }
+    #---------------------------------------------------------------------------------------------------------------
+    $am = RboxRemote::getDataReal($app, 'calcSMCustomerBalance_AsInBitrixV3_v1', $app->SMCustomerID);
+    $smc_am = 0;
+    if (isset($am[1]['summ'])) {
+        $smc_am = round($am[1]['summ'], 3);
+        $app->SMBalance = $smc_am * 1;
+    }
+    #---------------------------------------------------------------------------------------------------------------
+    $smc['sm_customer_lastupdated_ts'] = $app->siteTime;
+    $smc['sm_customer_balance_am'] = $app->SMBalance;
+    $smc['sm_customer_qr'] = json_encode($smc_[1]);
+    DB::sqlUpdateDict($app, __METHOD__, 'tbSMCustomers', $smc);
+    #---------------------------------------------------------------------------------------------------------------
+    $filter = array('r_sm_customer_person' => $app->userPID);
+    $app->userSMCustomers = DB::sqlSelect($app, 'tbSMCustomers', array($filter));
+    #---------------------------------------------------------------------------------------------------------------
+    $sm_contracts = DB::sqlSelect($app, 'tbSMContracts', array(array('r_sm_customer' => $app->SMCustomerID)));
+    $smcc_ = RboxRemote::getDataReal($app, 'getSMCustomerContracts_Full_v1', $app->SMCustomerID);
+
+    .........................
+
+}
+}
+}
+}
+#===================================================================================================================
+
+#===================================================================================================================
+/** sessCreateItem
+ * @var $app App
+ * @return array
+ */
+public
+static function sessCreateItem(App &$app)
+{
+    return array(
+        'user_session_created_ts' => $app->siteTime,
+        'user_session_lastused_ts' => $app->siteTime,
+        'user_session_status' => $app->d['db']['status_fields'][$app->t['tbSess']]['list']['ACTIVE'],
+        'user_session_status_ts' => $app->siteTime,
+        'user_session_ip' => $app->userBrowserIP,
+        'r_user_browser_agent' => $app->userBrowserAgent,
+        'r_user_session_owner' => $app->userPID,
+    );
+}
+
+#===================================================================================================================
+
+#===================================================================================================================
+/** Rentabox sessUpdate Authorize module
+ * @var $app App
+ * @var $session array session row
+ */
+public
+static function sessUpdate(App &$app, $session)
+{
+    $tb_name = 'tbSess';
+    #---------------------------------------------------------------------------------------------------------------
+    $session['user_session_lastused_ts'] = $app->siteTime;
+    DB::sqlUpdateDict($app, __METHOD__, $tb_name, $session);
+    if (!$app->userPID) {
+        $app->userPID = $session['r_user_session_owner'];
+    }
+    $person = DB::sqlSelectOne($app, 'tbPerson', array(array('person_id' => $app->userPID)));
+    #---------------------------------------------------------------------------------------------------------------
+    if (!$app->userRole) {
+        $app->userRole = $person['person_role'];
+    }
+   .................................
+    }
+    #---------------------------------------------------------------------------------------------------------------
+    if (!$app->userPProfile) {
+        $filter = array('r_person_profile_owner' => $app->userPID);
+        $app->userPProfile = DB::sqlSelectOne($app, 'tbPProfile', array($filter));
+    }
+    #---------------------------------------------------------------------------------------------------------------
+    if (!$app->userSMCustomers) {
+        $filter = array('r_sm_customer_person' => $app->userPID);
+        $app->userSMCustomers = DB::sqlSelect($app, 'tbSMCustomers', array($filter));
+    }
+    #---------------------------------------------------------------------------------------------------------------
+    User::updateSMFinance($app);
+    #---------------------------------------------------------------------------------------------------------------
+    ...........................
+}
+#===================================================================================================================
+
+}

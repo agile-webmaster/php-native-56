@@ -1,0 +1,195 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Integrated by BKLV-Robo [RBOX-3]
+ * Version: 3.0.2
+ * Sysmtem URL: http://bklv.ru/robo/
+ * User: webmaster.rentabox@bklv.ru
+ * Date: 23.05.2017
+ * Time: 13:02
+ * Tech support:
+ *  - url: http://bklv.ru/tech_support/
+ *  - email: rbox.support.tech@bklv.ru
+ *  - phone: +7(495)220-17-27
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+#=======================================================================================================================
+/** @var $this App */
+/** @var $layout_prefs array */
+/** @var $layout_code array */
+/** @var $layout_index string */
+/** @var $layout_event string */
+/** @var $layout_template string */
+/** @var $layout_ids array */
+/** @var $layout_js string */
+/** @var $layout_styles array */
+/** @var $layout_classes array */
+/** @var $custom_js array */
+/** @var $template RboxTemplateHTML */
+/** @var $lp array Layout params */
+/** @var $gs string Gets safe */
+/** @var $user_email string User email */
+/** @var $user_name string User name */
+#-----------------------------------------------------------------------------------------------------------------------
+$lp = array('layout_prefs' => $layout_prefs, 'layout_code' => $layout_code, 'layout_index' => $layout_index,
+    'layout_event' => $layout_event, 'layout_template' => $layout_template, 'layout_ids' => $layout_ids,
+    'layout_js' => $layout_js, 'layout_styles' => $layout_styles, 'layout_classes' => $layout_classes,
+    'custom_js' => $custom_js, 'template' => $template);
+$gs = $this->urlGetsSafe;
+#=======================================================================================================================
+
+#=======================================================================================================================
+$m = A::d($this, 'm');
+$debt_curr = $m['rbox_balance_cur_rub'];
+#=======================================================================================================================
+
+if ($this->userSMCustomers) {
+    foreach ($this->userSMCustomers as $smc) {
+
+        $i = $smc['sm_customer_id'];
+
+        #---------------------------------------------------------------------------------------------------------------
+        $x = DB::sqlSelectOne($this, 'tbSMCustomers', array(array('sm_customer_id' => $i)));
+
+        $bal = -1 * $x['sm_customer_balance_am'] . ' ' . $x['sm_customer_balance_cr'];
+        $bal .= ' 
+        <button bklv-for="contracts/contracts_pay" class="btn btn-warning btn-xs" onclick="js_go_to(' .
+            "'contracts/contracts_pay'" . ')">' . $m['rbox_pay_now'] . '</button>';
+        #---------------------------------------------------------------------------------------------------------------
+        $un = NULL;
+        $filter = array('r_person_profile_owner' => $x['r_sm_customer_person']);
+        $pprf = DB::sqlSelectOne($this, 'tbPProfile', array($filter));
+        if ($pprf['person_fio_last']) {
+            $un = $pprf['person_fio_last'];
+            if ($pprf['person_fio_first'] && $pprf['person_fio_middle']) {
+                $un .= ' ' .
+                    mb_strtoupper(mb_substr($pprf['person_fio_first'], 0, 1) . '.' . mb_substr($pprf['person_fio_middle'], 0, 1)) . '.';
+            } elseif ($pprf['person_fio_first']) {
+                $un .= ' ' . $pprf['person_fio_first'];
+            }
+        } else {
+            $un = ' ' . $pprf['person_fio_first'];
+            if ($pprf['person_fio_middle']) {
+                $un .= ' ' . $pprf['person_fio_middle'];
+            }
+        }
+        #---------------------------------------------------------------------------------------------------------------
+        $sm_contracts = DB::sqlSelect($this, 'tbSMContracts', array(array('r_sm_customer' => $i)));
+        #---------------------------------------------------------------------------------------------------------------
+        $sm_customer = DB::sqlSelectOne($this, 'tbSMCustomers', array(array('sm_customer_id' => $i)));
+        $sm_customer_data = (array)json_decode($sm_customer['sm_customer_qr']);
+        $sm_site = DB::sqlSelectOne($this, 'tbSMSites', array(array('sm_site_id' => $sm_customer_data['SiteID'])));
+        $update = FALSE;
+        foreach ($sm_contracts as $smcc) {
+            if (!$smcc['sm_subcontract_qr']) {
+                $update = TRUE;
+                $j = RboxRemote::getDataReal($this, 'getSMSubContracts_Full_v1', $smcc['sm_contract_id']);
+                $smcc['sm_subcontract_qr'] = json_encode($j[1]);
+                DB::sqlUpdateDict($this, __METHOD__, 'tbSMContracts', $smcc);
+            }
+        }
+        #---------------------------------------------------------------------------------------------------------------
+        if ($update) {
+            $sm_contracts = DB::sqlSelect($this, 'tbSMContracts', array(array('r_sm_customer' => $i)));
+        }
+        #---------------------------------------------------------------------------------------------------------------
+        $leave = 0;
+        foreach ($sm_contracts as $k => $smcc) {
+            $sm_subontract_data = (array)json_decode($smcc['sm_subcontract_qr']);
+            $sm_contracts[$k]['_LeaveDate_'] = NULL;
+            if ($sm_subontract_data['LeaveDate']) {
+                $leave++;
+                $sm_contracts[$k]['_LeaveDate_'] = new DateTime($sm_subontract_data['LeaveDate']);
+            }
+        }
+        #---------------------------------------------------------------------------------------------------------------
+        $sm_contract_status_pref = 'rbox_smcc_status_';
+        echo '<br /><br />
+        ' . $m['rbox_smcc_office'] . '
+        <span class="rblk_colm_span">' . $sm_site['sm_site_name_ru'] . '</span><br />
+        <i>(' . $sm_site['sm_site_address_ru'] . ')</i><br /><br />
+        <b>' . $m['rbox_smcc_client'] . ' <u>' . RboxSM::getSMCustomerName($this, $smc['sm_customer_id']) . '</u><br />
+         (' . $m['rbox_smcc_balance'] . ' ' . $bal . ')</b>';
+        #---------------------------------------------------------------------------------------------------------------
+
+        #---------------------------------------------------------------------------------------------------------------
+        echo '
+        <br /><br />' . $m['rbox_smcc_list_active'] . ':<br />
+        <div class="rblk_tbl">
+            <div class="rblk_tr">
+                <div class="rblk_colm_new_hd">#</div>
+                <div class="rblk_colm_new_hd">' . $m['rbox_smcc_from'] . '</div>
+                <div class="rblk_colm_new_hd">' . $m['rbox_smcc_service_period'] . '</div>
+                <div class="rblk_colm_new_hd">' . $m['rbox_smcc_status'] . '</div>
+                <div class="rblk_colm_new_hd">' . $m['rbox_smcc_to'] . '</div>
+            </div>';
+        foreach ($sm_contracts as $smcc) {
+            if (!$smcc['_LeaveDate_']) {
+                if ((int)$bal < 0) {
+                    $status = 'debt';
+                } else {
+                    $status = 'active';
+                }
+                echo '
+            <div class="rblk_tr">
+                <div class="rblk_valu_new">' . $sm_site['sm_site_contract_prefix'] . $smcc['sm_contract_legal_code'] . '</div>
+                <div class="rblk_valu_new">' . date("d-m-Y", $smcc['sm_contract_started_ts']) . '</div>
+                <div class="rblk_valu_new">' . $smcc['sm_contract_service_period'] . '</div>
+                <div class="rblk_valu_new">' . $m[$sm_contract_status_pref . $status] . '</div>
+                <div class="rblk_valu_new">' . date("d-m-Y", $smcc['sm_contract_ended_ts']) . '</div>
+            </div>';
+            }
+        }
+        echo '
+        </div>';
+        #---------------------------------------------------------------------------------------------------------------
+
+        #---------------------------------------------------------------------------------------------------------------
+        if ($leave) {
+            echo '
+        <br /><br />' . $m['rbox_smcc_list_debt'] . ':<br />
+        <div class="rblk_tbl">
+            <div class="rblk_tr">
+                <div class="rblk_colm_new_hd">#</div>
+                <div class="rblk_colm_new_hd">' . $m['rbox_smcc_from'] . '</div>
+                <div class="rblk_colm_new_hd">' . $m['rbox_smcc_service_period'] . '</div>
+                <div class="rblk_colm_new_hd">' . $m['rbox_smcc_status'] . '</div>
+            </div>';
+            foreach ($sm_contracts as $smcc) {
+                if ($smcc['_LeaveDate_']) {
+                    $status = 'closed';
+                    echo '
+            <div class="rblk_tr">
+                <div class="rblk_valu_new">' . $sm_site['sm_site_contract_prefix'] . $smcc['sm_contract_legal_code'] . '</div>
+                <div class="rblk_valu_new">' . date("d-m-Y", $smcc['sm_contract_started_ts']) . '</div>
+                <div class="rblk_valu_new">' . $smcc['sm_contract_service_period'] . '</div>
+                <div class="rblk_valu_new">' . $m[$sm_contract_status_pref . $status] . ' ' .
+                        date("d-m-Y", $smcc['sm_contract_ended_ts']) . '</div>
+            </div>';
+                }
+            }
+            echo '
+        </div>';
+        }
+        #---------------------------------------------------------------------------------------------------------------
+    }
+}
+#=======================================================================================================================
+
+#=======================================================================================================================
+else {
+    echo '
+    <p class="rblk_wrap"><div class="rbxh-getuaac-p">' . $m['txt_getuaac_no_contracts'] . '</div></p>
+    <p class="rblk_wrap" style="text-align: center"><button bklv-for="profile/profile_summary" class="btn btn-danger btn-lg" id="' .
+        $layout_ids['button_goto_uaac_from_contracts_summary'] . '">' . $m['rbox_go_get_uaac'] . '</button>
+        
+                            &nbsp; &nbsp; &nbsp;
+                            
+                            <a href="/profile/profile_summary/uaac/">
+                            <span class="btn btn-default btn-sm" id="' . $layout_ids['button_use_uaac_1_init'] . '">' . $m['i_have_uaac'] . '</span>  
+  </a>
+        </p>';
+}
+#=======================================================================================================================

@@ -1,0 +1,516 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Integrated by BKLV-Robo [RBOX-3]
+ * Version: 3.0.2
+ * Sysmtem URL: http://bklv.ru/robo/
+ * User: webmaster.rentabox@bklv.ru
+ * Date: 23.05.2017
+ * Time: 13:02
+ * Tech support:
+ *  - url: http://bklv.ru/tech_support/
+ *  - email: rbox.support.tech@bklv.ru
+ *  - phone: +7(495)220-17-27
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+#=======================================================================================================================
+/** @var $this App */
+/** @var $layout_prefs array */
+/** @var $layout_code array */
+/** @var $layout_index string */
+/** @var $layout_event string */
+/** @var $layout_template string */
+/** @var $layout_ids array */
+/** @var $layout_js string */
+/** @var $layout_styles array */
+/** @var $layout_classes array */
+/** @var $custom_js array */
+/** @var $template RboxTemplateHTML */
+/** @var $lp array Layout params */
+/** @var $gs string Gets safe */
+#-----------------------------------------------------------------------------------------------------------------------
+$lp = array('layout_prefs' => $layout_prefs, 'layout_code' => $layout_code, 'layout_index' => $layout_index,
+    'layout_event' => $layout_event, 'layout_template' => $layout_template, 'layout_ids' => $layout_ids,
+    'layout_js' => $layout_js, 'layout_styles' => $layout_styles, 'layout_classes' => $layout_classes,
+    'custom_js' => $custom_js, 'template' => $template);
+$gs = $this->urlGetsSafe;
+#=======================================================================================================================
+
+#=======================================================================================================================
+echo '
+<link type="text/css" href="' . $layout_prefs['css'] . $layout_code . '/' . $this->siteIndex . '.css" rel="stylesheet" />';
+#=======================================================================================================================
+
+#=======================================================================================================================
+// техпараметры
+$menu_url_prefix = $layout_prefs[''];
+$m = A::d($this, 'm');
+$init_get = $this->d['init']['id']['get'];
+#-----------------------------------------------------------------------------------------------------------------------
+// роутинг согласно табам (2 уровня)
+$ru = array(1 => NULL, 2 => NULL);
+$statuses = array(1 => array(), 2 => array());
+#-----------------------------------------------------------------------------------------------------------------------
+// архитектура согласно табам - для HTML и для JS
+$strc_html = $strc_js = $tree_html = array();
+#-----------------------------------------------------------------------------------------------------------------------
+if (isset(CFG::$initRouting[1]) && CFG::$initRouting[1] && array_key_exists(CFG::$initRouting[1], $template->tabs)) {
+    $ru[1] = CFG::$initRouting[1];
+    $menu_url_prefix = $menu_url_prefix . $ru[1] . '/';
+}
+if (isset(CFG::$initRouting[2]) && CFG::$initRouting[2] && array_key_exists(CFG::$initRouting[2], $template->tabs)) {
+    $ru[2] = CFG::$initRouting[2];
+    $menu_url_prefix = $menu_url_prefix . $ru[2] . '/';
+}
+#=======================================================================================================================
+
+#=======================================================================================================================
+foreach ($template->tabs as $k => $v) {
+    if (is_array($v)) {
+        #-------------------------------------------------------------------------------------------------------------------
+        if (!isset($v['ref']) || !$v['ref']) {
+            $tree_html[$k] = array();
+            #---------------------------------------------------------------------------------------------------------------
+            $statuses[1][$k] = NULL;
+            #---------------------------------------------------------------------------------------------------------------
+            $strc_html[$k] = $v;
+
+            ....................................
+        #-------------------------------------------------------------------------------------------------------------------
+    }
+}
+#=======================================================================================================================
+foreach ($tree_html as $k => $v) {
+    if (isset($v['tree'])) {
+        if (array_key_exists($ru[2], $v['tree'])) {
+            foreach ($v['tree'] as $kk => $vv) {
+                $statuses[2][$kk] = NULL;
+                if ($kk == $ru[2]) {
+                    $statuses[2][$kk] = 'active';
+                    if (!$ru[2] && $ru[1] == $k) {
+                        $ru[2] = $kk;
+                    }
+                }
+            }
+        } else {
+            $i = NULL;
+            foreach ($v['tree'] as $kk => $vv) {
+                if (isset($vv['status']) && $vv['status'] == 'active') {
+                    $i = $kk;
+                }
+            }
+            if (!$i) {
+                $i = array_keys($v['tree']);
+                $i = $i[0];
+            }
+            foreach ($v['tree'] as $kk => $vv) {
+                $statuses[2][$kk] = NULL;
+                if ($i == $kk) {
+                    $statuses[2][$kk] = 'active';
+                    if (!$ru[2] && $ru[1] == $k) {
+                        $ru[2] = $kk;
+                    }
+                }
+            }
+        }
+    }
+}
+#=======================================================================================================================
+
+#=======================================================================================================================
+if (!isset($ru[1]) && !$ru[1]) {
+    $k = array_keys($tree_html);
+    $k = $k[0];
+    $ru[1] = $k;
+    $strc_html[$k]['class_active'] = 'rblk_menu_active';
+    $statuses[1][$k] = 'active';
+}
+#=======================================================================================================================
+
+#=======================================================================================================================
+$rblk_menu_adopt_sw = '<div class="glyphicon glyphicon-resize-full rblk_menu_adopt_sw"></div>';
+$rblk_menu_header_sw = '<table align="right" style="position: relative; z-index: 1"><tr><td>
+    <div align="right" style="position: absolute;">
+        <span class="glyphicon glyphicon-resize-small rblk_menu_header_sw" onclick="js_menu_sw();"></span>
+    </div>
+</td></tr></table>';
+$header = $m['roles_' . $this->userRole . '_header'];
+$login_label = $m['login'];
+$login_value = NULL;
+if (isset($this->userLogins[0]['access_login'])) {
+    $login_value = $this->userLogins[0]['access_login'];
+}
+$user_role = $m['roles_' . $this->userRole . '_label'];
+$user_email = NULL;
+if (isset($this->userEmail['email_address'])) {
+    $user_email = $this->userEmail['email_address'];
+}
+$lp['user_email'] = $user_email;
+$user_name = NULL;
+$pprf = $this->userPProfile;
+if (isset($pprf['person_fio_last']) && $pprf['person_fio_last']) {
+    $user_name = $pprf['person_fio_last'];
+    if ($pprf['person_fio_first'] && $pprf['person_fio_middle']) {
+        $user_name .= ' ' .
+            mb_strtoupper(mb_substr($pprf['person_fio_first'], 0, 1) . '.' . mb_substr($pprf['person_fio_middle'], 0, 1)) . '.';
+    } elseif ($pprf['person_fio_first']) {
+        $user_name .= ' ' . $pprf['person_fio_first'];
+    }
+} else {
+    if (isset($pprf['person_fio_first']) && $pprf['person_fio_first']) {
+        $user_name = ' ' . $pprf['person_fio_first'];
+    }
+    if (isset($pprf['person_fio_middle']) && $pprf['person_fio_middle']) {
+        $user_name .= ' ' . $pprf['person_fio_middle'];
+    }
+}
+$lp['user_name'] = $user_name;
+$dom_menu_web = $layout_ids['dom_menu_web'];
+$dom_menu_adopt = $layout_ids['dom_menu_adopt'];
+$debt_label = $m['rbox_balance_am'];
+$debt_amoun = $this->SMBalance;
+$debt_curr = $m['rbox_balance_cur_rub'];
+$btn_pay = '<button bklv-for="contracts/contracts_pay" class="btn btn-warning btn-xs" id="' . $layout_ids['button_pay_now_web'] . '">' . $m['rbox_balance_pay'] . '</button>';
+$btn_pay_now_adopt = '<button bklv-for="contracts/contracts_pay" class="btn btn-warning btn-xs rblk_menu_apay" id="' . $layout_ids['button_pay_now_adopt_btn'] . '">' . $m['rbox_balance_pay'] . '</button>';
+$btn_lu_adopt = $layout_ids['button_lastupdate_adopt'];
+$lu_header = $m['rbox_lastupdate_head'];
+$lu_data = '<span id="' . $layout_ids['dom_lastupdate'] . '">0</span>' . $m['rbox_lastupdate_note'] . '&nbsp;&nbsp;';
+$lu_data_adopt = '<span id="' . $layout_ids['dom_lastupdate_adopt'] . '">0</span>';
+$lu_btn = '<input class="btn btn-success btn-xs" value="' . $m['rbox_lastupdate_btn'] . '" id="' . $layout_ids['button_lastupdate_web'] . '" />';
+#=======================================================================================================================
+
+#=======================================================================================================================
+$lp['gets_oper'] = $init_get['moderate_oper'];
+$lp['gets_page_id'] = $init_get['page_id'];
+$lp['gets_page_status'] = $init_get['page_status'];
+$lp['gets_page_lang'] = $init_get['page_lang'];
+$lp['gets_template_id'] = $init_get['template_id'];
+$lp['gets_template_file'] = $init_get['template_file'];
+#-----------------------------------------------------------------------------------------------------------------------
+$lp['target_site_index'] = $lp['target_site_host'] = $lp['target_site_layout'] = '';
+$lp['target_site_langs'] = array();
+$lp['target_page_templates'] = array();
+$lp['header'] = array();
+$lp['header_prefix'] = $lp['header_postfix'] = '';
+#-----------------------------------------------------------------------------------------------------------------------
+$lp['scenario_folder'] = INI::DIR_TEMPLATES . '/' . $layout_code . '/moderate/';
+$lp['psd'] = $this->d['init']['id']['post']['tab']['send_data'];
+$lp['gs'] = $this->urlGetsSafe;
+$lp['m'] = A::d($this, 'm');
+#-----------------------------------------------------------------------------------------------------------------------
+$lp['gets'] = array();
+$params = array('gets_oper', 'gets_page_id', 'gets_page_status', 'gets_page_lang', 'gets_template_file');
+foreach ($params as $p) {
+    $lp['gets'][$lp[$p]] = NULL;
+    if (isset(CFG::$initGet[$lp[$p]]) && CFG::$initGet[$lp[$p]]) {
+        $lp['gets'][$lp[$p]] = CFG::$initGet[$lp[$p]];
+    }
+}
+#-----------------------------------------------------------------------------------------------------------------------
+$lp['post'] = array();
+$params = array('psd');
+foreach ($params as $p) {
+    $lp['post'][$lp[$p]] = NULL;
+    if (isset($this->post[$lp[$p]]) && $this->post[$lp[$p]]) {
+        $lp['post'][$lp[$p]] = $this->post[$lp[$p]];
+    }
+}
+#=======================================================================================================================
+
+#=======================================================================================================================
+echo '
+<table cellspacing="0" cellpadding="0" border="0" align="left" style="width: 100%;">
+    <tr><td style="max-width: 960px !important">';
+#---------------------------------------------------------------------------------------------------------------
+echo '
+        <table cellspacing="0" cellpadding="0" border="0" align="left" class="rblk_menu_tbl" id="' . $dom_menu_web . '"><tr><td>
+            <div class="list-group rblk_menu_box" align="left">';
+#-------------------------------------------------------------------------------------------------------
+echo '
+                <div class="rblk_menu_header list-group-item active">
+                    <p class="rblk_menu_header_top">' . $header . '</p>' . $rblk_menu_header_sw . '
+                    <span class="rblk_menu_login_label">' . $login_label . ':</span>' . $login_value . '
+                    <sup><small class="rblk_menu_login_sup">' . $user_role . '</small>&nbsp;</sup>
+                </div>';
+#-------------------------------------------------------------------------------------------------------
+echo '
+                <div>';
+foreach ($strc_html as $k => $v) {
+    echo '
+                    <a ' . $v['id_web'] . ' ' . $v['url'] . ' data-href="' . $k . '" title="' . $v['title'] . '"
+                        class="list-group-item ' . Rbox::CLS_LK_MENU_ITEM_LEFT_WEB . ' ' . $v['class_active'] . '" ' . $v['toggle'] . ' >
+                        <span class="glyphicon ' . $v['glyphicon'] . ' rblk_menu-item" ></span>' . $v['label'] . ' ' . $v['badge'] . '
+                    </a>';
+}
+echo '
+                </div>';
+#-------------------------------------------------------------------------------------------------------
+if ($this->SMCustomerID && (int)$this->SMBalance > 1) {
+    echo '
+                <div><p class="rblk_menu-balance">' . $debt_label . ' ' . $debt_amoun . ' ' . $debt_curr . ' ' . $btn_pay . '</p></div>';
+}
+#-------------------------------------------------------------------------------------------------------
+echo '
+                <div class="rblk_lu" style="">' . $lu_header . '<br />' . $lu_data . '<br />' . $lu_btn . '</div>';
+#-------------------------------------------------------------------------------------------------------
+echo '
+            </div>
+        </td></tr></table>';
+#---------------------------------------------------------------------------------------------------------------
+echo '
+        <div id="' . $dom_menu_adopt . '" class="rblk_menu_adopt_tbl">
+            <table class="out_tbl" cellspacing="0" cellpadding="0" border="0"><tr><td class="out_td">
+                <table class="inn_tbl" cellspacing="0" cellpadding="0" border="0"><tr><td class="inn_td">
+                    <div class="btn_sw" onclick="js_menu_sw();">' . $rblk_menu_adopt_sw . '</div>
+                </td></tr></table>
+            </td></tr></table>
+            <table class="out_tbl" cellspacing="0" cellpadding="0" border="0"><tr><td class="out_td">
+                <table class="inn_tbl" cellspacing="0" cellpadding="0" border="0"><tr>
+                    <td class="inn_td rblk_menu_alogin">' . $login_value . '</td>
+                </tr></table>
+            </td></tr></table>
+            <table class="out_tbl" cellspacing="0" cellpadding="0" border="0"><tr><td class="out_td">
+                <table class="inn_tbl" cellspacing="0" cellpadding="0" border="0" id="' . $layout_ids['button_pay_now_adopt'] . '">
+                    <tr><td class="inn_td rblk_menu_alu">
+                        ' . (-1 * $this->SMBalance) . ' ' . $m['rbox_balance_cur_rub_adopt'] . '<br />' . $btn_pay_now_adopt . '
+                    </td></tr>
+                </table>
+            </td></tr></table>';
+foreach ($strc_html as $k => $v) {
+    echo '
+            <table class="out_tbl" cellspacing="0" cellpadding="0" border="0"><tr><td class="out_td">
+                <table class="inn_tbl" cellspacing="0" cellpadding="0" border="0"><tr><td class="inn_td">
+                    <a ' . $v['id_adopt'] . ' ' . $v['url'] . ' data-href="' . $k . '" title="' . $v['title'] . '"
+                        class="list-group-item ' . Rbox::CLS_LK_MENU_ITEM_LEFT_ADOPT . ' ' . $v['class_active'] . ' rblk_menu-item-a" ' . $v['toggle'] . ' >
+                        <div class="rblk_menu-ia-out"><div class="rblk_menu-ia-inn">
+                            <span class="glyphicon ' . $v['glyphicon'] . ' rblk_menu-item-adopt"></span>
+                        </div></div>
+                   </a>
+                </td></tr></table>
+            </td></tr></table>';
+}
+echo '
+            <table class="out_tbl" cellspacing="0" cellpadding="0" border="0"><tr><td class="out_td">
+                <table class="inn_tbl" cellspacing="0" cellpadding="0" border="0" id="' . $btn_lu_adopt . '">
+                    <tr><td class="inn_td rblk_menu_alu">
+                        ' . $lu_data_adopt . ' ' . $m['rbox_lastupdate_short'] . '<br />
+                        <button class="btn btn-success btn-xs rblk_menu_alu_btn">' . $m['rbox_lastupdate_btn'] . '</button>
+                    </td></tr>
+                </table>
+            </td></tr></table>
+        </div>';
+#---------------------------------------------------------------------------------------------------------------
+echo '
+        <div class="tab-content">';
+#-----------------------------------------------------------------------------------------------------------
+foreach ($strc_html as $k => $v) {
+    echo '
+            <div class="tab-pane fade ' . $statuses[1][$k] . ' in ' . Rbox::CLS_LK_MENU_ITEM_LEFT_DIV . '" id="tab_' . $k . '">
+                <h3 class="rblk_tab_1">' . $v['short_title'] . '</h3>
+                <p class="rblk_tab_1_note">' . $v['title'] . '</p>';
+    $this->renderFile(INI::DIR_TEMPLATES . '/' . $this->eventLayout .
+        INI::DELIMITER_ROUTE . $this->eventHandler . INI::DELIMITER_NAMING_VAR .
+        Rbox::TEMPLATE_USER_AUTHORIZED . INI::DELIMITER_NAMING_VAR . $k . INI::X, $lp);
+    #-------------------------------------------------------------------------------------------------------
+    if (isset($tree_html[$k]['tree'])) {
+        echo '
+                <table cellspacing="0" cellpadding="0" border="0" align="top" class="rblk_tab_2_tabs">
+                    <tr><td><ul class="nav nav-tabs">';
+        foreach ($tree_html[$k]['tree'] as $kk => $vv) {
+            echo '
+                        <li id="tab2_' . $kk . '" bklv-tab="' . $k . '/' . $kk . '"
+                            class="' . $statuses[2][$kk] . ' ' . Rbox::CLS_LK_MENU_ITEM_TOPS . '">
+                            <a href="#tab_' . $kk . '" for="' . $kk . '" data-toggle="tab">' . $vv['label'] . '</a>
+                        </li>';
+        }
+        echo '
+                    </ul></td></tr>
+                </table>';
+    }
+    #-------------------------------------------------------------------------------------------------------
+    echo '
+                <div class="tab-content">';
+    if (isset($tree_html[$k]['tree'])) {
+        foreach ($tree_html[$k]['tree'] as $kk => $vv) {
+            $note = NULL;
+            if (isset($vv['note'])) {
+                $note = $vv['note'];
+            }
+            echo '
+                         <div class="tab-pane fade in ' . $statuses[2][$kk] . '" id="tab_' . $kk . '">
+                        <table class="tab_child_note">' . $note;
+            #-------------------------------------------------------------------------------------------
+            $lp['tab_group'] = $k;
+            $lp['tab_key'] = $kk;
+            $lp['tab_href'] = $layout_prefs[''] . $k . '/' . $kk . '/';
+            #-------------------------------------------------------------------------------------------
+            $lp['localization'] = NULL;
+            $lp['target_site_index'] = '';
+            if (isset($vv['localization'])) {
+                $lp['localization'] = $vv['localization'];
+            }
+            #-------------------------------------------------------------------------------------------
+            if (isset($vv['target_site'])) {
+                $lp['target_site_index'] = $vv['target_site'];
+                #---------------------------------------------------------------------------------------
+                $lp['target_site_host'] = $this->arch[$this->siteHost]['arch'][$lp['target_site_index']];
+                $lp['target_site_layout'] = $this->d['init']['layout'][$lp['target_site_index']];
+                $lp['target_site_langs'] = TOOL::getSiteLangsByHost($lp['target_site_host']);
+                $lp['header'] = array($lp['m']['txt_project_code'] . ': <b>' .
+                    $lp['target_site_index'] . '</b>');
+                $lp['header_prefix'] = '<div style="display: table-cell; margin-bottom: 10px;">';
+                $lp['header_postfix'] = '</div>';
+                #---------------------------------------------------------------------------------------
+                $templates_filter = array('layout' => $lp['target_site_layout']);
+                $j = DB::sqlSelect($this, 'tbPageTemplates', array($templates_filter));
+                foreach ($j as $v) {
+                    $lp['target_page_templates'][$v['template']] = $v['name'];
+                }
+            }
+            #-------------------------------------------------------------------------------------------
+            $i = $kk;
+            if (isset($vv['template']) && $vv['template']) {
+                $i = $vv['template'];
+            }
+            $this->renderFile(INI::DIR_TEMPLATES . '/' . $this->eventLayout .
+                INI::DELIMITER_ROUTE . $this->eventHandler . INI::DELIMITER_NAMING_VAR .
+                Rbox::TEMPLATE_USER_AUTHORIZED . INI::DELIMITER_NAMING_VAR . $i . INI::X, $lp);
+            #-------------------------------------------------------------------------------------------
+            echo '
+                        </table>
+                    </div>';
+        }
+    }
+    echo '
+                    <div class="clearfix"></div>
+                </div>';
+    #-------------------------------------------------------------------------------------------------------
+    echo '
+            </div>';
+}
+#-----------------------------------------------------------------------------------------------------------
+echo '
+            <div class="clearfix"></div>
+        </div>';
+#---------------------------------------------------------------------------------------------------------------
+echo '
+    </td></tr>
+</table>';
+#=======================================================================================================================
+
+#=======================================================================================================================
+echo '
+<script type="application/javascript">
+
+    // =================================================================================================================
+    // UPDATE AUTH PAGE NAVI
+    // -------------------------------------------------------------------------------------------------------------
+    function js_update_auth (strc) {var url = window.tab; var href = \'/\' + url + \'/\';
+        for (var i in strc[url]) {if($(\'#tab2_\'+i).hasClass(\'active\') == true) {href += i + \'/\';}}
+        window.location.href = href + ' . "'" . $gs . "'" . ';}
+    // =================================================================================================================
+    
+    // =================================================================================================================
+    function js_go_to (href) {
+        window.location.href = "/" + href + "/" + ' . "'" . $this->urlGetsSafe . "'" . ';}
+    // =================================================================================================================
+        
+    // =================================================================================================================
+    function js_menu_sw () {$(\'#' . $dom_menu_web . '\').toggle(); $(\'#' . $dom_menu_adopt . '\').toggle();}
+    // =================================================================================================================
+        
+    // =================================================================================================================
+    function js_pay_now (bklvfor, cls, pref, strc) {
+        var url = bklvfor.attr(\'bklv-for\').split(\'/\'); $.each($(\'.' . "'" . '+cls), function (i, v) {
+            $("#"+v.id).removeClass(\'rblk_menu_active\'); $("#"+v.id).css(\'background\', \'#fff\');});
+        $("#"+pref+url[0]).addClass(\'rblk_menu_active\').css(\'background\', \'#fbfbfb\'); window.tab = url[0];
+        $.each($(\'.' . Rbox::CLS_LK_MENU_ITEM_LEFT_DIV . '\'), function (i, v) {$("#"+v.id).removeClass(\'active\');});
+        $("#tab_"+window.tab).addClass(\'active\'); $("#tab_"+window.tab).addClass(\'in\');
+        if(url.length > 1) {if (strc[url[0]]) {for (var i in strc[url[0]]) {
+            $(\'#tab2_\'+i).removeClass(\'active\'); $(\'#tab_\' + i).removeClass(\'active\').removeClass(\'in\');}
+            $(\'#tab2_\' + url[1]).addClass(\'active\'); $(\'#tab_\' + url[1]).addClass(\'active\').addClass(\'in\');}}}
+    // =================================================================================================================
+        
+    // =================================================================================================================
+    function js_goto (x, strc) {
+        var url = $(\'#\'+x).attr(\'bklv-for\').split(\'/\');
+        if ($("#"+"' . $layout_ids['dom_menu_web'] . '").is(":visible")) {
+              var cls = ".' . Rbox::CLS_LK_MENU_ITEM_LEFT_WEB . '";
+            var pref = \'' . $layout_ids['pref_lk_menu_left_web'] . '\';}
+        else {var cls = ".' . Rbox::CLS_LK_MENU_ITEM_LEFT_ADOPT . '";
+            var pref = \'' . $layout_ids['pref_lk_menu_left_adopt'] . '\'; }
+        $.each($(cls), function (i, v) {$("#"+v.id).removeAttr(\'style\'); $("#"+v.id).removeClass(\'rblk_menu_active\');});
+        $("#"+pref+url[0]).addClass(\'rblk_menu_active\').css(\'background\', \'#fbfbfb\');
+         window.tab = url[0];
+        $.each($(\'.' . Rbox::CLS_LK_MENU_ITEM_LEFT_DIV . '\'), function (i, v) {$("#"+v.id).removeClass(\'active\');});
+        $("#tab_"+window.tab).addClass(\'active\'); $("#tab_"+window.tab).addClass(\'in\');
+        if(url.length > 1) {if (strc[url[0]]) {for (var i in strc[url[0]]) {
+            $(\'#tab2_\'+i).removeClass(\'active\'); $(\'#tab_\' + i).removeClass(\'active\').removeClass(\'in\');}
+            $(\'#tab2_\' + url[1]).addClass(\'active\'); $(\'#tab_\' + url[1]).addClass(\'active\').addClass(\'in\');}}}
+    // =================================================================================================================
+
+    // =================================================================================================================
+    var rblv_lu = 0; 
+    setInterval(function () {rblv_lu++; $(' . "'" . '#' . $layout_ids['dom_lastupdate'] . "'" . ').html(rblv_lu);}, 60000);
+    setInterval(function () {rblv_lu++; $(' . "'" . '#' . $layout_ids['dom_lastupdate_adopt'] . "'" . ').html(rblv_lu);}, 60000);
+    window.tab = ' . "'" . $ru[1] . "'" . ';
+    // =================================================================================================================
+
+    // =================================================================================================================
+    window.onload = function() {
+        
+        // -------------------------------------------------------------------------------------------------------------
+        var strc = JSON.parse(\'' . json_encode($strc_js) . '\');
+        // -------------------------------------------------------------------------------------------------------------
+
+        // -------------------------------------------------------------------------------------------------------------
+        // КНОПКА - ОБНОВИТЬ ДАННЫЕ СТРАНИЦЫ / BUTTON - CLICK UPDATE INFO
+        $(\'#' . $layout_ids['button_lastupdate_web'] . '\').on(\'click\', function(){js_update_auth(strc);});
+        // -------------------------------------------------------------------------------------------------------------
+        // КНОПКА - ОБНОВИТЬ ДАННЫЕ СТРАНИЦЫ / BUTTON - CLICK UPDATE INFO
+        $(\'#' . $layout_ids['button_lastupdate_adopt'] . '\').on(\'click\', function(){js_update_auth(strc);});
+        // -------------------------------------------------------------------------------------------------------------
+    
+        // -------------------------------------------------------------------------------------------------------------
+        // СОБЫТИЕ - КЛИК ПО ЭЛЕМЕНТУ МЕНЮ СЛЕВА / USER MENU LEFT CLICK ACTION - ВЕБ / WEB
+        $(\'.' . Rbox::CLS_LK_MENU_ITEM_LEFT_WEB . '\').on(\'click\', function(){
+            $(\'.' . Rbox::CLS_LK_MENU_ITEM_LEFT_WEB . '\').css(\'background\', \'#fff\');
+            $(this).css(\'background\', \'#fbfbfb\'); window.tab = $(this).attr(\'data-href\');});
+        // -------------------------------------------------------------------------------------------------------------
+        // СОБЫТИЕ - КЛИК ПО ЭЛЕМЕНТУ МЕНЮ СЛЕВА / USER MENU LEFT CLICK ACTION - АДАПТИВ / ADOPT
+        $(\'.' . Rbox::CLS_LK_MENU_ITEM_LEFT_ADOPT . '\').on(\'click\', function(){
+            $(\'.' . Rbox::CLS_LK_MENU_ITEM_LEFT_ADOPT . '\').css(\'background\', \'#fff\');
+            $(this).css(\'background\', \'#fbfbfb\'); window.tab = $(this).attr(\'data-href\');});
+        // -------------------------------------------------------------------------------------------------------------
+        
+        // -------------------------------------------------------------------------------------------------------------
+        // КНОПКА - ПЕРЕЙТИ НА ОПЛАТУ (ВЕБ)
+        $(\'#' . $layout_ids['button_pay_now_web'] . '\').on(\'click\', function(){
+            js_pay_now($(\'#' . $layout_ids['button_pay_now_web'] . '\'), ' . "'" . Rbox::CLS_LK_MENU_ITEM_LEFT_WEB . "'" . ', 
+            \'' . $layout_ids['pref_lk_menu_left_web'] . '\', strc);});
+        // -------------------------------------------------------------------------------------------------------------
+        // КНОПКА - ПЕРЕЙТИ НА ОПЛАТУ (АДАПТИВ)
+        $(\'#' . $layout_ids['button_pay_now_adopt'] . '\').on(\'click\', function(){
+            js_pay_now($(\'#' . $layout_ids['button_pay_now_adopt_btn'] . '\'), ' . "'" . Rbox::CLS_LK_MENU_ITEM_LEFT_ADOPT . "'" . ', 
+            \'' . $layout_ids['pref_lk_menu_left_adopt'] . '\', strc);});        
+        // -------------------------------------------------------------------------------------------------------------
+
+        // -------------------------------------------------------------------------------------------------------------
+        // СОБЫТИЕ - КЛИК ПО ЭЛЕМЕНТУ МЕНЮ СВЕРХУ / USER MENU TOP CLICK ACTION
+        $(\'.' . Rbox::CLS_LK_MENU_ITEM_TOPS . '\').on(\'click\', function(){
+            window.tab = $(this).attr(\'bklv-tab\');});
+        // -------------------------------------------------------------------------------------------------------------
+        
+        // -------------------------------------------------------------------------------------------------------------
+        $(\'#' . $layout_ids['button_goto_uaac_from_contracts_pay'] . '\').on(\'click\', function(){
+            js_goto(\'' . $layout_ids['button_goto_uaac_from_contracts_pay'] . '\', strc);});
+           // -------------------------------------------------------------------------------------------------------------
+     $(\'#' . $layout_ids['button_goto_uaac_from_contracts_summary'] . '\').on(\'click\', function(){
+            js_goto(\'' . $layout_ids['button_goto_uaac_from_contracts_summary'] . '\', strc);});
+        // -------------------------------------------------------------------------------------------------------------
+            
+    }
+</script>';
+#=======================================================================================================================

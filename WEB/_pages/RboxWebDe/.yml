@@ -1,0 +1,16 @@
+:
+  _fixed_md: ''
+storage/box:
+  _fixed_md: yes
+storage:
+  _fixed_md: yes
+moving:
+  _fixed_md: yes
+about:
+  _fixed_md: yes
+contracts:
+  _fixed_md: yes
+selfstorage:
+  _fixed_md: ''
+payments:
+  _fixed_md: ''

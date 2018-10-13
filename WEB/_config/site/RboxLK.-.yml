@@ -1,0 +1,21 @@
+smtp:
+  host: 'ssl://smtp.yandex.ru'
+  port: 465
+  login: 'wm@self-storage.online'
+  password: '<PASS>'
+  ya_pass_question: 'teacher'
+  ya_pass_answer: '<SECRET>'
+  ya_pass_birthday: '21-06-1981'
+  ya_pass_sex: 'M'
+  ya_pass_city: 'Moscow'
+smtp-old:
+  host: 'ssl://smtp.yandex.ru'
+  ..............................
+firm:
+  requisites:
+    tel_main_pref: +7(495)
+    tel_main_code: 72-12345
+    tel_main_full: '+74957212345'
+    tel_messangers: '+79266722330'
+    skype_main: rentabox_selfstorage
+    mailbox_main: info@rentabox.ru

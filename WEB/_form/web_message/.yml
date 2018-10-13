@@ -1,0 +1,8 @@
+name:
+  input: text
+phone:
+  input: text
+email:
+  input: text
+message:
+  input: textarea

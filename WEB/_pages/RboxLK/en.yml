@@ -1,0 +1,64 @@
+
+profile:
+  title: 'You can update your personal profile data here'
+  name: Profile
+  short_title: 'Your personal data'
+  label: Your profile
+profile_summary:
+  label: Summary
+  note: >
+    Fill-in the application form to leave a request to change your
+    personal data. Updated data may be used for the conclusion of new contracts.
+    <br /><b>Please be extremely careful when changing these parameters!</b>
+profile_settings:
+  label: Settings
+  note: >
+    <br />Below are displayed your personal system access parameters:
+users:
+  title: User account management page
+  name: Users
+  short_title: Users support
+  label: Users
+
+info:
+  title: Answers to frequently (and not so) asked questions
+  name: Information
+  short_title: Information
+  label: Information
+messages:
+  title: Info messages from managers and system
+  name: System messages
+  short_title: System messages
+  label: My messages
+payments_list:
+  title: Financial payments registry
+  name: Financial payments
+  short_title: Financial payments
+  label: Financial payments
+financials:
+  title: Financial data
+  name: Financials
+  short_title: Financial data
+  label: Financials
+
+moder_de_templates:
+  title: Manage page templates
+  name: Templates
+  short_title: Page templates
+  label: Templates
+moder_ru_phrases_ru:
+  title: Phrases management
+  name: Translation
+  short_title: Translation
+  label: Phrases[RU]
+moder_ru_phrases_de:
+  title: Phrases management
+  name: Translation
+  short_title: Translation
+  label: Phrases[DE]
+
+user_exit:
+  title: 'Exit from user personal account'
+  name: Exit
+  short_title: Exit from PA
+  label: Exit

@@ -1,0 +1,92 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Integrated by BKLV-Robo [RBOX-3]
+ * Version: 3.0.2
+ * Sysmtem URL: http://bklv.ru/robo/
+ * User: webmaster.rentabox@bklv.ru
+ * Date: 23.05.2017
+ * Time: 13:02
+ * Tech support:
+ *  - url: http://bklv.ru/tech_support/
+ *  - email: rbox.support.tech@bklv.ru
+ *  - phone: +7(495)220-17-27
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+#=======================================================================================================================
+/** @var $this App */
+/** @var $layout_prefs array */
+/** @var $layout_code array */
+/** @var $layout_index string */
+/** @var $layout_event string */
+/** @var $layout_template string */
+/** @var $layout_ids array */
+/** @var $layout_js string */
+/** @var $layout_styles array */
+/** @var $layout_classes array */
+/** @var $custom_js array */
+/** @var $template RboxTemplateHTML */
+/** @var $lp array Layout params */
+/** @var $gs string Gets safe */
+/** @var $tab_key string */
+/** @var $tab_attr array */
+#-----------------------------------------------------------------------------------------------------------------------
+$lp = array('layout_prefs' => $layout_prefs, 'layout_code' => $layout_code, 'layout_index' => $layout_index,
+    'layout_event' => $layout_event, 'layout_template' => $layout_template, 'layout_ids' => $layout_ids,
+    'layout_js' => $layout_js, 'layout_styles' => $layout_styles, 'layout_classes' => $layout_classes,
+    'custom_js' => $custom_js, 'template' => $template, 'tab_key' => $tab_key, 'tab_attr' => $tab_attr);
+$gs = $this->urlGetsSafe;
+#=======================================================================================================================
+
+#===============================================================================================
+$post_send_data = $this->d['init']['id']['post']['tab']['send_data'];
+#-----------------------------------------------------------------------------------------------
+$post_use_sf = $this->d['init']['id']['post']['tab']['use_special_fields'];
+$pref_use_sf = $layout_ids['pref_tab_special_fields_ih'];
+#-----------------------------------------------------------------------------------------------
+$form = A::f($this, $tab_key);
+$basic = 'fg_basic';
+$special = 'fg_special';
+$usf = Rbox::$optUseSpercialFields;
+$n = 'rbox_btn_sfields_show';
+$c = 'warning';
+if (isset($usf[$tab_key]) && $usf[$tab_key]) {
+    $n = 'rbox_btn_sfields_hide';
+    $c = 'info';
+}
+$btn_toggle_note = A::d($this, 'm')[$n];
+$btn_toggle_class = $c;
+#===============================================================================================
+
+#===============================================================================================
+echo '
+                        
+                        <!-- / TAB ' . $tab_key . ' -->
+                        <form method="post" action="' . $layout_prefs[''] . $tab_key . '/' . $gs . '">
+                            ' . RboxTemplateHTML::ihSendData($tab_key, $post_send_data) . '
+                            <table cellpadding="0" cellspacing="0" border="0" style="width: 100%">
+                                <tr><td><div class="rbx-tbl">';
+foreach ($form as $k => $v) {
+    if (isset($v['group']) and $v['group'] == $basic) {
+        $this->renderFile(INI::DIR_TEMPLATES . '/' . $layout_code . '/_form_field' . INI::X,
+            array_merge($lp, array('field_key' => $k, 'field_attr' => $v)));
+    }
+}
+echo '
+                                </div></td></tr>
+                                <tr><td style="padding-top: 25px; padding-bottom: 25px">
+                                    <div style="float: left">
+                                        <input class="btn btn-success btn-large" type="submit" value="' .
+    A::d($this, 'm')['rbox_btn_continue'] . '" onclick="return js_check_form(' .
+    "'" . $tab_key . "'" . '); " style="margin-right: 12px" />
+                                        </div>
+                                        <div style="float: left" id="' . $layout_ids['pref_tab_form_err'] . $tab_key . '"></div>
+                                    </div>
+                                </td></tr>
+                            </table>
+                        </form>
+                        <!-- // TAB ' . $tab_key . ' -->
+                        ';
+#===============================================================================================

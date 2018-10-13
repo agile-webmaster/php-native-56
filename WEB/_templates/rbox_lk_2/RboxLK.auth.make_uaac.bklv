@@ -1,0 +1,280 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Integrated by BKLV-Robo [RBOX-3]
+ * Version: 3.0.2
+ * Sysmtem URL: http://bklv.ru/robo/
+ * User: webmaster.rentabox@bklv.ru
+ * Date: 23.05.2017
+ * Time: 13:02
+ * Tech support:
+ *  - url: http://bklv.ru/tech_support/
+ *  - email: rbox.support.tech@bklv.ru
+ *  - phone: +7(495)220-17-27
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+#=======================================================================================================================
+/** @var $this App */
+/** @var $layout_prefs array */
+/** @var $layout_code array */
+/** @var $layout_index string */
+/** @var $layout_event string */
+/** @var $layout_template string */
+/** @var $layout_ids array */
+/** @var $layout_js string */
+/** @var $layout_styles array */
+/** @var $layout_classes array */
+/** @var $custom_js array */
+/** @var $template RboxTemplateHTML */
+/** @var $lp array Layout params */
+/** @var $gs string Gets safe */
+/** @var $user_email string User email */
+/** @var $user_name string User name */
+#-----------------------------------------------------------------------------------------------------------------------
+$lp = array('layout_prefs' => $layout_prefs, 'layout_code' => $layout_code, 'layout_index' => $layout_index,
+    'layout_event' => $layout_event, 'layout_template' => $layout_template, 'layout_ids' => $layout_ids,
+    'layout_js' => $layout_js, 'layout_styles' => $layout_styles, 'layout_classes' => $layout_classes,
+    'custom_js' => $custom_js, 'template' => $template);
+$gs = $this->urlGetsSafe;
+#=======================================================================================================================
+
+#===================================================================================================================
+$m = A::d($this, 'm');
+$debt_curr = $m['rbox_balance_cur_rub'];
+$debt_amoun = $this->SMBalance;
+$da = 0;
+if ($debt_amoun) {
+    $da = $debt_amoun;
+}
+$selected_number = NULL;
+$selected_list = array();
+#===================================================================================================================
+
+#===================================================================================================================
+$mail = $mobile = $user_id = $code_user = $code_uaac = NULL;
+$_get = explode('?', $_SERVER['REQUEST_URI']);
+if (isset($_get[1])) {
+    $_get = explode('&', $_get[1]);
+    foreach ($_get as $v) {
+        $v = explode('=', $v);
+        if ($v[0] == 'mail') {
+            $mail = urldecode($v[1]);
+        }
+    }
+    foreach ($_get as $v) {
+        $v = explode('=', $v);
+        if ($v[0] == 'mobile') {
+            $mobile = urldecode($v[1]);
+        }
+    }
+    foreach ($_get as $v) {
+        $v = explode('=', $v);
+        if ($v[0] == 'user_id') {
+            $user_id = urldecode($v[1]);
+        }
+    }
+    foreach ($_get as $v) {
+        $v = explode('=', $v);
+        if ($v[0] == 'code_uaac') {
+            $code_uaac = urldecode($v[1]);
+        }
+    }
+    foreach ($_get as $v) {
+        $v = explode('=', $v);
+        if ($v[0] == 'code_user') {
+            $code_user = urldecode($v[1]);
+        }
+    }
+}
+#-------------------------------------------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------------------------------------------
+# ФОРМА СОЗДАНИЯ КАПА
+#-------------------------------------------------------------------------------------------------------------------
+if (!$user_id && !$code_uaac && !$code_user) {
+    echo '
+    <div style="margin: 40px 10px 10px 10px">Для создания КАПА (Кода Авторизации Пользовательского Аккаунта)
+        <b>НЕОБХОДИМО</b> указать:</div>
+    <form action="/users/make_uaac/">
+        <div style="background: #ff9; display: table-cell; padding: 5px 20px; margin-top: 10px; padding-bottom: 20px">
+            <div style="margin-top: 20px">
+                1) <u><b>Номер клиента в SM</b></u>: &nbsp;
+                <input type="text" name="user_id" class="rbx-input" /><br />
+                <i>(4-5 значный, например "6102" - вверху слева в карточке клиента
+                в программе Space Manager) - 
+                могут быть указаны только цифры</i>
+            </div>
+            <div style="margin-top: 20px">
+                2) <u>Телефон или имейл клиента</u> (можно не указывать, но если сомневаетесь,
+                то лучше указать): &nbsp; 
+            </div>
+            <div style="margin-top: 20px;">
+                <div style="display: inline-block;">
+                    <b>Мобильный (10 цифр)</b><br />
+                    <input class="rbx-input" type="text" name="mobile" style="margin-top: 5px" />
+                </div>
+                <div style="display: inline-block;">
+                    или
+                </div>
+                <div style="display: inline-block;">
+                    <b>Имейл клиента</b><br />
+                    <input class="rbx-input" type="text" name="mail" style="margin-top: 5px" />
+                </div>
+                <div style="display: inline-block;">
+                    <button type="submit" class="btn btn-lg btn-danger">Создать КАПА</button>
+                </div>
+            </div>
+        </div>
+        <div style="margin-top: 40px">
+            *) <b><i>КАПА будет выслан на один из этик контактов - если указано</b></i><br />
+            **) <i>КАПА может быть утерян либо может быть выдано много КАПА - на работе системе
+                это не отразится</i><br />
+            ***) <b><i>КАПА следует выдавать клиенту при подписании договора либо 
+            при подаче заявления на предоставление нового КАПА, <u>не следует выдавать КАПА
+                неизвестным лицам</u> либо по телефону (Вы должны быть точно уверены в том, что
+                лицо, получившее КАПА имеет полномочия на получение конфиденциальной информации
+                клиента</b></i><br />
+        </div>
+    </form>';
+}
+#-------------------------------------------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------------------------------------------
+# ОБРАБОТКА ДАННЫХ
+#-------------------------------------------------------------------------------------------------------------------
+else {
+
+    #---------------------------------------------------------------------------------------------------------------
+    $x = $code_user;
+    if ($user_id) {
+        $x = $user_id;
+    }
+    $un = NULL;
+    $ch = DB::sqlSelectOne($this, 'tbSMCustomers', array(array('sm_customer_number' => $x)));
+    if ($ch) {
+        #-----------------------------------------------------------------------------------------------------------
+        $filter = array('r_person_profile_owner' => $ch['r_sm_customer_person']);
+        $pprf = DB::sqlSelectOne($this, 'tbPProfile', array($filter));
+        #-----------------------------------------------------------------------------------------------------------
+        if ($pprf['person_fio_last']) {
+            $un = $pprf['person_fio_last'];
+            if ($pprf['person_fio_first'] && $pprf['person_fio_middle']) {
+                $un .= ' ' .
+                    mb_strtoupper(mb_substr($pprf['person_fio_first'], 0, 1) . '.' .
+                        mb_substr($pprf['person_fio_middle'], 0, 1)) . '.';
+            } elseif ($pprf['person_fio_first']) {
+                $un .= ' ' . $pprf['person_fio_first'];
+            }
+        } #-----------------------------------------------------------------------------------------------------------
+        else {
+            $un = ' ' . $pprf['person_fio_first'];
+            if ($pprf['person_fio_middle']) {
+                $un .= ' ' . $pprf['person_fio_middle'];
+            }
+        }
+    } #---------------------------------------------------------------------------------------------------------------
+    else {
+        $dt = RboxRemote::getDataReal($this, 'getCustomerByNumber_Full_v1', $x);
+    }
+    #---------------------------------------------------------------------------------------------------------------
+
+    #---------------------------------------------------------------------------------------------------------------
+    if ($code_uaac && $code_user) {
+        $uaac_task_id = $code_uaac;
+    } #---------------------------------------------------------------------------------------------------------------
+
+    elseif ($user_id) {
+
+        #===========================================================================================================
+        $uaac_task_id = NULL;
+        #===========================================================================================================
+
+        #===========================================================================================================
+        # ЕСЛИ ПРИВЯЗКА УЖЕ СУЩЕСТВУЕТ !!!
+        #-----------------------------------------------------------------------------------------------------------
+        if ($ch) {
+            echo '
+                Данный клиент SM уже привязан к аккаунту в системе онлайн: ' . $un . ' (#' . $user_id . ')<br /><br />
+                <a class="btn btn-lg btn-warning" href="/users/users_list/?sm_customer=' .
+                $ch['sm_customer_id'] . '">Посмотреть карточку клиента</a>';
+        }
+        #===========================================================================================================
+
+        #===========================================================================================================
+        # ЕСЛИ СОЗДАЕТСЯ НОВАЯ ПРИВЯЗКА
+        #-----------------------------------------------------------------------------------------------------------
+        else {
+            $dt = RboxRemote::getDataReal($this, 'getCustomerByNumber_Full_v1', $user_id);
+            if (isset($dt[1]['CustomerID']) && $dt[1]['CustomerID']) {
+
+                #---------------------------------------------------------------------------------------------------
+                # ЕСЛИ УКАЗАН ИМЕЙЛ ИЛИ МОБИЛЬНЫЙ
+                #---------------------------------------------------------------------------------------------------
+                if ($mail || $mobile) {
+                    $res_email = $res_mobile = NULL;
+                    if (preg_match(ChBase::MASK_EMAIL, $mail) == 1) {
+                        $res_email = Proc::smSendUAAC($this, 'sendmail_send_uaac', 'uaac', $user_id, $mail);
+                    } elseif (preg_match(ChBase::MASK_MOBILE_RUS, '7' . $mobile) == 1 && mb_strlen($mobile) == 10) {
+                        $res_mobile = Proc::smsUAAC($this, $user_id, $mobile, $this->siteLang);
+                    }
+                    #---------------------------------------------------------------------------------------------------
+                    if ($res_email || $res_mobile) {
+                        if (isset($res_email[1]) || $res_email[1]) {
+                            $uaac_task_id = $res_email[1];
+                        } elseif (isset($res_mobile[1]) || $res_mobile[1]) {
+                            $uaac_task_id = $res_mobile[1];
+                        }
+                    }
+                }
+                #---------------------------------------------------------------------------------------------------
+
+                #---------------------------------------------------------------------------------------------------
+                # ЕСЛИ ИМЕЙЛ ИЛИ МОБИЛЬНЫЙ НЕ УКАЗАНЫ
+                #---------------------------------------------------------------------------------------------------
+                else {
+                    #-----------------------------------------------------------------------------------------------
+                    $oper = $this->d['process']['operations']['standalone'];
+                    $scena = $this->d['process']['scenarios']['give_uaac'];
+                    $section = $this->d['process']['sections']['uaac'];
+                    $task_grup = implode(INI::DELIMITER_INTER, array($oper, $section, $scena));
+                    #-----------------------------------------------------------------------------------------------
+                    $uaac_task_id = Task::makeNew($this, __METHOD__, $task_grup,
+                        json_encode(GetParams::taskMakeUAAC($this, $user_id), JSON_UNESCAPED_UNICODE));
+                }
+            }
+        }
+        #===========================================================================================================
+
+    }
+
+    #---------------------------------------------------------------------------------------------------------------
+    if (!$user_id || ($user_id && !$ch)) {
+        if (!$un && isset($dt[1]['FullName']) && $dt[1]['FullName']) {
+            $un = $dt[1]['FullName'];
+        }
+        if ($un) {
+            echo '
+                Код активации аккаунта для пользователя:<br /><br >
+                <b><u>' . $un . '</b></u><br />
+                <b>' . $uaac_task_id . '</b><br /><br />
+                <form action="/users/make_uaac/" method="post">
+                    <button class="btn btn-lg btn-default" type="submit">' . $m['rbox_btn_continue'] . '</button>
+                </form>';
+        }
+    }
+    #---------------------------------------------------------------------------------------------------------------
+
+}
+#=======================================================================================================================
+
+
+#=======================================================================================================================
+if ($user_id && $ch) {
+    echo '<br /><br /><br />
+<form action="/users/make_uaac/" method="post">
+    <button class="btn btn-lg btn-danger" type="submit">' . $m['i_want_create_new_uaac'] . '</button>
+</form>';
+}
+#=======================================================================================================================

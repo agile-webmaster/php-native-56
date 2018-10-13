@@ -1,0 +1,63 @@
+:
+  title: Personal Cabinet des Systembenutzers
+  name: Personal Cabinet
+  short_title: Personal Cabinet
+  author: ООО "Rentabox" | Russland| Moskau
+  description: Rentabox – Minilager für Familie und Business
+  keywords: Rentabox – Minilager für Familie und Business
+user_register:
+  title: 'neuen Benutzer registrieren'
+  short_title: Benutzer-Anmeldung
+  label: Registrierung
+  welcome_1: Herzlich willkommen in das Benutzer-Anmeldungssytem!
+  welcome_2: >
+    Um sich erfolgreich als Benutzer anzumelden, füllen Sie die untenliegende Formular-Felder aus.<br />
+    Die mit "*" gekennzeichneten Felder sind Pflichtfelder.
+  note_sfields: >
+    Wenn Sie später online zahlen oder andere Handlungen in Ihrem Personal Cabinet
+    ausführen wollen, können Sie sofort andere Informationen angeben, die uns Sie
+    als unser Kunde richtig identifizierenund für Sie Zugriff zu
+    allen möglichen Handlungen freigeben lassen:
+  note_form_finish: oder die Anmeldung Ihres Konto sofort beenden
+lk_enter:
+  title: 'sich bei Personal Cabinet einloggen'
+  short_title: sich bei Benutzerkonto einloggen
+  label: Einloggen
+  welcome_1: Wir sind froh Sie auf unserer Website wieder zu sehen!
+  welcome_2: >
+    Geben Sie einen der persönlichen Identifikationsparameter an, um in das Kunden-Konto zuzugreifen!
+access_recover:
+  title: 'Zugriff in das Benutzerkonto wiederherstellen'
+  short_title: Zugriff-Wiederherstellung
+  label: wiederherstellen
+  welcome_1: Herzlich willkommen in das System der Zugriff-Wiederherstellung!
+  welcome_2: >
+    Bitte, geben Sie einen der persönlichen Identifikationsparameter an, die Sie früher schon benutzt haben:
+
+profile:
+  title: 'Hier können Sie die Angaben Ihrer Profileseite präzisieren'
+  name: Profileseite
+  short_title: 'Ihre persönlichen Angaben'
+  label: Profileseite
+profile_summary:
+  label: Profileseite
+  note: >
+    Hier können Sie Ihre persönlichen Angaben sehen und ihre Änderung bestellen.
+    Aktuelle Angaben können zum Abschluss neuer Verträge verwendet werden.
+    <b>Bitte, seien Sie aufmerksam, wenn Sie diese Parameter ändern!</b>
+moder_ru_phrases_de:
+  title: Phrase Management
+  name: Übersetzung
+  short_title: Übersetzung
+  label: Phrasen[DE]
+moder_ru_phrases_en:
+  title: Phrase Management
+  name: Übersetzung
+  short_title: Übersetzung
+  label: Phrasen[EN]
+
+user_exit:
+  title: 'Abmeldung vom Personal Cabinet des Benutzers'
+  name: Abmeldung
+  short_title: Abmeldung vom Personal Cabinet
+  label: Abmeldung

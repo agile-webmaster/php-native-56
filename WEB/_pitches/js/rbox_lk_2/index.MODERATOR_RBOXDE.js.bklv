@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Integrated by BKLV-Robo [RBOX-3]
+ * Version: 3.0.2
+ * Sysmtem URL: http://bklv.ru/robo/
+ * User: webmaster.rentabox@bklv.ru
+ * Date: 23.05.2017
+ * Time: 13:02
+ * Tech support:
+ *  - url: http://bklv.ru/tech_support/
+ *  - email: rbox.support.tech@bklv.ru
+ *  - phone: +7(495)220-17-27
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+#=======================================================================================================================
+/** @var $this App */ /** @var $layout_prefs array */  /** @var $layout_code array */ /** @var $layout_index string */
+/** @var $layout_event string */ /** @var $layout_template string */  /** @var $layout_ids array */
+/** @var $layout_js string */ /** @var $layout_styles array */ /** @var $layout_classes array */
+/** @var $custom_js array */ /** @var $template RboxTemplateJS */ /** @var $lp array Layout params */
+/** @var $gs string Gets safe */
+#=======================================================================================================================
+
+?>
+
+function search_all_pages() {
+    var display_show = 'table-row !important';
+    var display_hide = 'none !important';
+    var search_string = $('#<?=$layout_ids['in_srch_moder_allp']?>').val().toLowerCase();
+    $('.filtered').each(function (i) {
+        var in_string = false;
+        var content = $(this).attr('bklv-data-search').toLowerCase();
+        if (search_string == undefined || search_string == null || search_string == '') {
+            in_string = true;
+        }
+        else {
+            if (content.search(search_string) != -1) {
+                in_string = true;
+            }
+        }
+        var res = display_hide;
+        if (in_string) {
+            res = display_show;
+        }
+        $(this).attr('style', 'display: ' + res);
+    })
+}

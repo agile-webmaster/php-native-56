@@ -1,0 +1,148 @@
+# -------------- Schnittstellefunktion
+appStartPoint: Zeitstempel vom App
+appStopPoint: Zeitstempel vom APP stop
+appStartedAt: Countdown hat begon
+appStoppedAt: Zeitzählung beendete um
+
+# -------------- Verfahrenskette => Fix->$mess (Nachrichten)
+cm_app_start: GRUNDLEGEND – Die App ist normal gestartet
+cm_app_stop: GRUNDLEGEND – Die App ist normal gehalten
+cm_app_loadInitEnvParams: GRUNDLEGEND – Anfangsparameter der Umgebung
+cm_app_updateEnvParams: GRUNDLEGERND – Parameteraktualisierung der Schnittstelle-Umgebung
+cm_app_getRoutingParams: GRUNDLEGEND – Routingparameter bestimmen
+cm_app_renderFile: GRUNDLEGEND – Das File bearbeiten
+cm_app_useRemoteAction: GRUNDLEGEND – Aufruf einer entfernten Prozedur
+cm_db_chDBProfileName: DATENBANK – Anschlussprofile an die Datenbank prüfen
+cm_merge_deepYML4: VEREINIGUNG – Vereinigung von YML-Daten der 4. Netzwerkschicht vom Datenbereich-Baum
+cm_tool_getServer: HILFSEREIGNIS – Angabe aus den Bereich $_SERVER bekommen
+cm_tool_getParamFromArray: HILFSEREIGNIS – keine Null-Angabe aus dem Datenbereich bekommen
+cm_tool_getTime: HILFSEREIGNIS – Zeitstempel für das bestimmte Datum bekommen
+cm_tool_getFullDate: HILFSEREIGNIS – Zeitstempel in Form Y-m-d H:i:s bekommen
+cm_tool_pickNotEmptyValue: HILFSEREIGNIS – Prüfen, ob die Angabe keine Null-Angebe ist, sonst aus der Kette der untergeschobenen Angaben wählen
+cm_BKLV_BKLVsiteBlocker_checkIfAvailableForPublicUse: checkIfAvailableForPublicUse-Verfahren aus dem BKLV/BKLVsiteBlocker-Modul verwenden
+cm_fix_insertbx: 'DATEN AUS BITRIX IMPORTIEREN ::'
+
+# -------------- Datenbank-Beschreibung
+dbProfileName: Name vom Anschlussprofile an die Datenbank
+dbTableName: Titel der Tabelle
+dbErrorDesc: Fehlerbeschreibung bei der Arbeit mit der Datenbank
+dbFieldType: Feldtyp in der Datenbank
+
+# -------------- Typisierung von Fehlern
+errFatal: Der kritische Fehler
+errDBcheckerFieldNotSpecified: Kein Prüffeld in der Datenbank angegeben
+errRouting: Routing-Fehler
+errGetVarsForMigrateСheckerNotDefined: Variable für die Prüfung der Routingmigration sind nicht festgestellt
+errGetVarsForInsertBXСheckerNotDefined: Variable für die Routingprüfung zum Datenherunterladen aus Bitrix sind nicht festgestellt
+errDBProfileNameIsEmpty: Anschlussprofile an die Datenbank sind nicht angegeben
+errDBConnParamsAreWrong: Anschlussparameter lassen keinen Anschluss an die Datenbank
+errDBConnProfileNameIsNotInList: Anschlussprofile an die Datenbank sind nicht erkannt
+errDBTableNameUnknown: falscher Titel der Tabelle
+errDBTableIndexFieldTypeIsWrong: Falscher Indexfeldtyp der Tabelle
+errDBDataNotArray: Falsche Datenform (Datenbereich erforderlich)
+errDBFieldsAreWrong: Stichprobenartige Spalten sind falsch angewiesen
+errDBFilterIsWrong: Auswahl-Filter entspricht den Anforderungen nicht
+errDBLimitTypeWrong: Auswahl-Limit entspricht den Anforderungen nicht
+errPDO: Falsche PDO-Parameter
+errDBCreateDB: Das Schaffen von neuer Datenbank ist unmöglich
+errDBInsertRow: Das Angeben-Hinzufügen in die Tabelle ist unmöglich
+errDBSelectRow: Die Angaben-Auswahl aus der Tabelle ist unmöglich
+errDBUpdateRow: Die Angaben-Erneuerung in der Tabelle ist unmöglich
+errActionMethodIsNotValid: Kein Verfahren in der Klasse gefunden
+errFormStructureIsNull: Die Form mit leerer Struktur
+
+# -------------- Mikroereignisse – Titel der Meldungen
+ma_system_timing: Zeitzählung
+ma_rendering_fault: Misslungene Rendering-Prozedur
+ma_rendering_success: Gelungene Rendering-Prozedur
+ma_checker_db: Prüfung aus der DB
+ma_checker_routing: Routingprüfung
+ma_migrate_initialize: Start der Migrationsprozedur
+ma_migrate_make: Migrationsprozeduren
+ma_opt_change: Änderung ist möglich
+ma_checker_action: Verfahrensanwesenhiet in der Klasse prüfen
+ma_checker_form: Angabenprüfung (Formvalidität)
+ma_sql_insert: Angaben in die DB hinzufügen
+ma_sql_update: Angaben in der DB aktualisieren
+ma_remote_success: Erfolgsreiche Verwendung der entfernten Prozedur
+ma_auth_sess: Benutzer-Autorisierung  in der Session
+
+# -------------- MODALs
+modal_head_callback: Rückruf
+modal_head_chpprof: Profil ändern
+modal_head_getuaac: AB-Code erhalten
+modal_head_bronya: eine Box reservieren
+modal_head_use_uaac: AB-Code aktivieren
+modal_head_chupass: Das Passwort ändern
+modal_head_ch_txt_cntn: Text ändern
+modal_head_tsts_login: Login-Status
+modal_head_tsts_email: Status der E-Mail-Adresse
+modal_head_tsts_mobile: Handy-Status
+modal_head_add_email: E-Mail-Adresse hinzufügen
+modal_head_add_mobile: Handynummer hinzufügen
+modal_head_att_mobile: Handynummer aktivieren
+modal_body_callback_top: >
+  Sie wollen den Rückruf bestellen!<br />
+  Bitte, geben Sie Ihren Namen und die Telefonnummer an:
+modal_body_ch_txt_cntn_top: >
+  Sie werden den Text der Website ändern
+
+modal_body_chupass_note: Wir bearbeiten diese Daten so schnell wie möglich!
+modal_body_tsts_login_note: Drücken Sie "fortsetzen", nur wenn Sie sich der Sache absolut sicher sind!
+modal_body_tsts_email_note: Drücken Sie "fortsetzen", nur wenn Sie sich der Sache absolut sicher sind!
+modal_body_tsts_mobile_note: Drücken Sie "fortsetzen", nur wenn Sie sich der Sache absolut sicher sind!
+modal_body_add_email_note: Der Brief mit dem Link für die Aktivierung Ihrer E-Mail-Adesse wird Ihnen sofort versandt werden!
+modal_body_add_mobile_note: Aktivierungscode für Ihre Handynummer wird Ihnen per SMS  so schnell wie möglich versandt werden!
+modal_body_att_mobile_note: Die Handynummer wird so schnell wie möglich aktiviert werden!
+modal_footer_close: 'Schließen'
+modal_proceed_ok_text: Danke, Ihre Bestellung ist angenommen!<br /> Wir setzen uns mit Ihnen so schnell wie möglich in Verbindung!
+modal_proceed_ok_btn: Seitennavigation fortsetzen
+modal_proceed_err_text: Ihre Angaben sind nicht richtig, oder Sie haben nicht genug Sonderrechte! FEHLER!
+modal_proceed_err_btn: Website-Navigieren fortsetzen
+modal_proceed_success_text: Ihre Transaktion ist erfolgreich bearbeitet!
+modal_proceed_err_code: Ungültiger Aktivierungscode (falsch angegeben, wurde früher aktiviert oder ist abgelaufen)
+
+# -------------- E-MAIL-MITTEILUNGEN
+sendmail:
+  title:
+    text:
+      sm.err_modal.sm_callback: 'Technischer Fehler im modalen Fenster  während der "Rückruf"-Prozedur auf der Website  {{domain}}!'
+      sm.err_sender.sm_opinion: 'Technischer Fehler im modalen Fenster  während der «Neue Bewertung»-Prozedur auf der Website{{domain}}'
+      sm.err_sender.sm_reserve: 'Technischer Fehler im modalen Fenster  während der «Box Reservierung»-Prozedur auf der Website{{domain}}!'
+      sm.err_modal.ch_pprofile: 'Technischer Fehler im modalen Fenster, Regime "Änderung der personenbezogenen Daten des Benutzers"  {{domain}}!'
+      sm.err_modal.getuaac: 'Technischer Fehler im modalen Fenster, Regime "AB-Code erhalten" auf der Website {{domain}}!'
+
+
+      sm.proc_sender.sm_opinion: 'Es kam eine neue "Neue Bewertung"-Meldung auf der Website {{domain}}!'
+      sm.proc_sender.sm_reserve: 'Es kam eine neue "Box Reservierung"-Meldung auf der Website {{domain}}!'
+  ........................................
+text_about_us_2: >
+  <h3>Self-storage conditions</h3>
+  <p>
+    RENTABOX is a young self-storage company that offers rent-a-box services
+    to the physical and commercial clients for any popular period that is
+    from 2-3 days to several years.
+    Modern life has its conditions, a person faces
+    the constant need to acquire new things - machinery, furniture and
+    different life-style goods. Their less perfect and more cumbersome, but still
+    having valuable precursors take up a lot of space, and extra
+    clutter in a small house no one needs. For items that are
+    still needed, but not used often, there are boxes of individual storage,
+    adapted for full provision the safety of a variety of things.
+  </p>
+text_services: >
+  <h1>Moving and transportation services</h1>
+  <p>
+    RENTABOX Company has its own park of minivan cars Citroen Jumper with
+    a body volume of 15 cubic meters. At any convinient for You time our
+    transportation specialists will arrive, pack, load and deliver things
+    to our self-storage office. If it is necessary to transport large-sized
+    furniture they will disassemble it, securely pack it and deliver.
+  </p>
+
+documents_contract: 'Typical rent-a-box agreement'
+.........................
+address: Adresse
+phone: Telefon
+web_site_project: Projektcode
+key: Positionsindex

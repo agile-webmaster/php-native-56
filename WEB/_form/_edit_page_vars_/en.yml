@@ -1,0 +1,10 @@
+note:
+  label: Page title<br />(tech param)
+  pholder: Input title
+pr_for_header_left:
+  label: Page rank in header menu (left column) - integer
+used_in_under_clock:
+  label: Usage indicator - in header menu under clock (1 <-> yes)
+used_in_header_bottom:
+  label: Usage indicator - in header menu at bottom (1 <-> yes)
+

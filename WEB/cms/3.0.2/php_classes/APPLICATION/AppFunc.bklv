@@ -1,0 +1,285 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Integrated by BKLV-Robo [RBOX-3]
+ * Version: 3.0.2
+ * Sysmtem URL: http://bklv.ru/robo/
+ * User: webmaster.rentabox@bklv.ru
+ * Date: 23.05.2017
+ * Time: 13:02
+ * Tech support:
+ *  - url: http://bklv.ru/tech_support/
+ *  - email: rbox.support.tech@bklv.ru
+ *  - phone: +7(495)220-17-27
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+#=======================================================================================================================
+$path = $_SERVER['DOCUMENT_ROOT'] . '/.bklv';
+/** @noinspection PhpIncludeInspection */
+include($path);
+#=======================================================================================================================
+
+/** Class SYSTEM-AppParams */
+class AppFunc extends AppParams
+{
+
+    #===================================================================================================================
+    /**
+     * 1. Usual start of the App [Старт приложения в нормальном режиме]
+     * @param $method string Class::method
+     */
+    public function start($method)
+    {
+        /** @var $this App */
+        #---------------------------------------------------------------------------------------------------------------
+        $this->appTimeStart = $this->appTimeCurrent = microtime(TRUE);
+        if (isset(INI::$appTimeStart)) {
+            $this->appTimeStart = INI::$appTimeStart;
+        }
+        Fix::cm($method, '{{cm_app_start}}', $this->appTimeStart . ': ' . TOOL::getFullDate($this, $this->appTimeStart));
+        #---------------------------------------------------------------------------------------------------------------
+        /** 1.2 Sys */
+        $this->sysIndex = CFG::$sysIndex;
+        $this->sysURLs = CFG::$sysURLs;
+        #---------------------------------------------------------------------------------------------------------------
+        /** 1.3 Site */
+        $this->siteTime = TOOL::getTime($this->appTimeStart);
+        $this->siteDir = CFG::$siteDir;
+        $this->siteLang = $this->userLang = CFG::$siteLang;
+        $this->siteSSL = CFG::$siteSSL;
+        $this->siteIndex = CFG::$siteIndex;
+        $this->siteHost = INI::$siteHost;
+        $this->siteOptLocality = CFG::$setLocality;
+        ..............................
+        $this->dbProfileName = CFG::$dbProfileName;
+        $this->dbTableNames = TOOL::getDBTableNames($this);
+        $this->data = MERGE::deepYML4($this, TOOL::getCFGfileList($this));
+        #---------------------------------------------------------------------------------------------------------------
+        /** 1.7 SHORTS [d] */
+        $this->t = &$this->dbTableNames;
+        $this->d = &$this->data;
+        #---------------------------------------------------------------------------------------------------------------
+        /** 1.8 SCHEMATA */
+        $this->sitePageSchemaType = CFG::$sitePageSchemaType;
+        #---------------------------------------------------------------------------------------------------------------
+    }
+    #===================================================================================================================
+
+    #===================================================================================================================
+    /** 2. Use site lockers [Использовать внешние ограничители по IP, COOKIE, etc]  @var $params array */
+    public function siteLockers($params)
+    {
+        foreach ($params as $k => $v) {
+            foreach ($v as $vv) {
+                $k::$vv($this);
+            }
+        }
+    }
+    #===================================================================================================================
+
+    #===================================================================================================================
+    /** 3. Load init environment parameters [Загрузка начальных параметров окружения] */
+    public function loadInitEnvParams()
+    {
+        #---------------------------------------------------------------------------------------------------------------
+        /** @var $this App */
+        Fix::cm(__METHOD__, '{{cm_app_loadInitEnvParams}}', INI::i . implode(INI::NL_BRi,
+                array('initUserUserID', 'initUserSessionID', 'initUserLanguageID')));
+        #---------------------------------------------------------------------------------------------------------------
+        $user_ids = $this->d['init']['id']['cook']['user'];
+        #---------------------------------------------------------------------------------------------------------------
+        $this->initUserUserID = TOOL::getParamFrArr($this->cook, $user_ids['person']);
+        $this->initUserSessionID = TOOL::getParamFrArr($this->cook, $user_ids['session']);
+        $this->initUserLanguageID = TOOL::getParamFrArr($this->cook, $user_ids['language']);
+        $this->initSiteRouting = $this->getInitRouting(CFG::$initRouting);
+        #---------------------------------------------------------------------------------------------------------------
+    }
+    #===================================================================================================================
+.....................
+    #===================================================================================================================
+    /** 7. Setup app exec Params [Уточняем параметры работы приложения] */
+    public function setupExecutionParams()
+    {
+        /** @var $this App */
+        #---------------------------------------------------------------------------------------------------------------
+        $l = array(INI::Y, $this->siteLang . INI::Y);
+        $path = CFG::$sitePath . '/' . INI::DIR_PAGES . '/' . $this->siteIndex . '/';
+        $this->pageSiteSchema = MERGE::deepYML4($this, $l, $path);
+        if ($this->sitePageSchemaType == 'sql') {
+            $this->pageSiteSchema = array('' => $this->pageSiteSchema['']);
+            $nf = A::db($this)['_note_fields'];
+            $flt = array('site' => $this->siteIndex, 'lang' => $this->siteLang, 'param' => 'status', 'value' => NULL);
+            $p = array();
+            foreach (DB::sqlSelect($this, 'tbPageParams', array($flt)) as $v) {
+                $p[$v['uri']] = array();
+            }
+            foreach (array_keys($p) as $uri) {
+                $flt = array('site' => $this->siteIndex, 'lang' => $this->siteLang, 'uri' => $uri);
+                if (!isset($this->pageSiteSchema[$uri])) {
+                    $this->pageSiteSchema[$uri] = $this->pageSiteSchema[''];
+                }
+                foreach (DB::sqlSelect($this, 'tbPageParams', array($flt)) as $v) {
+                    $this->pageSiteSchema[$v['uri']][$v['param']] = trim($v['value']);
+                }
+            }
+        }
+        foreach ($this->pageSiteSchema as $k => $v) {
+            foreach ($v as $kk => $vv) {
+                if (!is_array($vv)) {
+                    $this->pageSiteSchema[$k][$kk] = str_replace('"', '&quot;', $vv);
+                }
+            }
+        }
+        $init = $this->pageSiteSchema[''];
+        $route = implode('/', CFG::$initRouting);
+        $current = array();
+        if (isset($this->pageSiteSchema[$route])) {
+            $current = $this->pageSiteSchema[$route];
+        }
+        $this->p = $this->pageParams = MERGE::deep4One($init, $current);
+        #---------------------------------------------------------------------------------------------------------------
+        $l = array(INI::Y, $this->siteLang . INI::Y);
+        $path = CFG::$sitePath . '/' . INI::DIR_PAGES . '/' . $this->sysIndex . '/';
+        $this->pageSysSchema = MERGE::deepYML4($this, $l, $path);
+        if (isset($this->pageSysSchema[''])) {
+            foreach ($this->pageSysSchema as $k => $v) {
+                $this->pageSysSchema[$k] = MERGE::deep4One($this->pageSysSchema[''], $v);
+            }
+        }
+        #---------------------------------------------------------------------------------------------------------------
+        $this->urlGetsSafe = $this->makeGet(CFG::$initGet, $this->d['init']['id']['get_safe']);
+        #---------------------------------------------------------------------------------------------------------------
+    }
+    #===================================================================================================================
+
+    #===================================================================================================================
+    /** 8. Setup trace and debug screens [Уточняем итоговые параметры трейсинга и дебаггинга] */
+    public function setupScreenParams()
+    {
+        /** @var $this App */
+        #---------------------------------------------------------------------------------------------------------------
+        ...........................
+        INI::upErr($this);
+        $this->userBrowserAgent = TOOL::getBrowserAgentID($this);
+        User::sessAuth($this);
+        #---------------------------------------------------------------------------------------------------------------
+        if ($this->siteOptTrace) {
+            Logger::$traceAllow = TRUE;
+            Logger::showLostTrace($this);
+        }
+        #---------------------------------------------------------------------------------------------------------------
+    }
+    #===================================================================================================================
+
+    #===================================================================================================================
+    /** 8. Use Remote Action
+     * @var $h string Handler
+     * @var $act string Action
+     * @var $p array
+     * @var $alt_h string Handler2
+     * @var $alt_m string Action2
+     */
+    function useRemoteAction($h = NULL, $act = NULL, $p = array(), $alt_h = NULL, $alt_m = NULL)
+    {
+        #---------------------------------------------------------------------------------------------------------------
+        /** @var $this App */
+        $note = INI::i . implode(INI::NL_BRi, array($h . ' - ' . $act, $alt_h . ' - ' . $alt_m));
+        #---------------------------------------------------------------------------------------------------------------
+        Fix::cm(__METHOD__, '{{cm_app_useRemoteAction}}', $note);
+        $x = INI::FUNC_METHOD_DEFAULT;
+        #---------------------------------------------------------------------------------------------------------------
+        if (method_exists($h, $act)) {
+            $hh = new $h($this);
+            if ($p) {
+                Logger::Fix($this, __METHOD__, '{{ma_remote}}', '{{ma_remote_success}}',
+                    '{{fixUseCustomHandlerAndActionWithParams}}', '<u>{{description}}</u>: ' . $h . ' - ' . $act);
+                $hh->$act($this, $p);
+            } else {
+                Logger::Fix($this, __METHOD__, '{{ma_remote}}', '{{ma_remote_success}}',
+                    '{{fixUseCustomHandlerAndActionWithoutParams}}', '<u>{{description}}</u>: ' . $h . ' - ' . $act);
+                $hh->$act($this);
+            }
+        } #---------------------------------------------------------------------------------------------------------------
+        else {
+            #---------------------------------------------------------------------------------------------------------------
+            $note = INI::i . implode(INI::NL_BRi, array($alt_h . ' - ' . $act, $alt_h . ' - ' . $x));
+            #---------------------------------------------------------------------------------------------------------------
+            Logger::Fix($this, __METHOD__, '{{ma_remote}}', '{{ma_remote_success}}',
+                '{{fixCannotUseCustomHandlerAndAction}}', '<u>{{description}}</u>: ' . $h . ' - ' . $act);
+            #-----------------------------------------------------------------------------------------------------------
+            .....................
+
+        }
+    }
+}
+
+#===================================================================================================================
+
+
+#===================================================================================================================
+/**
+ * Renders a particular view - for trace needs (no render log).
+ * @var $_f string string $filename name of routes to be rendered.
+ * @var $_d array params
+ * @var $_o bool
+ * @return bool
+ */
+public
+function renderFileForTrace($_f = null, $_d = array(), $_o = FALSE)
+{
+    /** @var $this App */
+    foreach (array('_x', '_u', '_d', '_k', '_f', '_o') as $_k) {
+        if (array_key_exists($_k, $_d)) {
+            return FALSE;
+        }
+    }
+    foreach ($_d as $_x => $_u) {
+        $$_x = $_u;
+    }
+    unset($_d, $_x, $_k, $_u);
+    if (file_exists($_f) && $_o) {
+        unset($_o);
+        /** @noinspection PhpIncludeInspection */
+        include_once($_f);
+        return TRUE;
+    } elseif (file_exists($_f)) {
+        unset($_o);
+        /** @noinspection PhpIncludeInspection */
+        include($_f);
+        return TRUE;
+    }
+    return FALSE;
+}
+
+#===================================================================================================================
+........................
+#===================================================================================================================
+/**
+ * update user code of the visitor
+ * @var $tb_name string - table name
+ * @var $index string index
+ * @var $hash string hash
+ * @var $note string
+ * @return string Hash
+ */
+public
+function upUserCode($tb_name, $index, $hash, $note)
+{
+    /** @var $this App */
+    #---------------------------------------------------------------------------------------------------------------
+    DB::sqlInsert($this, $tb_name, array($index => $hash, '_wsi' => $this->siteIndex, '_ats' => $this->siteTime));
+    #---------------------------------------------------------------------------------------------------------------
+    $i = DB::checkValue($this, $tb_name, $index, $hash, $note);
+    #---------------------------------------------------------------------------------------------------------------
+    if ($hash && $i == $hash) {
+        $j = $this->d['init']['id']['cook']['user']['person'];
+        TOOL::setCookie($this, $j, $hash, $this->siteTime, $this->siteHost);
+        return $hash;
+    }
+    #---------------------------------------------------------------------------------------------------------------
+    return NULL;
+}
+#===================================================================================================================
+}

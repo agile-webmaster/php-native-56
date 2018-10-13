@@ -1,0 +1,72 @@
+<
+style type
+
+=
+"text/css"
+>
+    /**
+     * ---------------------------------------------------------------------------------------------------------------------
+     * Integrated by BKLV-Robo [RBOX-3]
+     * Version: 3.0.2
+     * Sysmtem URL: http://bklv.ru/robo/
+     * User: webmaster.rentabox@bklv.ru
+     * Date: 23.05.2017
+     * Time: 13:02
+     * Tech support:
+     *  - url: http://bklv.ru/tech_support/
+     *  - email: rbox.support.tech@bklv.ru
+     *  - phone: +7(495)220-17-27
+     * ---------------------------------------------------------------------------------------------------------------------
+     */
+.trace {
+    padding: 0px;
+    border-radius: 12px;
+    border: #999 5px solid;
+    margin: 14px 28px 8px 28px;
+}
+
+.trace_inner {
+    padding: 10px 12px;
+    border: #222 2px solid;
+    background: #ffa;
+    border-radius: 8px;
+    margin: 0px;
+}
+
+.trace_time {
+    font-weight: 900;
+    font-size: 80%;
+    background: lightblue;
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+
+.trace_message_group {
+    text-decoration: underline;
+}
+
+.trace_message_header {
+    font-weight: 900;
+}
+
+.trace_message_body {
+    background: lightgreen;
+    width: 100%;
+    font-weight: 900;
+    font-size: 85%;
+    line-height: 96%;
+}
+
+.trace_note {
+    font-style: italic;
+}
+
+.trace_fatal {
+    background: #f88;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+<
+/
+style >

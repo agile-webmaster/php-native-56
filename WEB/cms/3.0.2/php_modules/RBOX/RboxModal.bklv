@@ -1,0 +1,116 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Integrated by BKLV-Robo [RBOX-3]
+ * Version: 3.0.2
+ * Sysmtem URL: http://bklv.ru/robo/
+ * User: webmaster.rentabox@bklv.ru
+ * Date: 23.05.2017
+ * Time: 13:02
+ * Tech support:
+ *  - url: http://bklv.ru/tech_support/
+ *  - email: rbox.support.tech@bklv.ru
+ *  - phone: +7(495)220-17-27
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+#=======================================================================================================================
+$path = $_SERVER['DOCUMENT_ROOT'] . '/.bklv';
+/** @noinspection PhpIncludeInspection */
+include($path);
+#=======================================================================================================================
+
+/** Basic Modal content class */
+class RboxModal
+{
+
+    var $index;
+
+    var $specialContent;
+    var $mHead;
+    var $mPostHead;
+    var $mContentTop;
+    var $mContentNote;
+    var $mButtonProceed;
+    var $mButtonClose;
+    var $mJSProceedFunction;
+    var $form;
+    var $text;
+    var $ch;
+
+    #===================================================================================================================
+
+    /** Initializes new content
+     * @var $app App
+     * @var $scena_key string
+     * @var $params array
+     * @var $post array
+     */
+    function __construct(App &$app, $scena_key, $params, $post)
+    {
+        $scena = $app->d['process']['scenarios'][$scena_key];
+        $this->form = A::f($app, $scena);
+        $this->ch = new FormChecker($app, $scena, $post);
+        .......................
+    }
+}
+}
+#===================================================================================================================
+.................
+#===================================================================================================================
+public
+function sendmail_callback(App &$app, $scena_key, $params = array(), $values = array())
+{
+    #---------------------------------------------------------------------------------------------------------------
+    $this->index = 'callback';
+    $toggler = NULL;
+    $section_key = NULL;
+    if (isset($params['section'])) {
+        $section_key = $params['section'];
+    }
+    #---------------------------------------------------------------------------------------------------------------
+    if (array_key_exists('proceed', $params) && $params['proceed'] && !$this->ch->errors) {
+        #-----------------------------------------------------------------------------------------------------------
+        if (in_array('sendmail', $params['opers'])) {
+            $proc = Proc::smCallback($app, $scena_key, $section_key, $values);
+            if ($proc == INI::YES && !$toggler) {
+                $toggler = INI::YES;
+            } else {
+                #---------------------------------------------------------------------------------------------------
+                $toggler = INI::NO;
+                $pref = $app->d['pref']['ref'];
+                $err_id = ErrTech::makeNewErrTech($app, __METHOD__, $scena_key, $section_key);
+                Proc::fixErrTech($app, $scena_key, $section_key, $err_id, Rbox::$errTechOpers);
+                #---------------------------------------------------------------------------------------------------
+                $this->specialContent = A::d($app, 'm')['errFatalModal'] . '<br /><br />' .
+                    A::d($app, 'm')['errReference'] . ': <b>' . $pref . $err_id . '</b><br /><br />
+                    <button type="button" class="btn btn-big btn-warning" data-dismiss="modal">' .
+                    A::d($app, 'm')['modal_footer_close'] . '</button>';
+            }
+        }
+        #-----------------------------------------------------------------------------------------------------------
+    }
+    #---------------------------------------------------------------------------------------------------------------
+    if ($toggler == INI::YES) {
+        $this->specialContent = $this->getSpecialContent($app);
+    }
+    #---------------------------------------------------------------------------------------------------------------
+}
+
+#===================================================================================================================
+
+.......................
+#===================================================================================================================
+public
+function messageFault(App &$app)
+{
+    return A::d($app, 'm')['modal_proceed_err_text'] . '<br /><br />
+        <button type="button" class="btn btn-big btn-warning" data-dismiss="modal">' .
+        A::d($app, 'm')['modal_proceed_err_btn'] . '</button>';
+}
+
+#===================================================================================================================
+.........................
+
+}

@@ -1,0 +1,70 @@
+:
+  p_role: ''
+user_register:
+  layout: rbox|rbox_lk_2
+lk_enter:
+  layout: rbox|rbox_lk_2
+  status: active
+access_recover:
+  layout: rbox|rbox_lk_2
+
+profile:
+  layout: rbox|rbox_lk_2
+  p_role: 'CLIENT|MANAGER|DIRECTOR|FINANCIER|ADMIN|DEVELOPER|MODERATOR_RBOXRU|MODERATOR_RBOXDE|...................'
+  glyphicon: home
+..................................
+users:
+  layout: rbox|rbox_lk_2
+  p_role: 'DEVELOPER|MANAGER|DIRECTOR|FINANCIER'
+  glyphicon: user
+manage_roles:
+  layout: rbox|rbox_lk_2
+  p_role: 'DEVELOPER'
+  ref: users
+
+support:
+  layout: rbox|rbox_lk_2
+  p_role: 'DEVELOPER|MANAGER|DIRECTOR|CLIENT|MODERATOR_RBOXRU|MODERATOR_RBOXDE'
+  glyphicon: flag
+requests_active:
+  layout: rbox|rbox_lk_2
+  p_role: 'DEVELOPER'
+  ref: support
+requests_archieve:
+  layout: rbox|rbox_lk_2
+  p_role: 'DEVELOPER'
+  ref: support
+requests_new:
+  layout: rbox|rbox_lk_2
+  p_role: 'DEVELOPER'
+  ref: support
+
+moder_de_pages:
+  layout: rbox|rbox_lk_2
+  p_role: 'DEVELOPER|MODERATOR_RBOXDE|DIRECTOR'
+  ref: moder_office_de
+  target_site: RboxWebDe
+  template: moder_pages
+  module_ckeditor: 1
+moder_ru_templates:
+  layout: rbox|rbox_lk_2
+  p_role: 'DEVELOPER|MODERATOR_RBOXRU|DIRECTOR'
+  ref: moder_office_ru
+  target_site: RboxWebRu
+  template: moder_templates
+  module_ckeditor: 1
+
+moder_ru_phrases_en:
+  layout: rbox|rbox_lk_2
+  p_role: 'DEVELOPER|DIRECTOR'
+  ref: moder_office_ru
+  target_site: RboxWebRu
+  localization: en
+  template: moder_phrases
+
+user_exit:
+  layout: rbox|rbox_lk_2
+  p_role: 'DEVELOPER|ADMIN|DIRECTOR|MODERATOR|MANAGER|CLIENT|FINANCIER|MODERATOR_RBOXRU|MODERATOR_RBOXDE'
+  type: link
+  glyphicon: log-out
+

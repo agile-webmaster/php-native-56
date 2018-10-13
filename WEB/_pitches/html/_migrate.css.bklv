@@ -1,0 +1,54 @@
+<
+style type
+
+=
+"text/css"
+>
+    /**
+     * ---------------------------------------------------------------------------------------------------------------------
+     * Integrated by BKLV-Robo [RBOX-3]
+     * Version: 3.0.2
+     * Sysmtem URL: http://bklv.ru/robo/
+     * User: webmaster.rentabox@bklv.ru
+     * Date: 23.05.2017
+     * Time: 13:02
+     * Tech support:
+     *  - url: http://bklv.ru/tech_support/
+     *  - email: rbox.support.tech@bklv.ru
+     *  - phone: +7(495)220-17-27
+     * ---------------------------------------------------------------------------------------------------------------------
+     */
+.migrate_header {
+    padding: 4px 0px 8px 0px
+}
+
+.migrate_head {
+    font: 12px Verdana;
+    margin: 4px 0px 0px 0px;
+    color: #444444;
+    line-height: 140%;
+    font-weight: 900;
+    padding: 4px 8px 2px 4px;
+    background-color: #eeeeee;
+    border: #bbb solid;
+    border-width: 1px 1px 1px 1px
+}
+
+.migrate_head:hover {
+    background-color: #dddddd;
+    cursor: pointer
+}
+
+.migrate_text {
+    display: none;
+    font: 11px Verdana;
+    color: #444444;
+    line-height: 140%;
+    padding: 12px 8px 8px 8px;
+    border: #bbb solid;
+    border-width: 0px 1px 1px 1px
+}
+
+<
+/
+style >

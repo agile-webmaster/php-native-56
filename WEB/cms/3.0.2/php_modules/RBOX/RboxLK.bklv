@@ -1,0 +1,107 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Integrated by BKLV-Robo [RBOX-3]
+ * Version: 3.0.2
+ * Sysmtem URL: http://bklv.ru/robo/
+ * User: webmaster.rentabox@bklv.ru
+ * Date: 23.05.2017
+ * Time: 13:02
+ * Tech support:
+ *  - url: http://bklv.ru/tech_support/
+ *  - email: rbox.support.tech@bklv.ru
+ *  - phone: +7(495)220-17-27
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+#=======================================================================================================================
+$path = $_SERVER['DOCUMENT_ROOT'] . '/.bklv';
+/** @noinspection PhpIncludeInspection */
+include($path);
+#=======================================================================================================================
+
+/** Class RboxLK */
+class RboxLK extends Rbox
+{
+
+    #===================================================================================================================
+    /** Main function for the RboxLK Handler * @param App $app */
+    public function rfibank(App &$app)
+    {
+        #---------------------------------------------------------------------------------------------------------------
+        $params = array();
+        $init = array();
+        $x = FALSE;
+        $m = A::d($app, 'm');
+        $keys = explode('|', $app->d['api']['rfi_bank_online']['query_fields']);
+        $sc = $app->d['api']['rfi_bank_online']['secret_key'];
+        $y = 'ncp_fault_url_wrong';
+        #---------------------------------------------------------------------------------------------------------------
+        if (CFG::$initRouting[2] == 'processing') {
+            $init = CFG::$initPost;
+            $x = TRUE;
+        } elseif (CFG::$initRouting[2] == 'success' || CFG::$initRouting[2] == 'fault') {
+            $init = CFG::$initGet;
+            $x = TRUE;
+        }
+        if ($x) {
+            foreach ($keys as $k) {
+                if (array_key_exists($k, $init)) {
+                    $params[$k] = $init[$k];
+                } else {
+                    $x = FALSE;
+                }
+            }
+        }
+        #---------------------------------------------------------------------------------------------------------------
+        if ($x && array_key_exists('check', $init) && $init['check']) {
+            if (md5(implode('', $params) . $sc) == $init['check']) {
+                $tb_name = 'tbNCPInvoices';
+                ...........................
+            } else {
+                $y = 'ncp_fault_invoice_status_modified';
+                $x = FALSE;
+            }
+            echo '
+                <p style="text-align: center; padding-top: 30px"><a href="/info/payments_list/">' . $m['rbox_go_oper_arch'] . '</a></p>';
+            #-------------------------------------------------------------------------------------------------------
+        } else {
+            $y = 'ncp_fault_check_error';
+            $x = FALSE;
+        }
+    } else
+{
+$y = 'ncp_fault_check_empty';
+$x = FALSE;
+}
+
+#---------------------------------------------------------------------------------------------------------------
+....................
+Logger::makeLogToMySQLOne($app);
+INI::fault();
+}
+}
+#===================================================================================================================
+
+
+#===================================================================================================================
+public
+function kicker(App &$app)
+{
+    INI::make_html($app);
+    $tbl = 'tbTask';
+    $j = $app->d['init']['id']['get']['task'];
+    $t = $app->t[$tbl];
+    $sf = $app->d['db']['status_fields'][$t];
+    $statuses = $sf['list'];
+    if (isset(CFG::$initGet[$j])) {
+        ............................
+        #-----------------------------------------------------------------------------------------------------------
+        $i = $app->d['template']['default']['filename']['html'];
+        $lp = $this->updateLayoutParamsForHTML($app, $this->prepareInitLayoutParams($app));
+        $app->renderFile(INI::DIR_LAYOUTS . '/' . $app->eventLayout . '/' . $i . INI::X, $lp, TRUE);
+    }
+    #===================================================================================================================
+    ........................
+}

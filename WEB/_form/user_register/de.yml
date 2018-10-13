@@ -1,0 +1,56 @@
+login:
+  label: Login
+  pholder: Login angeben
+  note: >
+    Mögliche Loginsymbole - Ziffer, lateinische Buchstaben, <br/>
+    und Zeichen"-" (Gedankenstrich) und/oder "_" (Unterstrich)<br/>
+    (zum Beispiel: <b>Petr_1983</b>)
+password:
+  label: Passwort
+  pholder: Passwort angeben
+  note: >
+    Das Passwort soll möglichst kompliziert sein
+    <br/>(Minimum – 4 Symbole)
+password2:
+  label: Passwort<br />wiederholen
+  pholder: Passwort wiederholen
+  note: Ihr Passwort ist zu wiederholen
+uaac:
+  label: Aktivierungscode<br />des Benutzerkontos<br />(AB-code)
+  pholder: Ihren AB-code angeben
+  note: >
+    Geben Sie Ihren Aktivierungscode des Benutzerkontos an <br />
+    (AB-code wird vom Manager bei der Vertrag-Registrierung<br />
+    oder nach dem Kundenantrag ausgestellt – zu Händen bei Vorlage <br />
+    eines Papiers, das die Vollmachten für die Erledigung  <br />
+    solcher Handlungen bestätigt), zum Beispiel: <b>DF-ALM-32424</b>
+email:
+  label: E-Mail-Adresse
+  pholder: Ihre E-Mail-Adresse
+  note: >
+    Wir können die E-Mail-Adresse zum Versand<br />
+    der elektronischen Anzeigen, Sowie für die<br />
+    Zugriffs-Wiederherstellung zu Ihrem Personal Cabinet<br />
+    benutzen. Damit wir diese E-Mail-Adresse benutzen können,<br />
+    sollen Sie dem Link folgen und die Adresse bestätigen
+mobile_number_ru:
+  label: Handynummer
+  pholder: Ihre Handynummer angeben
+  note: >
+    Handynummer, registriert vom russischen Mobilnetzbetreiber<br />
+    – leider Können wir die SMS-Nachrichten ins Ausland nicht<br />
+    senden (die letzten 10 Ziffer, was der Handynummer<br />
+    ohne die erste Ziffer entspricht), zum Beispiel:<br />
+    <b>9032221122</b>
+fio_last:
+  label: Familienname
+  pholder: Familiennamen angeben
+  note: 'Familienname wie im Vertrag, zum Beispiel, Ivanov'
+fio_first:
+  label: Vorname
+  pholder: Vornamen angeben
+  note: 'Name wie im Vertrag, zum Beispiel, Ivan'
+fio_middle:
+  label: Vatersanme
+  pholder: Vatersnamen angeben
+  note: 'Vatersname wie im Vertrag, zum Beispiel, Ivanovitsch'

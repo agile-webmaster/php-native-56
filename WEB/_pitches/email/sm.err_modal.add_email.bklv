@@ -1,0 +1,11 @@
+<p>
+    {{title}}:
+</p>
+<p style="padding: 12px; border: 3px #999 solid; background: #eee; border-radius: 8px">
+    <u>{{err_tech_id_name}}</u>: <b>{{err_tech_id_value}}</b><br />
+    <u>{{err_tech_user_id_name}}</u>: <b>{{err_tech_user_id_value}}</b><br />
+    <u>{{err_tech_tr_id_name}}</u>: <b>{{err_tech_tr_id_value}}</b><br />
+</p>
+<p>
+    {{data_admin}}
+</p>

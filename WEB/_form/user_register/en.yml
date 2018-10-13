@@ -1,0 +1,56 @@
+login:
+  label: Login
+  pholder: Enter your login
+  note: >
+    You can use only numbers, latin alphabet letters <br/>
+    and symbols "-" (hyphen) и "_" (bottom
+    line)<br/>(for example: <b>JaneLukash_23</b>)
+password:
+  label: Password
+  pholder: Enter password
+  note: >
+    Be sure that You don't use weak pass phrase
+    <br/>(minimum length of the record is 4 symbols)
+password2:
+  label: Password again
+  pholder: Repeat password
+  note: Repeat the pass phrase to be sure it's not wrong
+uaac:
+  label: User Profile<br />Activation<br />Code (UPAC)
+  pholder: Enter your UPAC
+  note: >
+    Input here your User Profile Activation Code<br />
+    (usually UPAC is prepared to each of our client<br />
+    by the manager during our client's first visit<br />
+    to the office and may be immidiately reissued<br />
+    in any case of need), for example: <b>DY-TTS-12133</b>
+email:
+  label: E-mail
+  pholder: Enter your e-mail
+  note: >
+    Subsequently we will use this e-mail to send you<br />
+    notifications or start web-site account access<br />
+    recover procedure or solve other of your requests.<br />
+    You will not be able to use this e-mail until the<br />
+    owner will confirm his position to use it in this way.
+mobile_number_ru:
+  label: Mobile phone <br />number
+  pholder: Enter your mobile phone
+  note: >
+    This can be ONLY a mobile phone number that is registered<br />
+    on the territory of Russian Federation and served by one of<br />
+    the Russian cell operators - unfortunately, we have no<br />
+    possibility to send SMS-messages abroad (you will need to put<br />
+    just the last 10 numbers), for example: <b>9032221122</b>
+fio_last:
+  label: Last name
+  pholder: Enter your last name
+  note: 'Enter your last name as it is stated in contract'
+fio_first:
+  label: First name
+  pholder: Enter your first name
+  note: 'Enter your first name as it is stated in contract'
+fio_middle:
+  label: Middle name
+  pholder: Enter your middle name
+  note: 'Enter your middle name as it is stated in contract'

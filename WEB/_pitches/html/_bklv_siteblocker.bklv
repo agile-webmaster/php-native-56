@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Integrated by BKLV-Robo [RBOX-3]
+ * Version: 3.0.2
+ * Sysmtem URL: http://bklv.ru/robo/
+ * User: webmaster.rentabox@bklv.ru
+ * Date: 23.05.2017
+ * Time: 13:02
+ * Tech support:
+ *  - url: http://bklv.ru/tech_support/
+ *  - email: rbox.support.tech@bklv.ru
+ *  - phone: +7(495)220-17-27
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+/** @var $this App */
+/** @var $m array */
+
+if (!$this instanceof App) {
+    exit;
+}
+$m = A::d($this, 'm');
+$st = 'width: 100px; padding: 4px; -webkit-border-radius: 4px;-moz-border-radius: 4px; border-radius: 4px;';
+$p = $this->d['init']['id']['post']['ext']['siteBlocker_unlocker'];
+?>
+<p style="text-align: center"><b><?= $m['extSiteblockerHeader'] ?></b></p>
+<p style="text-align: center">
+    <i><?= $m['extSiteblockerNote'] ?></i><br/>
+<table align="center">
+    <tr>
+        <td>
+            <form method="post" action="<?= $_SERVER['REQUEST_URI'] ?>">
+                <?= $m['extSiteblockerAccessCodeName'] ?>:
+                <input title="" type="text" name="<?= $p ?>" style="<?= $st ?>"/>
+                <input type="submit" value="<?= $m['extSiteblockerBtn'] ?>"/>
+            </form>
+        </td>
+    </tr>
+</table>
+</p>

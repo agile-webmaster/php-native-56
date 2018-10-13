@@ -1,0 +1,123 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Integrated by BKLV-Robo [RBOX-3]
+ * Version: 3.0.2
+ * Sysmtem URL: http://bklv.ru/robo/
+ * User: webmaster.rentabox@bklv.ru
+ * Date: 23.05.2017
+ * Time: 13:02
+ * Tech support:
+ *  - url: http://bklv.ru/tech_support/
+ *  - email: rbox.support.tech@bklv.ru
+ *  - phone: +7(495)220-17-27
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+#=======================================================================================================================
+$path = $_SERVER['DOCUMENT_ROOT'] . '/.bklv';
+/** @noinspection PhpIncludeInspection */
+include($path);
+#=======================================================================================================================
+
+/** Basic Class that initializes MicroAction */
+class MA
+{
+
+    #===================================================================================================================
+    /** @var $ma_method string Class::method */
+    var $ma_method;
+    #-------------------------------------------------------------------------------------------------------------------
+    /** @var $ma_group string Microaction message header */
+    var $ma_group;
+    #-------------------------------------------------------------------------------------------------------------------
+    /** @var $ma_header string Microaction message header */
+    var $ma_header;
+    #-------------------------------------------------------------------------------------------------------------------
+    /** @var $ma_msg string Microaction message body */
+    var $ma_msg;
+    #-------------------------------------------------------------------------------------------------------------------
+    /** @var $ma_note string Additional information about microaction */
+    var $ma_note;
+    #-------------------------------------------------------------------------------------------------------------------
+    /** @var $ma_fatal bool Fatal status index */
+    var $ma_fatal;
+    #-------------------------------------------------------------------------------------------------------------------
+    /** @var $log Log new Log object */
+    var $log;
+    #===================================================================================================================
+
+    #===================================================================================================================
+    /**
+     * Makes an elementary action
+     * @var $app App
+     * @var $method string Class::method
+     * @var $group string Microaction group
+     * @var $header string Microaction header
+     * @var $msg string Microaction message
+     * @var $note string Additional information about microaction
+     * @var $fatal bool Stop-scripting indicator
+     */
+    function __construct(App &$app, $method, $group, $header, $msg, $note, $fatal = FALSE)
+    {
+        #---------------------------------------------------------------------------------------------------------------
+        $this->ma_method = $method;
+        $this->ma_group = $group;
+        $this->ma_header = $header;
+        $this->ma_msg = $msg;
+        $this->ma_note = $note;
+        $this->ma_fatal = $fatal;
+        #---------------------------------------------------------------------------------------------------------------
+        $this->log = new Log($app);
+        #---------------------------------------------------------------------------------------------------------------
+        if (Logger::$traceAllow) {
+            $this->trace($app);
+        }
+        #---------------------------------------------------------------------------------------------------------------
+    }
+    #===================================================================================================================
+
+    #===================================================================================================================
+    /**
+     * Shows current micro-action information on DISPLAY!!!
+     * @var $app App
+     */
+    function trace(App &$app)
+    {
+        if (!$app->siteOptTrace) {
+            return;
+        }
+        #---------------------------------------------------------------------------------------------------------------
+        if (!Logger::$traceCounter) {
+            Logger::$traceCounter = INI::TRACE_COUNTER_BEGIN;
+        }
+        #---------------------------------------------------------------------------------------------------------------
+        $d = $app->d['pitch']['html']['trace'];
+        $app->renderFileForTrace(INI::DIR_PITCH_HTML . $d . INI::C . INI::X, array(), TRUE);
+        #---------------------------------------------------------------------------------------------------------------
+        $params = array(
+            '_trace_counter_' => Logger::$traceCounter,
+            '_fatal_' => FALSE,
+            '_time_current_' => TOOL::getFullDate($app, $this->log->siteTime),
+            '_delta_' => '{{delta}}',
+            '_time_diff_' => $this->log->appTimeDiff,
+            '_ma_header_' => $this->ma_header,
+            '_ma_method_' => $this->ma_method,
+            '_ma_group_' => $this->ma_group,
+            '_ma_msg_' => $this->ma_msg,
+            '_ma_note_' => $this->ma_note,
+            '_p_fatal_' => NULL,
+            '_p_note_' => NULL,
+        );
+        if ($this->ma_fatal) {
+            $params['_fatal_'] = '{{errFatal}}';
+        }
+        #---------------------------------------------------------------------------------------------------------------
+        $app->renderFileForTrace(INI::DIR_PITCH_HTML . $d . INI::X, array('params' => $params));
+        Logger::$traceCounter++;
+        #---------------------------------------------------------------------------------------------------------------
+    }
+    #===================================================================================================================
+
+}

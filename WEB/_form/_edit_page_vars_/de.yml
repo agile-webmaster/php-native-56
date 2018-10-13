@@ -1,0 +1,9 @@
+note:
+  label: 'Bezeichnung<br />(technischer Parameter)'
+  pholder: 'Bezeichnung einführen'
+pr_for_header_left:
+  label: 'Seitenrang im oberen Menü (das Gebiet links) - Ganzzahl'
+used_in_under_clock:
+  label: 'Gebrauchsnachweis im oberen Menü unter der Uhr (1 <-> ja)'
+used_in_header_bottom:
+  label: 'Gebrauchsnachweis im oberen Menü ganz unten (1 <-> ja)'

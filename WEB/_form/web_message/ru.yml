@@ -1,0 +1,8 @@
+name:
+  label: Имя
+phone:
+  label: Телефон
+email:
+  label: Имейл
+message:
+  label: Сообщение

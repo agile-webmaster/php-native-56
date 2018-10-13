@@ -1,0 +1,114 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Integrated by BKLV-Robo [RBOX-3]
+ * Version: 3.0.2
+ * Sysmtem URL: http://bklv.ru/robo/
+ * User: webmaster.rentabox@bklv.ru
+ * Date: 23.05.2017
+ * Time: 13:02
+ * Tech support:
+ *  - url: http://bklv.ru/tech_support/
+ *  - email: rbox.support.tech@bklv.ru
+ *  - phone: +7(495)220-17-27
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+#=======================================================================================================================
+$path = $_SERVER['DOCUMENT_ROOT'] . '/.bklv';
+/** @noinspection PhpIncludeInspection */
+include($path);
+#=======================================================================================================================
+
+/** Class CronTabExe */
+class CronTabExe
+{
+
+    #===================================================================================================================
+    public function every2min(App &$app)
+    {
+        #---------------------------------------------------------------------------------------------------------------
+        $tb_name = 'tbNCPInvoices';
+        $continue = FALSE;
+        $ts = $app->siteTime;
+        $cfs = $app->d['db']['custom_field_statuses'][$app->t[$tb_name]];
+        #---------------------------------------------------------------------------------------------------------------
+        $sts_pp = $app->d['db']['status_fields'][$app->t[$tb_name]]['list']['PAID_PARTIAL'];
+        $sts_pf = $app->d['db']['status_fields'][$app->t[$tb_name]]['list']['PAID_FULL'];
+        $sts_po = $app->d['db']['status_fields'][$app->t[$tb_name]]['list']['PAID_OVER'];
+        $ts_scan_from = ceil($ts - 32 * 60 * 60 * 24);
+        $ts_scan_from = $ts_scan_from * 1;
+        #---------------------------------------------------------------------------------------------------------------
+        if ((int)$ts_scan_from > 0) {
+            $continue = TRUE;
+        }
+        if (!$continue) {
+            return;
+        }
+        #---------------------------------------------------------------------------------------------------------------
+        $fs = '`ncp_invoice_status`';
+        $q = "SELECT * FROM " . $app->t[$tb_name] . " WHERE (
+            (" . $fs . " = '" . $sts_pp . "' OR " . $fs . " = '" . $sts_pf . "' OR " . $fs . " = '" . $sts_po . "') and
+            `ncp_invoice_created_ts` > " . $ts_scan_from . " and `ncp_invoice_kkms_doc_status` IS NULL)";
+        $pay_docs_for_kkms = DB::sqlSelectSimple($app, $q);
+        #---------------------------------------------------------------------------------------------------------------
+        foreach ($pay_docs_for_kkms as $v) {
+            if (strlen($v['ncp_invoice_kkms_doc_id']) == 40) {
+                $inv = $v;
+                #-----------------------------------------------------------------------------------------------------------
+                # 1) пытаемся произвести платеж
+                #-----------------------------------------------------------------------------------------------------------
+                $url = RboxRemote::getKassaURL($app, 'make_payment', $v['ncp_invoice_kkms_doc_id'], $v['r_invoice_email'],
+                    $v['ncp_invoice_amount_paid']);
+                TOUCH::touchURLwithCookie($app, $url);
+                #-----------------------------------------------------------------------------------------------------------
+                $url = RboxRemote::getKassaURL($app, 'get_oper_result', $v['ncp_invoice_kkms_doc_id'], $v['r_invoice_email'],
+                    $v['ncp_invoice_amount_paid']);
+                $r = TOUCH::touchURLwithCookie($app, $url);
+                #-----------------------------------------------------------------------------------------------------------
+                $r = explode('|$|', $r);
+                if ($r[0] == 'FIX_PAYMENT') {
+                    $inv['ncp_invoice_kkms_doc_status'] = $cfs['ncp_invoice_kkms_doc_status']['PAYMENT_TRANSFERED_TO_KASSA'];
+                    $inv['ncp_invoice_kkms_doc_ts'] = TOOL::makeTimeStampMasked($r[3], 'Y-m-d H:i:s');
+                    $inv['ncp_invoice_kkms_doc_chn'] = $r[1];
+                    $inv['ncp_invoice_kkms_doc_ssn'] = $r[2];
+                    DB::sqlUpdateDict($app, __METHOD__, $tb_name, $inv);
+                }
+            }
+        }
+        #---------------------------------------------------------------------------------------------------------------
+        $fs = '`ncp_invoice_status`';
+        $q = "SELECT * FROM " . $app->t[$tb_name] . " WHERE (
+            (" . $fs . " = '" . $sts_pp . "' OR " . $fs . " = '" . $sts_pf . "' OR " . $fs . " = '" . $sts_po . "') and
+            `ncp_invoice_created_ts` > " . $ts_scan_from . " and `ncp_invoice_sm_status` IS NULL)";
+        $invoices_to_check = DB::sqlSelectSimple($app, $q);
+        if (!$invoices_to_check) {
+            return;
+        }
+        #---------------------------------------------------------------------------------------------------------------
+        foreach ($invoices_to_check as $v) {
+            $inv = $v;
+            $pay_doc_id = 'ONL' . $v['ncp_invoice_id'];
+            $smc = DB::sqlSelectOne($app, 'tbSMCustomers', array(array('sm_customer_id' => $inv['r_sm_customer'])));
+            $pay_doc = RboxRemote::getDataReal($app, 'showPaymentDocumentStatus', $pay_doc_id);
+            $smc_qr = json_decode($smc['sm_customer_qr']);
+            #-----------------------------------------------------------------------------------------------------------
+            # 1. PREPARE
+            #-----------------------------------------------------------------------------------------------------------
+            if (!$inv['ncp_invoice_sm_status_ts']) {
+                #-------------------------------------------------------------------------------------------------------
+                // 1.1. ERROR - DOCUMENT_ID EXISTS
+                if (isset($pay_doc[1]['DocumentID']) && $pay_doc[1]['DocumentID']) {
+                    $inv['ncp_invoice_sm_status'] = $cfs['ncp_invoice_sm_status']['ERROR_SMID_IS_OCCUPIED'];
+                    $inv['ncp_invoice_sm_status_ts'] = $ts;
+                    $inv['ncp_invoice_sm_id'] = $pay_doc[1]['DocumentID'];
+                    DB::sqlUpdateDict($app, __METHOD__, $tb_name, $inv);
+                }
+
+
+                ..............................
+            }
+            #===================================================================================================================
+
+        }

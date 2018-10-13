@@ -1,0 +1,630 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Integrated by BKLV-Robo [RBOX-3]
+ * Version: 3.0.2
+ * Sysmtem URL: http://bklv.ru/robo/
+ * User: webmaster.rentabox@bklv.ru
+ * Date: 23.05.2017
+ * Time: 13:02
+ * Tech support:
+ *  - url: http://bklv.ru/tech_support/
+ *  - email: rbox.support.tech@bklv.ru
+ *  - phone: +7(495)220-17-27
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+#=======================================================================================================================
+/** @var $this App */
+/** @var $layout_prefs array */
+/** @var $layout_code array */
+/** @var $layout_index string */
+/** @var $layout_event string */
+/** @var $layout_template string */
+/** @var $layout_ids array */
+/** @var $layout_js string */
+/** @var $layout_styles array */
+/** @var $layout_classes array */
+/** @var $custom_js array */
+/** @var $template RboxTemplateWebWS */
+/** @var $lp array Layout params */
+/** @var $gs string Gets safe */
+/** @var $$sind string */
+/** @var $host string */
+/** @var $lang string */
+/** @var $logo string */
+/** @var $href string */
+/** @var $pvar array */
+/** @var $pref array */
+/** @var $reqs array */
+/** @var $svgs array */
+/** @var $seve array */
+/** @var $luri array */
+/** @var $text array */
+/** @var $bann array */
+/** @var $m array */
+/** @var $an array */
+/** @var $tree array */
+#-----------------------------------------------------------------------------------------------------------------------
+$lp = array('layout_prefs' => $layout_prefs, 'layout_code' => $layout_code, 'layout_index' => $layout_index,
+    'layout_event' => $layout_event, 'layout_template' => $layout_template, 'layout_ids' => $layout_ids,
+    'layout_js' => $layout_js, 'layout_styles' => $layout_styles, 'layout_classes' => $layout_classes,
+    'custom_js' => $custom_js, 'template' => $template,
+    'sind' => $sind, 'host' => $host, 'lang' => $lang, 'pvar' => $pvar, 'pref' => $pref, 'luri' => $luri, 'text' => $text,
+    'an' => $an, 'm' => $m, 'tree' => $tree, 'bann' => $bann,
+    'href' => $href, 'logo' => $logo, 'reqs' => $reqs, 'svgs' => $svgs, 'seve' => $seve);
+$gs = $this->urlGetsSafe;
+#=======================================================================================================================
+
+#=======================================================================================================================
+echo '
+<script type="text/javascript" src="' . $href . 'jquery-ui.min.js"></script>
+<script type="text/javascript" src="' . $href . 'jquery-ui-touch.js"></script>
+<link rel="stylesheet" href="' . $href . 'jquery-ui.css">';
+#=======================================================================================================================
+
+#=======================================================================================================================
+$br = NULL;
+$title = $an[$luri['booking']];
+$markers = array();
+$thing = NULL;
+$j = array_keys($tree[$luri['sf_personal']]);
+$img = $href . '../booking/' . $j[1] . '.jpg';
+if (isset(CFG::$initRouting[1]) && array_key_exists(CFG::$initRouting[1], $tree)) {
+    $title = $an[CFG::$initRouting[1]];
+    $br = '<a href="' . $pref[''] . CFG::$initRouting[1] . '/">' . $title . '</a>';
+    $thing = $an[$template->routing];
+    $img = $href . '../booking/' . CFG::$initRouting[2] . '.jpg';
+} elseif (isset(CFG::$initRouting[2]) && CFG::$initRouting[2] == $luri['sf_personal']) {
+    $title = $an[$template->routing];
+    $br = '<a href="' . $pref[''] . $luri['sf_personal'] . '/">' . $an[$luri['sf_personal']] . '</a>';
+    $j = array_keys($tree[$luri['sf_personal']]);
+    $img = $href . '../booking/' . $j[1] . '.jpg';
+} elseif (isset(CFG::$initRouting[2]) && CFG::$initRouting[2] == $luri['sf_business']) {
+    $title = $an[$template->routing];
+    $br = '<a href="' . $pref[''] . $luri['sf_business'] . '/">' . $an[$luri['sf_business']] . '</a>';
+    $j = array_keys($tree[$luri['sf_business']]);
+    $img = $href . '../booking/' . $j[1] . '.jpg';
+} elseif (isset(CFG::$initRouting[2]) && CFG::$initRouting[2] == $luri['sf_office']) {
+    $title = $an[$template->routing];
+    $br = '<a href="' . $pref[''] . $luri['sf_office'] . '/">' . $an[$luri['sf_office']] . '</a>';
+    $j = array_keys($tree[$luri['sf_office']]);
+    $img = $href . '../booking/' . $j[1] . '.jpg';
+} elseif (isset(CFG::$initRouting[2])) {
+    foreach (explode('+', CFG::$initRouting[2]) as $v) {
+        foreach ($tree as $tk => $tv) {
+            if (array_key_exists($v, $tv)) {
+                if (!$br) {
+                    $br = '<a href="' . $pref[''] . $tk . '/">' . $an[$tk] . '</a>';
+                    $img = $href . '../booking/' . $v . '.jpg';
+                    $thing = $an[$tk . '/' . $v];
+                }
+                $markers[] = '<div style="cursor: pointer !important" data-bklv="' . $v . '" class="tag">' .
+                    $an[$tk . '/' . $v] . '<span class="remove"></span></div>';
+            }
+        }
+        if (in_array($v, array('others_personal', 'others_business', 'others_office'))) {
+            $markers[] = '<div style="cursor: pointer !important" data-bklv="' . $v . '" class="tag" data-bklv-e="tree_item_others">' .
+                $text['tree_item_others'] . '<span class="remove"></span></div>';
+        }
+    }
+}
+#=======================================================================================================================
+
+#=======================================================================================================================
+echo '
+<div class="rentabox">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3"><div class="title">' .
+    html_entity_decode($text['sf_personal_header']) . '</div></div>
+            <div class="col-lg-3 col-md-3 col-sm-3"><div class="wrap"><img src="' . $href . 'icon-map.png"><i>' .
+    html_entity_decode($text['sf_pers_item_map']) . '</i></div></div>
+            <div class="col-lg-3 col-md-3 col-sm-3"><div class="wrap"><img src="' . $href . 'icon-shield.png"><i>' .
+    html_entity_decode($text['sf_pers_item_safe']) . '</i></div></div>
+            <div class="col-lg-3 col-md-3 col-sm-3"><div class="wrap"><img src="' . $href . 'icon-box.png"><i>' .
+    html_entity_decode($text['sf_pers_item_boxx']) . '</i></div>
+            </div>
+        </div>
+    </div>
+</div>';
+#=======================================================================================================================
+
+#=======================================================================================================================
+echo '
+<div class="container"><div class="row"><div class="col-lg-12"><div class="breadcrumbs">
+    <a href="' . $pref[''] . $gs . '">' . $an[''] . '</a> <a>' . $an[$template->routing] . '</a>
+</div></div></div></div>';
+#=======================================================================================================================
+
+#=======================================================================================================================
+echo '
+<div class="heading"><div class="container"><div class="row"><div class="col-lg-12">
+    <h1>' . $title . '</h1>' . implode('', $markers) . '
+</div></div></div></div>
+';
+#=======================================================================================================================
+
+$bann = explode(',', $bann[$template->name]);
+$banner_key = trim($bann[0]);
+$banner_img = 'events_sale/booking_' . $banner_key . '.png';
+
+
+#=======================================================================================================================
+echo '
+<div class="container"><div class="row"><div class="col-lg-12"><div class="box-choose-wrap" style="margin-bottom: 20px">
+    <div class="steps-title"><ul>
+        <li class="active">
+            <h2 data-bklv-e="book_1_hd">' . $text['book_1_hd'] . '</h2>
+            <p data-bklv-e="book_1_txt" style="color: #000 !important; font-weight: 100">46047 Oberhausen</p>
+            <span class="choose" data-bklv-e="book_1_desc">' . $text['book_1_desc'] . '</span>
+            <span class="refresh" data-bklv-e="book_1_addr">Oberhausen</span>
+        </li>
+        <li>
+            <h2 data-bklv-e="book_2_hd">' . $text['book_2_hd'] . '</h2>
+            <p data-bklv-e="book_2_txt">' . $text['book_2_txt' . $this->d['custom_txt']] . ' <br class="visible-md visible-sm"><br class="visible-md visible-sm"></p>
+            <span class="choose" data-bklv-e="book_2_desc">' . $text['book_2_desc'] . '</span>
+            <span class="refresh" onclick="stepRefresh(this);" data-bklv-e="book_2_disc"></span>
+        </li>
+        <li>
+            <h2 data-bklv-e="book_3_hd">' . $text['book_3_hd'] . '</h2>
+            <p data-bklv-e="book_3_txt">' . $text['book_3_txt'] . '</p></li>
+    </ul></div>
+    <div class="steps">
+        <div class="step first-step active">
+            <div id="' . $layout_ids['map'] . '"></div>
+            <a href="' . $pref[''] . $luri['about_sf'] . '/' . $gs . '" class="how-link how-store" data-bklv-e="how_to_store">' .
+    $text['how_to_store'] . ' <span>' . $thing . $text['how_to_store2'] . '</span></a>
+            <img src="' . $img . '" class="step-bg" alt="">
+        </div>    
+        <div class="step second-step">
+		    <img src="' . $href . 'box0-bg.png" class="step-bg box-bg box0" alt="">
+            <img src="' . $href . 'box1-bg.png" class="step-bg box-bg box1" alt="">
+            <img src="' . $href . 'box2-bg.png" class="step-bg box-bg box2" alt="">
+            <img src="' . $href . 'box3-bg.png" class="step-bg box-bg box3" alt="">
+            <img src="' . $href . 'box4-bg.png" class="step-bg box-bg box4" alt="">
+            <img src="' . $href . 'box5-bg.png" class="step-bg box-bg box5" alt="">
+            <img src="' . $href . 'box6-bg.png" class="step-bg box-bg box6" alt="">
+            <a href="' . $pref[''] . $luri['choose_box'] . '/' . $gs .
+    '" class="how-link how-choose" data-bklv-e="how_choose_size_box">' . $text['how_choose_size_box'] . '</a>
+            <div class="content">
+                <div class="slider-ui-wrap box-size">
+                    <div class="title">
+                        <div class="sale-metr" data-bklv-e="booking_discount">' . $text['booking_discount'] . ' <i></i>%</div>
+                        ' . $text['booking_boxsize'] . ' <span><i></i> ' . $text['booking_m2'] . '</span>
+                    </div>
+                    <div class="slide-range"></div>
+                </div>
+                <div class="slider-ui-wrap srok-arend">
+                    <div class="title" data-bklv-e="booking_lease_period">
+                        ' . $text['booking_lease_period'] . '
+                        <span><i></i> ' . $text['booking_mon_sh'] . '</span>
+                    </div>
+                    <div class="slide-range"></div>
+                </div>
+                <div class="skidka">
+                    <div class="top">
+                        <div class="title" data-bklv-e="booking_per_dis">' . $text['booking_per_dis'] . ':</div>
+                        <div class="sales-perc">
+                            <div class="sale-perc">
+                                <span><i>5</i>%</span>
+                                <div data-bklv-e="booking_per_dis_txt_1">' . $text['booking_per_dis_txt_1'] . '</div>
+                                <div class="close"></div>
+                            </div>
+                            <div class="sale-perc">
+                                <span><i>10</i>%</span>
+                                <div data-bklv-e="booking_per_dis_txt_2">' . $text['booking_per_dis_txt_2'] . '</div>
+                                <div class="close"></div>
+                            </div>
+                            <div class="sale-perc">
+                                <span><i>15</i>%</span>
+                                <div data-bklv-e="booking_per_dis_txt_3">' . $text['booking_per_dis_txt_3'] . '</div>
+                                <div class="close"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="price-month" data-bklv-e="booking_pr_desc">
+                        <span></span> ' . $text['booking_pr_desc'] . '
+                    </div>
+                    <div class="price-total" data-bklv-e="booking_pr_desc2">
+                        <span></span> ' . $text['booking_pr_desc2'] . '
+                    </div>
+                    <span class="to-bron" onclick="toBron();" data-bklv-e="booking_gotor">' . $text['booking_gotor'] . '</span>
+                </div>
+            </div>
+        </div>
+        <div class="step third-step">
+            <div class="content">
+                <div class="form">
+                    <div class="inp-wrp" data-bklv-e="booking_name">
+                        ' . $text['booking_name'] . ' <br>
+                        <input type="text" id="bklv-zakaz-name">
+                    </div>
+                    <div class="inp-wrp" data-bklv-e="booking_phone">
+                       ' . $text['booking_phone'] . ' <br>
+                        <input type="text" id="bklv-zakaz-phone">
+                    </div>
+                    <div class="inp-wrp mr0">
+                        e-mail <br>
+                        <input type="text" id="bklv-zakaz-email">
+                    </div>
+                    <div class="bottom-links">
+                        <input class="send-form" type="submit" data-bklv-e="booking_do" value="' . $text['booking_do'] . '">
+                        <a href="' . $pref[''] . $luri['services'] . '/' . $gs .
+    '" target="_blank"  data-bklv-e="booking_delivery" class="ship form-link">' .
+    $text['booking_delivery'] . '</a>
+                        <a href="' . $pref[''] . $luri['shop'] . '/' . $gs
+    . '" target="_blank"  data-bklv-e="booking_shop" class="pack form-link">' .
+    $text['booking_shop'] . '</a>
+                    </div>
+                </div>
+                <!-- <div class="gift" style="background: #eff6f8 url(' . "'" .
+    $pref['img_ext'] . $banner_img . "'" . ') top right no-repeat;">
+                    <div class="title">' . $seve['sales'][$banner_key]['title_' . $lang] . '</div>
+                    <p>' . mb_substr($seve['sales'][$banner_key]['body_' . $lang], 0, 180) . '... 
+                        <a class="link" href="' . $pref[''] . $luri['events_sale'] . '/' . $gs . '#evs_' . $banner_key . '" target="_blank">' .
+    $m['get_details'] . '</a>
+                    </p>
+                </div> -->
+            </div>
+            <div class="result">
+                <div class="title" data-bklv-e="booking_choice_header">' . $text['booking_choice_header'] . '</div>
+                <div class="box-adres"><p></p></div>
+                <div class="box-info size pl40" data-bklv-e="booking_choice_size">
+                    ' . $text['booking_choice_size'] . '<span><i>1.0</i> ' . $text['booking_m2'] . '</span></div>
+                <div class="box-info srok mr0" data-bklv-e="booking_choice_period">
+                    ' . $text['booking_choice_period'] . '<span><i>1</i> mon.</span></div>
+                <div class="sales-wrap">
+                    <div class="sale-inner sales-metr" data-bklv-e="booking_discount">' .
+    $text['booking_discount'] . ' <i>10</i>% <div class="titl" data-bklv-e="booking_disc_for_box_size">' .
+    $text['booking_disc_for_box_size'] . '</div></div>
+                    <div class="sale-inner sales-predoplata" data-bklv-e="booking_discount">' .
+    $text['booking_discount'] . ' <i>10</i>% <div class="titl" data-bklv-e="booking_disc_for_box_prep">' .
+    $text['booking_disc_for_box_prep'] . '</div></div>
+                </div>
+                <div class="prices-wrap">
+                    <div class="price-month2"></div>
+                    <div class="price-total2"></div>
+                </div>
+            </div>
+        </div>	
+    </div>
+</div></div></div></div>';
+#=======================================================================================================================
+
+$mrimg = $this->d['firm']['googleMap']['marker_img'];
+$obj = $this->d['firm']['googleMap']['obj'];
+#=======================================================================================================================
+echo '
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7IRubdOBzgLpDWnheH_llQA6vswddpnk&language=de"></script>
+<script src="' . $href . 'infobox.js"></script>
+<script>
+    
+    // document.ready
+    $(document).ready(function(){});
+    
+    // remove tag for target storaged item(s)
+    $(".tag").click(function(){
+        var $this = $(this); $this.addClass("removed"); setTimeout(function() {$this.remove();}, 300);});
+    
+    // booking
+    $(' . "'.send-form'" . ').click(function() {
+        var elems = $(".tag"); var elemsTotal = elems.length; var tags = ""; var tag_index = "data-bklv";
+        for (var i = 0; i < elemsTotal; ++i) {
+            if (!tags) {tags = $(elems[i]).attr(tag_index);} else {tags = tags + ", " + $(elems[i]).attr(tag_index);}}
+            var html = $(".result").html();
+            var res = true;
+
+            var name = $("#bklv-zakaz-name").val(); 
+            if (!name) {$("#bklv-zakaz-name").css("border", "2px red solid"); res = false;}
+            else {$("#bklv-zakaz-name").css("border", "2px #999 solid");}
+            var phone = $("#bklv-zakaz-phone").val();
+            if (!phone) {$("#bklv-zakaz-phone").css("border", "2px red solid"); res = false;}
+            else {$("#bklv-zakaz-phone").css("border", "2px #999 solid");}
+            var email = $("#bklv-zakaz-email").val();
+            if (!email) {$("#bklv-zakaz-email").css("border", "2px red solid"); res = false;}
+            else {$("#bklv-zakaz-email").css("border", "2px #999 solid");}
+            if(!res) {return false;}
+            var url = ' . "'" . $pref['lk'] . 'sender/' . $this->d['init']['routes']['send_reserve'] . "/'" . ';
+            var data = {html: html, phone: phone, tags: tags, name: name, email: email};
+            $.ajax({url: url, type: "POST", data: data}).done(function(r) {
+            var modal = "' . $layout_ids['modal_web_message'] . '";
+            var location = "' . $pref[''] . $luri['services'] . '/";
+            console.log(r);
+            if (r == "Y") {
+                $("#overlay").fadeIn(3, function() {
+                    $("#"+modal).css("display", "block").animate({opacity: 1, top: "50%"}, 2);});
+                document.getElementById(modal).innerHTML =' . "
+                '" . '<p style="padding-top: 10px">' . $m['sender_modal_ok_booking_hd'] . '</p>' . "'+
+                '" . '<p style="padding-top: 10px">' . $m['sender_modal_ok_booking_msg'] . '</p>' . "'+
+                '" . '<p style="padding-top: 10px; font-style: italic">' . $m['sender_modal_ok_booking_adm'] . '</p>' . "'+
+                '" . '<p style="padding-top: 10px"><a href="' . "' + location + '" . '"><button class="btn btn-warning">' . "'+
+                    '" . $m['rbox_btn_continue'] . "'+
+                '" . '</button></a></p>' . "';" . '} else {
+                document.getElementById(modal).innerHTML =' . "
+                '" . '<p style="padding-top: 10px; font-weight: 900">' . $m['sender_fail'] . '</p>' . "'+
+                '" . '<p style="padding-top: 10px"><a href="' . "' + location + '" . '"><button class="btn btn-warning">' . "'+
+                    '" . $m['rbox_btn_continue'] . "'+
+                '" . '</button></a></p>' . "';" . '}
+        });
+    });
+
+    // updatePrice
+    function updatePrice(){
+        var prMetr = window.priceUsed * (100 - window.discUsedPay) / 100; $(".price-month span").text(prMetr.toFixed(0));
+        var prMonth = window.sizeUsed * prMetr; $(".price-total span").text(prMonth.toFixed(0));}
+
+    // activateStep
+    function activateStep(i, loc){
+        
+        // 1. Update Steps CSS
+        $(".steps-title ul li").removeClass("active"); $(".steps-title ul li").eq(i).addClass("active");
+        $(".steps .step").removeClass("active"); $(".steps .step").eq(i).addClass("active");
+        // 2.1. Update 1st Step img (ZERO step is not executed)
+        $(".box-bg").removeClass("active"); $(".box1").addClass("active");
+        // 2.2. Update PRICING params (box Sizes and Prices)
+        if (loc == undefined) {return false;}
+        var boxSizeList = boxSizeInit[loc]; var sizeInit = boxSizeList[0]; var sizeUsed = sizeInit;
+        var priceInit = boxStartPrice[loc]; var priceUsed = priceInit; var prices = priceList[loc]; 
+        // 2.3.1. setup default discUsedSize, discUsedPay, total
+        var discUsedSize = 0; window.discUsedPay = 0;
+        var total = priceUsed * sizeUsed; var total = total.toFixed(0);
+        // 2.3.2. SIZE SLIDER';
+if ($this->d['state_default'] == 'de') {
+    echo '
+        var maxR = 28;';
+} else {
+    echo '
+        var maxR = 34;';
+}
+echo '
+        $(".box-size .slide-range").slider({range: "min", min: 0, max: maxR, step: 1, value: 14, slide: function (ee, ui) {
+            // 0. get box size index
+            var index = ui.value;
+            // 1. indicator value for box size choosed
+            sizeUsed = boxSizeList[index]; priceUsed = prices[index];
+            // 2. setup indicator for box size choosed - top right (1st line)
+            $( ".box-size .title span i" ).text(sizeUsed.toFixed(1));
+            // 3. setup indicator for box size discount choosed - top right (1st line)
+            discUsedSize = (priceInit - priceUsed) / priceInit * 100;
+            if(discUsedSize > 0){$(".sale-metr").addClass("active").find("i").text(discUsedSize.toFixed(0));
+                $(".sale-metr active::after").css("display", "none");}
+            else {$(".sale-metr").removeClass("active");}
+            // 4. choose box image
+            if(sizeUsed > 0){$(".box-bg").removeClass("active"); $(".box1").addClass("active");}
+            if(sizeUsed > 2.5){$(".box-bg").removeClass("active"); $(".box2").addClass("active");}
+            if(sizeUsed > 4.5){$(".box-bg").removeClass("active"); $(".box3").addClass("active");}
+            if(sizeUsed > 7.5){$(".box-bg").removeClass("active"); $(".box4").addClass("active");}
+            if(sizeUsed > 9.5){$(".box-bg").removeClass("active"); $(".box5").addClass("active");}
+            if(sizeUsed > 19.5){$(".box-bg").removeClass("active"); $(".box6").addClass("active");}
+            // 2.3.4. show
+            window.sizeUsed = sizeUsed; window.priceUsed = priceUsed; window.discUsedSize = discUsedSize;
+            updatePrice();}});
+        // 2.3.3. STEP 2 UPDATE
+        $(".box-size .title span sup").text("2");
+        $(".box-size .title span i").text( boxSizeList[$(".box-size .slide-range").slider("value")].toFixed(1));
+        var mp = "' . $this->d['firm']['googleMap']['max_period'] . '";
+        $(".srok-arend .slide-range").slider({range: "min", min: 1, max: mp, value: 6, slide: function(ee, ui) {
+            $(".srok-arend .title span i").text(ui.value);}});
+        $(".srok-arend .title span i").text($( ".srok-arend .slide-range").slider("value"));
+        $(".ui-slider-handle").each(function(){$(this).append("<span></span>")});
+        // 2.3.4. show
+        window.sizeUsed = sizeUsed; window.priceUsed = priceUsed; window.discUsedSize = discUsedSize;
+
+        var totalAll = window.priceUsed * (100 - window.discUsedSize - window.discUsedPay) / 100;
+        var totalSized = window.priceUsed * (100 - window.discUsedSize - window.discUsedPay) / 100 / window.sizeUsed;
+        $(".price-month span").text(totalAll.toFixed(0)); $(".price-total span").text(totalSized.toFixed(0));
+        updatePrice();}
+   
+    $("body").on("click", ".sale-perc .close", function() {$this = $(this); setTimeout(function() {
+        $this.parent().removeClass("active"); window.discUsedPay = 0;
+        
+        updatePrice();
+    
+    }, 100);});
+
+    // click .sale-perc
+    $("body").on("click", ".sale-perc", function() {
+        if ($(this).hasClass("disabled")){} else {if( $(this).hasClass("active") ){}
+        else {$(this).addClass("active"); $(this).siblings().removeClass("active");
+           window.discUsedPay = parseInt($(this).find("i").text()); updatePrice();}}});'; ?>
+
+    //Переход на третий шаг по клику на кнопку (перейти к бронированию)
+    function toBron(){
+    $(".steps-title ul li").eq(1).addClass("choosed");
+    $(".box-adres p").text(adres);
+    resultSize = $(".box-size span").html();
+    resultSrok = $(".srok-arend span").html();
+    $(".sale-inner").each(function() {
+    $(this).removeClass('active')
+    });
+    if($(".sale-metr.active i").length > 0){
+    salesMetrs = $(".sale-metr.active i").text();
+    $(".sale-inner.sales-metr i").text(salesMetrs);
+    $(".sale-inner.sales-metr").addClass('active');
+    }
+    if($(".sale-perc.active i").length > 0){
+    salesPredoplata = $(".sale-perc.active i").text();
+    $(".sale-inner.sales-predoplata i").text(salesPredoplata);
+    $(".sale-inner.sales-predoplata").addClass('active');
+    }
+
+
+    $(".box-info.size span").html(resultSize);
+    $(".box-info.srok span").html(resultSrok);
+
+    priceMonth = $(".price-month").html();
+    priceTotal = $(".price-total").html();
+
+    $(".price-month2").html(priceMonth);
+    $(".price-total2").html(priceTotal);
+
+    $(".steps-title ul li").eq(1).find(".refresh").html(resultSize+', '+resultSrok);
+    $(".sale-perc.active .close").trigger('click');
+    //$(".sale-perc").addClass("disabled");
+    activateStep(2);
+    if ( window.innerWidth < 768 ) {
+    $('html, body').stop().animate({
+    scrollTop: $(".third-step").offset().top
+    }, 1000);
+    }
+    }
+    //Обработка перехода к предыдущему шагу
+    function stepRefresh(refresh){
+    var index = $(refresh).parent().index();
+    if(index == 0){
+    $(".steps-title ul li").removeClass("choosed");
+    }
+    $(refresh).parent().removeClass("choosed");
+    $(".sale-perc.active .close").trigger('click');
+    activateStep(index);
+    }
+
+
+<?
+
+# ==================================================================================================================
+$obj = $this->d['firm']['googleMap']['obj'];
+
+foreach ($obj as $k => $v) {
+    if (!isset($v['active']) || !$v['active']) {
+        unset($obj[$k]);
+    }
+}
+echo '
+    var boxSizeInit = {';
+foreach ($obj as $k => $v) {
+    echo '
+        ' . $k . ': [' . $v['boxList'] . '],';
+}
+echo '
+    };
+    var boxStartPrice = {';
+foreach ($obj as $k => $v) {
+    echo '
+        ' . $k . ': "' . $v['startPrice'] . '",';
+}
+echo '
+    };
+    var priceList = {';
+foreach ($obj as $k => $v) {
+    echo '
+        ' . $k . ': [' . $v['priceList'] . '],';
+}
+echo '
+    };
+    function step_map(a, b){boxId = b; adres = ' . "'Brammenring 109, Oberhausen'" . ';
+        $(a).addClass("active"); $(a).find("span").text(""); $(a).find(".check").addClass("active");
+        setTimeout(function() {$(a).removeClass("active");
+            $(a).find("span").text("+"); $(a).find(".check").removeClass("active");
+            $(".steps-title ul li").eq(0).addClass("choosed");
+            $(".steps-title ul li").eq(0).find(".refresh").text(adres); activateStep(1, b);}, 100);}
+    function addMapMarker(lat,lng,infotitle,contentString,obj) {var myLatLng = new google.maps.LatLng(lat, lng);
+        var am_marker = new google.maps.Marker({position: myLatLng, map: map, optimized: false,
+            icon: "' . $mrimg . '", title: infotitle});
+        if (obj.status) {google.maps.event.addListener(am_marker, "click", function(e) {
+            if(obj.status == 1){window.location = obj.url;}
+        }); return true;}
+        var boxText = document.createElement("div"); 
+        boxText.className = "infobox_container"; boxText.innerHTML = contentString;
+        var ibox = document.createElement("div"); ibox.appendChild(boxText);
+        var myOptions = {content: ibox, disableAutoPan: false, maxWidth: 214, 
+            pixelOffset: new google.maps.Size(-107, -37), zIndex: null, boxStyle: {width: 214},
+            infoBoxClearance: new google.maps.Size(0, 0), isHidden: false, pane: "floatPane",
+            enableEventPropagation: false}; var ib = new InfoBox(myOptions);
+        google.maps.event.addListener(am_marker, "click", function(e) {
+            jQuery.each(Markers, function(index, marker) {
+                if(marker != am_marker){marker.infobox.close(); offOpenIcon(marker);}});
+            onOpenIcon(am_marker); Selected_wash = am_marker; try {checkAllcostsForm();} catch(err) { };
+            ib.open(map, this);});
+        google.maps.event.addListener(map, "click", function(e) {ib.close(map, this);});
+        am_marker.infobox = ib; am_marker.icon_open = false; am_marker.icon_disabled = false;
+        Markers.push(am_marker); try {checkAllMarker();} catch(err) { }; return am_marker;}
+    function checkOpenIcon(x) {var icontype = "on"; if (x.icon_disabled == true) {icontype = "off";}
+        if (x.icon_open==true) {x.setIcon(image[icontype].open);} else {x.setIcon(image[icontype].close);}}
+    function onOpenIcon(x) {x.icon_open = true; checkOpenIcon(x);}
+    function offOpenIcon(marker) {marker.icon_open = false; checkOpenIcon(marker);}
+
+    // init goggle map markers - function
+    function initialize2() {
+        
+        setTimeout(function()
+            {
+            var gmt = document.getElementsByClassName("gmnoprint");
+            gmt = gmt[0];
+            gmt.click();
+            }, 1500)
+        
+        
+    }
+    function initialize() {
+        var mapOptions = {
+            zoom: ' . $this->d['firm']['googleMap']['zoom'] . ',
+            center: new google.maps.LatLng(' . $this->d['firm']['googleMap']['LatLng'] . '),
+            scrollwheel: false,
+            draggable: true,
+            language: "' . $this->siteLang . '",
+        };
+        if (!navigator.userAgent.match(/(iPhone|iPod|iPad|BlackBerry|IEMobile|Android)/)){
+            mapOptions.zoomControl = true; mapOptions.panControl = true; mapOptions.mapTypeControl = true;}
+        $(document).ready(function(){
+            map = new google.maps.Map(document.getElementById("' . $layout_ids['map'] . '"),mapOptions);})';
+
+foreach ($obj as $k => $v) {
+    echo '
+        var contentString' . $k . ' = ' . "'" . '<div class="map-block">' . "'" . '+
+
+            ' . "'" . '<span class="title">' . $v['title'] . '</span>' . "'" . ' +
+            ' . "'" . '<div class="phone">' . $this->d['firm']['requisites']['contact_tel_top'] . '</div>' . "'" . ' +
+            ' . "'" . '<div class="info">' . "'" . ' +
+                ' . "'" . $this->d['firm']['tt1_hd'] . '<br/>' . "'" . ' +
+                ' . "'" . $this->d['firm']['tt1_data'] . '<br/>' . "'" . ' +
+                ' . "'" . $this->d['firm']['tt1_data2'] . '<br/>' . "'" . ' +
+                ' . "'" . $this->d['firm']['tt2_hd'] . '<br/>' . "'" . ' +
+                ' . "'" . $this->d['firm']['tt2_data'] . "<br/>'" . ' +
+                ' . "'" . $this->d['firm']['tt2_data2'] . "'" . ' +
+                
+                        ' . "'" . '<span onclick="step_map(this, ' . "'" . '+"' . "'" . $k . "'" . '"+' . "'" . ')">' . "'" . ' +
+                ' . "'" . '<div style="cursor: pointer; margin: 4px 4px 4px 8px ; padding: 8px 12px; color: #fff; background: #369">' .
+        $m['book_a_box2'] . '</div>' . "'" . ' +
+            ' . "'" . '</span>' . "'" . ' +
+                
+            ' . "'" . '</div>' . "'" . ' +
+        ' . "'" . '</div>' . "'" . ';';
+}
+echo '
+        var obj = {};';
+foreach ($obj as $k => $v) {
+    echo '
+        addMapMarker(' . $v['LatLng'] . ',' . "'" . $v['title'] . "'" . ',contentString' . $k . ',obj);';
+}
+
+if (isset($_GET['current']) && $_GET['current'] == 'oberhausen') {
+    echo ' initialize2();';
+// include('oberhausen.bklv');
+}
+
+echo '
+    }
+
+    var map; var image = {on:{open: "' . $mrimg . '", close: "' . $mrimg . '"}, off:{open: "' . $mrimg . '", close: "' . $mrimg . '"}};
+
+    var Markers = []; var Selected_wash = false;
+
+    // init goggle map markers - action
+    google.maps.event.addDomListener(window, "load", initialize);';
+
+
+echo '
+</script>';
+# ======================================================================================================================
+# if (isset($_GET['show']) && $_GET['show'] == 'price') {
+echo '
+<script>
+    step_map(this, "Oberhausen");
+</script>
+';
+# }
+
+# ======================================================================================================================

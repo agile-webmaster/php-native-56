@@ -1,0 +1,61 @@
+smtp:
+  ..............................
+smtp-old:
+  ..............................
+  ya_pass_sex: 'M'
+  ya_pass_city: 'Moscow'
+firm:
+  tt1_hd: 'Bürozeiten:'
+  tt2_hd: 'So. Geschlossen'
+  tt1_data: 'Mo. – Fr. 09:00 bis 19:00 Uhr'
+  tt2_data: 'Zugangszeiten 24h'
+  tt1_data2: 'Sa. 09:00 bis 18:00 Uhr'
+  tt2_data2: '&nbsp;'
+  requisites:
+    contact_tel_top: '0208-88296460'
+    contact_email_top: 'info@rentabox24.de'
+    contact_skype_top: 'info@rentabox24.de'
+    contact_whatsapp: '+49 1755 349 975'
+    contact_whatsapp_chat: '491755349975'
+    contact_viber: '+49 1755 349 975'
+    contact_viber_chat: '491755349975'
+  startDate: 2017
+  WorkTimeFrom:
+    hours: 9
+    minutes: 00
+  WorkTimeTo:
+    hours: 20
+    minutes: 00
+  googleMap:
+    LatLng: 51.4885436,6.8922795
+    marker_img: 'http://rentabox24.de/assets/modules/ws/imgcss/marker.png'
+    zoom: 11
+    max_period: 24
+    obj:
+      Oberhausen:
+        title: Brammenring 109, 46047 Oberhausen
+        LatLng: 51.4885436,6.8922795
+        startPrice: 40
+        boxList: '1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 6, 7, 8, 8.5, 9, 10, 11, 11.5, 12, 13, 13.5, 14, 15, 16, 17, 18, 19, 20'
+        priceList: '40, 36.65, 31, 28.5, 26, 25.65, 25.65, 25.65, 24, 23.25, 22, 22, 21.25, 21.25, 20.65, 20.65, 20.65, 20.65, 19, 19, 19, 19, 19, 19, 19, 18, 17'
+        active: 1
+      Duisburg:
+        title: Duisburg
+        LatLng: 51.429649,6.7697433
+        startPrice: 12
+        boxList: '1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 6, 7, 8, 8.5, 9, 10, 11, 11.5, 12, 13, 13.5, 14, 15, 16, 17, 18, 19, 20, 22, 23, 24, 25, 27, 28, 29, 30'
+        priceList: '40, 36.65, 31, 28.5, 26, 25.65, 25.65, 25.65, 24, 23.25, 22, 22, 21.25, 21.25, 20.65, 20.65, 20.65, 20.65, 19, 19, 19, 19, 19, 19, 19, 18, 17, 16.85, 16.5, 16.5, 16.5, 16.5, 16.5, 16.5, 16.5'
+        active: 0
+routes_img_trusted: assets/img/trusted/de
+routes_img_reviews: assets/img/reviews/de
+custom_txt: _de
+state_default: de
+counter_google_1: <script async src="https://www.googletagmanager.com/gtag/js?id=UA-108074702-1"></script>
+counter_google_2:
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-108074702-1');
+counter_yandex:
+  <!-- Yandex.Metrika counter --> <script type="text/javascript" > (function (d, w, c) { (w[c] = w[c] || []).push(function() { try { w.yaCounter46287834 = new Ya.Metrika({ id:46287834, clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true, trackHash:true }); } catch(e) { } }); var n = d.getElementsByTagName("script")[0], s = d.createElement("script"), f = function () { n.parentNode.insertBefore(s, n); }; s.type = "text/javascript"; s.async = true; s.src = "https://mc.yandex.ru/metrika/watch.js"; if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); } })(document, window, "yandex_metrika_callbacks"); </script> <noscript><div><img src="https://mc.yandex.ru/watch/46287834" style="position:absolute; left:-9999px;" alt="" /></div></noscript> <!-- /Yandex.Metrika counter -->
+..............................

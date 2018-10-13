@@ -1,0 +1,24 @@
+delimiter: '<DELIMITER>'
+tables:
+  site_routes:
+    key_column: index
+    key_value: RboxLK|$|RboxWeb|$|RboxWebRu|$|RboxWebDe
+    key_fields: 'index|$|uri|$|handler|$|method|$|template|$|oper|$|notes'
+    inserts:
+     - 'RboxWeb|$||$|RboxWeb|$|index|$||$||$|Главная страница / Main page / Startseite'
+     - 'RboxWeb|$|storage/box|$|RboxWeb|$|index|$||$||$|АРЕНДА БОКСА / RENT A BOX / EINE BOX MIETEN'
+     - 'RboxWeb|$|storage|$|RboxWeb|$|index|$||$||$|ХРАНЕНИЕ / STORAGE / AUFBEWAHRUNG'
+     - 'RboxWeb|$|moving|$|RboxWeb|$|index|$||$||$|ПЕРЕЕЗД / MOVING / UMZUG'
+     - 'RboxWeb|$|about|$|RboxWeb|$|index|$||$||$|О нас / About us / Über uns'
+     - 'RboxWeb|$|contacts|$|RboxWeb|$|index|$||$||$|Контакты / Contacts / Kontakte'
+     - 'RboxWeb|$|selfstorage|$|RboxWeb|$|index|$||$||$|Индивидуальное хранение / Selfstorage / Individuelle Aufbewahrung'
+     - 'RboxWeb|$|payments|$|RboxWeb|$|index|$||$||$|Оплата / Payments / Bezahlung'
+     ...............
+  _d_pages:
+    key_column: _ats
+    key_value: 0
+    key_fields: 'id|$|site|$|lang|$|uri|$|param|$|value|$|_wsi|$|_ats'
+    inserts:
+     - '1|$|RboxWebRu|$|ru|$||$|status|$||$|RboxLK|$|0'
+     - '2|$|RboxWebRu|$|en|$||$|status|$||$|RboxLK|$|0'
+     - '3|$|RboxWebRu|$|de|$||$|status|$||$|RboxLK|$|0'

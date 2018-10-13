@@ -1,0 +1,158 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Integrated by BKLV-Robo [RBOX-3]
+ * Version: 3.0.2
+ * Sysmtem URL: http://bklv.ru/robo/
+ * User: webmaster.rentabox@bklv.ru
+ * Date: 23.05.2017
+ * Time: 13:02
+ * Tech support:
+ *  - url: http://bklv.ru/tech_support/
+ *  - email: rbox.support.tech@bklv.ru
+ *  - phone: +7(495)220-17-27
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+#=======================================================================================================================
+/** @var $this App */
+/** @var $layout_prefs array */
+/** @var $layout_code array */
+/** @var $layout_index string */
+/** @var $layout_event string */
+/** @var $layout_template string */
+/** @var $layout_ids array */
+/** @var $layout_js string */
+/** @var $layout_styles array */
+/** @var $layout_classes array */
+/** @var $custom_js array */
+/** @var $template RboxTemplateHTML */
+/** @var $lp array Layout params */
+/** @var $gs string Gets safe */
+#-----------------------------------------------------------------------------------------------------------------------
+$lp = array('layout_prefs' => $layout_prefs, 'layout_code' => $layout_code, 'layout_index' => $layout_index,
+    'layout_event' => $layout_event, 'layout_template' => $layout_template, 'layout_ids' => $layout_ids,
+    'layout_js' => $layout_js, 'layout_styles' => $layout_styles, 'layout_classes' => $layout_classes,
+    'custom_js' => $custom_js, 'template' => $template);
+$gs = $this->urlGetsSafe;
+#=======================================================================================================================
+
+
+#===================================================================================================================
+$u = $sys_index = $this->sysURLs['homepage'];
+if ($u) {
+    $u .= '/';
+}
+$sys_root = $layout_prefs['sys'] . $u;
+$sys_page = $this->pageSysSchema[$sys_index];
+#-------------------------------------------------------------------------------------------------------------------
+$content_start = '<div class="rbxh-item" align="center">' . INI::NL . '                    ';
+$content_stop = INI::NL . '                </div>';
+#-------------------------------------------------------------------------------------------------------------------
+$wt = $this->d['firm'];
+$ph1 = $wt['WorkTimeFrom']['hours'];
+$pm1 = $wt['WorkTimeFrom']['minutes'];
+$ph2 = $wt['WorkTimeTo']['hours'];
+$pm2 = $wt['WorkTimeTo']['minutes'];
+#-------------------------------------------------------------------------------------------------------------------
+$reqs = $this->d['firm']['requisites'];
+$ct_tel_note = $reqs['tel_main_pref'];
+$ct_tel_href = $reqs['tel_main_full'];
+$ct_tel_code = $reqs['tel_main_code'];
+#-------------------------------------------------------------------------------------------------------------------
+$ct_mess_tel = $reqs['tel_messangers'];
+$ct_skype_href = $reqs['skype_main'];
+$ct_mail_href = $reqs['mailbox_main'];
+#-------------------------------------------------------------------------------------------------------------------
+$ct_mess_img_1 = $layout_prefs['img'] . 'communication_tunnels/communication_tunnels_viber.png';
+$ct_mess_img_2 = $layout_prefs['img'] . 'communication_tunnels/communication_tunnels_whatsapp.png';
+$ct_skype_img = $layout_prefs['img'] . 'communication_tunnels/communication_tunnels_skype.png';
+$ct_mail_img = $layout_prefs['img'] . 'communication_tunnels/communication_tunnels_mail.png';
+#===================================================================================================================
+
+#===================================================================================================================
+echo '
+   
+    <!-- / page html :: pre-header -->
+    <tr><td class="rbxh-preh"></td></tr>
+    <!-- // page html :: pre-header -->
+    
+    <!-- / page html :: header -->
+    <tr><td valign="top" class="rbxh" id="' . $layout_ids['postheader'] . '" ' . $layout_styles['postheader'] . '>
+        <table class="rbxh-tbl" cellspacing="0" cellpadding="0" border="0" align="center"><tr>
+             <td class="rbxh-td" valign="top">
+             
+                <!-- / ------------- -->
+                ' . $content_start . '<table cellspacing="0" cellpadding="0" border="0" class="rbxh-itbl rbxh-logo">
+                        <tr><td><div><a href="' . $layout_prefs[''] . $gs . '" title="' . $this->pageSiteSchema['']['title'] . '">
+                            <img src="' . $layout_prefs['img'] . 'rbox/logo/company_logo_' . $this->siteHost . '.png" class="rbxh-logo-img" />
+                        </a></div></td></tr>
+                    </table>' . $content_stop . '
+                <!-- // ================ -->
+
+                <!-- / ------------- -->
+                ' . $content_start . '<table cellspacing="0" cellpadding="0" border="0" class="rbxh-itbl rbxh-callback">
+                        <tr><td style="rbxh-callback-td"><div class="rbxh-callback-div">
+                            <button class="btn btn-success rbxh-callback-btn" id="' . $layout_ids['button_callback_init'] . '"
+                                 align="center">' . A::d($this, 'm')['rbox_btn_callback_init'] . '</button>
+                        </div></td></tr>
+                    </table>' . $content_stop . '
+                <!-- // ================ -->
+                
+                <!-- / ------------- -->
+                ' . $content_start . '<table cellspacing="0" cellpadding="0" border="0" class="rbxh-itbl">
+                        <tr><td style="text-align: center;"><div>
+                            <table cellspacing="0" cellpadding="0" border="0" class="rbxh-wt" align="center">
+                                <tr><td class="rbxh-wt-box">
+                                    <span class="rbxh-wt-tt">
+                                        ' . A::d($this, 'm')['rbox_worktime_title'] . ':
+                                        <span class="rbxh-wt-timetbl">
+                                            ' . A::d($this, 'm')['rbox_worktime_from'] . ' ' . $ph1 . '<sup>' . $pm1 . '</sup> -  
+                                            ' . A::d($this, 'm')['rbox_worktime_to'] . ' ' . $ph2 . '<sup>' . $pm2 . '</sup>
+                                        </span>
+                                    </span><br>
+                                    <span>
+                                        <span class="rbxh-wt-phone">' . $ct_tel_note . '</span>
+                                        <a class="rbxh-wt-lnk" href="tel:' . $ct_tel_href . '">' . $ct_tel_code . '</a>
+                                    </span>
+                                </td></tr>
+                            </table>
+                        </div></td></tr>
+                    </table>' . $content_stop . '
+                <!-- // ================ -->
+
+                <!-- / ------------- -->
+                ' . $content_start . '<table cellspacing="0" cellpadding="0" border="0" class="rbxh-ct-area">
+                        <tr><td class="rbxh-ct-item"><nobr>
+                            <img src="' . $ct_mess_img_1 . '"
+                            /><img src="' . $ct_mess_img_2 . '"
+                            />' . $ct_mess_tel . '
+                        </nobr></td></tr>
+                        <tr><td class="rbxh-ct-inter"></td></tr>
+                        <tr><td class="rbxh-ct-item"><nobr>
+                            <img src="' . $ct_skype_img . '"
+                            /><a href="skype:' . $ct_skype_href . '?call">' . $ct_skype_href . '</a>
+                        </nobr></td></tr>
+                        <tr><td class="rbxh-ct-inter"></td></tr>
+                        <tr><td class="rbxh-ct-item"><nobr>
+                            <img src="' . $ct_mail_img . '"
+                            /><a href="mailto:' . $ct_mail_href . '">' . $ct_mail_href . '</a>
+                        </nobr></td></tr>
+                    </table>' . $content_stop . '
+                <!-- // ================ -->
+                
+            </td>
+        </tr></table>
+    </td></tr>
+    <!-- // page html :: header -->
+    
+    <!-- / page html :: post-header -->
+    <tr><td class="rbxh-psth-main"><div class="rbxh-psth-box"><div align="right">
+        <button align="right" id="' . $layout_ids['button_postheader_on'] . '" class="rbxh-psth-wrap ' .
+    $layout_classes['posthd_on'] . '">x ' . A::d($this, 'm')['rbox_btn_posthd_on'] . '</button>
+        <button align="right" id="' . $layout_ids['button_postheader_off'] . '" class="rbxh-psth-wrap ' .
+    $layout_classes['posthd_off'] . '">+ ' . A::d($this, 'm')['rbox_btn_posthd_off'] . '</button>
+    </div></div></td></tr>
+    <!-- // page html :: post-header -->';
+#===================================================================================================================

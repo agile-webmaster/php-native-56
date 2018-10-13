@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Integrated by BKLV-Robo [RBOX-3]
+ * Version: 3.0.2
+ * Sysmtem URL: http://bklv.ru/robo/
+ * User: webmaster.rentabox@bklv.ru
+ * Date: 23.05.2017
+ * Time: 13:02
+ * Tech support:
+ *  - url: http://bklv.ru/tech_support/
+ *  - email: rbox.support.tech@bklv.ru
+ *  - phone: +7(495)220-17-27
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+/** @var $this App */
+/** @var $params array */
+
+#-----------------------------------------------------------------------------------------------------------------------
+if (isset($params)) {
+    foreach ($params as $k => $v) {
+        $params['{{' . $k . '}}'] = strtr($v, A::m($this, 'm'));
+    }
+    echo strtr('
+<p class="log_screen_main">
+    <span class="log_screen_header">{{_ma_group_}} :: {{_time_current_}} / {{_time_diff_}}</span>
+    <span class="log_screen_txt"><b><u>{{_ma_header_}}</u></b></span>
+    <span class="log_screen_txt">[{{_ma_method_}}]</span><br />
+    <span class="log_screen_txt">{{_ma_msg_}}</span><br />
+    <span class="log_screen_note">{{_ma_note_}}</span>
+</p>', $params);
+}
+#-----------------------------------------------------------------------------------------------------------------------

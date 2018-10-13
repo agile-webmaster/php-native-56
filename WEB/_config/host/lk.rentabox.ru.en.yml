@@ -1,0 +1,7 @@
+mail_sender:
+  webmaster:
+    name: 'RENTABOX Russia'
+    sign: >
+      Sincerely yours,<br />
+      Web-site rentabox.ru admin<br />
+      wm@self-storage.online

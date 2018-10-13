@@ -1,0 +1,12 @@
+<p>
+    {{title}}.
+    <br />
+</p>
+<p style="padding: 12px; border: 3px #999 solid; background: #eee; border-radius: 8px">
+    {{name_name}}: <b>{{name_value}}</b><br />
+    {{phone_name}}: <b>{{phone_value}}</b><br />
+    {{dept_name}}: <b>{{dept_value}}</b><br />
+</p>
+<p>
+    {{data_admin}}
+</p>

@@ -1,0 +1,98 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Integrated by BKLV-Robo [RBOX-3]
+ * Version: 3.0.2
+ * Sysmtem URL: http://bklv.ru/robo/
+ * User: webmaster.rentabox@bklv.ru
+ * Date: 23.05.2017
+ * Time: 13:02
+ * Tech support:
+ *  - url: http://bklv.ru/tech_support/
+ *  - email: rbox.support.tech@bklv.ru
+ *  - phone: +7(495)220-17-27
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+#=======================================================================================================================
+/** @var $this App */
+/** @var $layout_prefs array */
+/** @var $layout_code array */
+/** @var $layout_index string */
+/** @var $layout_event string */
+/** @var $layout_template string */
+/** @var $layout_ids array */
+/** @var $layout_js string */
+/** @var $layout_styles array */
+/** @var $layout_classes array */
+/** @var $custom_js array */
+/** @var $template RboxTemplateHTML */
+/** @var $lp array Layout params */
+/** @var $gs string Gets safe */
+#-----------------------------------------------------------------------------------------------------------------------
+$lp = array('layout_prefs' => $layout_prefs, 'layout_code' => $layout_code, 'layout_index' => $layout_index,
+    'layout_event' => $layout_event, 'layout_template' => $layout_template, 'layout_ids' => $layout_ids,
+    'layout_js' => $layout_js, 'layout_styles' => $layout_styles, 'layout_classes' => $layout_classes,
+    'custom_js' => $custom_js, 'template' => $template);
+$gs = $this->urlGetsSafe;
+#=======================================================================================================================
+
+#=======================================================================================================================
+$copy = str_replace('{{period}}', $this->d['firm']['startDate'] . ' - ' . date("Y"), A::d($this, 'm')['rbox_copyrights']);
+$img = $layout_prefs['img'] . 'gotop/gotop_' . $this->userLang . '.png';
+#=======================================================================================================================
+
+
+echo '
+
+    <!-- / page html :: footer -->
+    <tr><td class="rbxb-area" valign="top">
+        <table cellspacing="0" cellpadding="0" border="0" class="rbxb-tbl" align="center">
+            <tr><td class="rbxb-tbl-lnk">
+                <div class="rbxb-tbl-inter"></div>
+                
+                <!-- / ------------- -->
+                <table cellspacing="0" cellpadding="0" border="0" align="right"><tr><td>
+                    <div id="' . $layout_ids['button_go_top'] . '" class="rbxb-gtop-box">
+                        <div class="rbxb-gtop-img" style="background: #ed3b5c url(' . $img . ') no-repeat;"></div>
+                    </div>
+                </td></tr></table>
+                <!-- // ================ -->
+
+                <!-- / ------------- -->
+                <ul class="rbxb-socn-box">';
+foreach ($this->d['socials'] as $k => $v) {
+    $img_src = $layout_prefs['img'] . 'socials/social_network_' . $k . '.png';
+    echo '
+                    <li class="rbxb-socn-item"><a target="_blank" href="' . $v['href'] . '">
+                        <img src="' . $img_src . '" alt="' . $v['alt'] . '" title="' . $v['title'] . '" />
+                    </a></li>';
+}
+echo '
+                </ul>
+                <!-- // ================ -->
+                <p class="rbxb-link-box">';
+foreach ($this->pageSysSchema as $k => $v) {
+    if (isset($v['_fixed_md']) && $v['_fixed_md']) {
+        $i = $k;
+        if ($i) {
+            $i .= '/';
+        }
+        $title = str_replace('{{domain}}', $this->siteHost, $v['anchor_title']);
+        echo '
+                    <nobr><a class="" href="' . $layout_prefs['sys'] . $i . $gs . '" title="' . $title . '">' .
+            $v['name'] . '</a></nobr><br />';
+    }
+}
+echo '
+                </p>
+            </td></tr>
+            <tr><td class="rbxb-copy-area" valign="top">
+                <table cellspacing="0" cellpadding="0" border="0" class="rbxb-copy-tbl" align="center"><tr><td>
+                    <p class="rbxb-copy-txt">' . $copy . '</p>
+                </td></tr></table>
+            </td></tr>
+        </table>
+    </td></tr>
+    <!-- // page html :: footer -->';

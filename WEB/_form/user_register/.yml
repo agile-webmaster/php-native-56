@@ -1,0 +1,68 @@
+login:
+  group: fg_basic
+  required: 1
+  onkeyup: 1
+  minLength: 4
+  maxLength: 16
+  checkSymbolList:
+    - type: standart
+  checkInputValue:
+    - table: d_access_logins
+password:
+  group: fg_basic
+  type: password
+  required: 1
+  onkeyup: 1
+  minLength: 4
+  maxLength: 16
+  checkSymbolList:
+    - type: duplicate_init
+      field: password2
+password2:
+  group: fg_basic
+  type: password
+  required: 1
+  onkeyup: 1
+  checkSymbolList:
+    - type: duplicate_alter
+      field: password
+uaac:
+  group: fg_special
+  onkeyup: 1
+  minLength: 16
+  maxLength: 16
+  checkInputValue:
+    - table: d_task
+email:
+  group: fg_special
+  required: 1
+  onkeyup: 1
+  minLength: 8
+  maxLength: 255
+  checkSymbolList:
+    - type: email
+  checkInputValue:
+    - table: d_emails
+mobile_number_ru:
+  group: fg_special
+  required: 1
+  onkeyup: 1
+  minLength: 10
+  maxLength: 10
+  checkSymbolList:
+    - type: integer
+  checkInputValue:
+    - table: d_mobile_phones_ru
+fio_last:
+  group: fg_special
+  onkeyup: 1
+  maxLength: 64
+fio_first:
+  group: fg_special
+  required: 1
+  onkeyup: 1
+  maxLength: 64
+fio_middle:
+  group: fg_special
+  onkeyup: 1
+  maxLength: 64

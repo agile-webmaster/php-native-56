@@ -1,0 +1,126 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Integrated by BKLV-Robo [RBOX-3]
+ * Version: 3.0.2
+ * Sysmtem URL: http://bklv.ru/robo/
+ * User: webmaster.rentabox@bklv.ru
+ * Date: 23.05.2017
+ * Time: 13:02
+ * Tech support:
+ *  - url: http://bklv.ru/tech_support/
+ *  - email: rbox.support.tech@bklv.ru
+ *  - phone: +7(495)220-17-27
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+
+if ($_SERVER['HTTP_HOST'] && in_array($_SERVER['HTTP_HOST'], array('rboxde.lc', 'rentabox24.de'))) {
+    #  header('Location: /articles/about-selfstorage/');
+    echo "
+<script>
+    window.location.replace('/articles/about-selfstorage/'); 
+</script>";
+    exit;
+}
+
+
+#=======================================================================================================================
+/** @var $this App */
+/** @var $layout_prefs array */
+/** @var $layout_code array */
+/** @var $layout_index string */
+/** @var $layout_event string */
+/** @var $layout_template string */
+/** @var $layout_ids array */
+/** @var $layout_js string */
+/** @var $layout_styles array */
+/** @var $layout_classes array */
+/** @var $custom_js array */
+/** @var $template RboxTemplateWebWS */
+/** @var $lp array Layout params */
+/** @var $gs string Gets safe */
+#-----------------------------------------------------------------------------------------------------------------------
+$lp = array('layout_prefs' => $layout_prefs, 'layout_code' => $layout_code, 'layout_index' => $layout_index,
+    'layout_event' => $layout_event, 'layout_template' => $layout_template, 'layout_ids' => $layout_ids,
+    'layout_js' => $layout_js, 'layout_styles' => $layout_styles, 'layout_classes' => $layout_classes,
+    'custom_js' => $custom_js, 'template' => $template);
+$gs = $this->urlGetsSafe;
+#=======================================================================================================================
+
+#=======================================================================================================================
+## 1. БАЗОВЫЕ ПАРАМЕТРЫ
+#-----------------------------------------------------------------------------------------------------------------------
+$sind = $this->siteIndex;
+$host = $this->siteHost;
+$lang = $this->siteLang;
+$pvar = $this->pageParams;
+$pref = $layout_prefs;
+$href = $layout_prefs['widestudio'] . 'imgcss/';
+$logo = $pref['img'] . 'rbox/logo/company_logo_' . $host . '.png';
+$reqs = $this->d['firm']['requisites'];
+$svgs = $template->svg;
+#-----------------------------------------------------------------------------------------------------------------------
+
+$docs = $pref['img_ext'] . $luri['documents'] . '/' . $this->d['state_default'] . '/' . $lang . '/';
+
+#=======================================================================================================================
+echo '
+<div class="rentabox">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3"><div class="title">' .
+    html_entity_decode($text['sf_personal_header']) . '</div></div>
+            <div class="col-lg-3 col-md-3 col-sm-3"><div class="wrap"><img src="' . $href . 'icon-map.png"><i>' .
+    html_entity_decode($text['sf_pers_item_map']) . '</i></div></div>
+            <div class="col-lg-3 col-md-3 col-sm-3"><div class="wrap"><img src="' . $href . 'icon-shield.png"><i>' .
+    html_entity_decode($text['sf_pers_item_safe']) . '</i></div></div>
+            <div class="col-lg-3 col-md-3 col-sm-3"><div class="wrap"><img src="' . $href . 'icon-box.png"><i>' .
+    html_entity_decode($text['sf_pers_item_boxx']) . '</i></div>
+            </div>
+        </div>
+    </div>
+</div>';
+#=======================================================================================================================
+
+#=======================================================================================================================
+echo '
+<div class="container" style="margin-top: 30px"><div class="row"><div class="col-lg-12"><div class="breadcrumbs">
+    <a href="' . $pref[''] . $gs . '">' . $an[''] . '</a> <a>' . $an[$template->routing] . '</a>
+</div></div></div></div>';
+#=======================================================================================================================
+
+echo '
+
+<div class="page-inner about-page" style="margin-top: 0px"><div class="container">
+    <div class="row"><div class="col-lg-12"><h1>' . $pvar['link_title'] . '</h1></div></div>
+    <div class="row">
+        <div class="col-lg-7 col-md-7 col-sm-8">' . $m['text_about_us_1'] . '</div>
+			<div class="col-lg-5 col-md-5 col-sm-4">
+				<img src="' . $href . 'box-photo.png" class="about-photo" alt="">
+				<a href="' . $pref[''] . $luri['booking'] . '/" class="request" style="cursor: pointer">' . $m['book_a_box'] . '</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="usl">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 col-md-8">' . $m['text_about_us_2'] . '</div>
+				<div class="col-lg-4 col-md-4">
+					<ul>
+					<!-- 
+						<li><a target="_blank" href="' . $docs . 'contract.pdf">' . $m['documents_contract'] . '</a></li>
+						<li><a target="_blank" href="' . $docs . 'conditions.pdf">' . $m['documents_conditions'] . '</a></li>
+						<li><a target="_blank" href="' . $docs . 'insurance.pdf">' . $m['documents_insurance'] . '</a></li>
+				    -->
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+';

@@ -1,0 +1,12 @@
+mail_sender:
+  webmaster:
+    email: 'wm@self-storage.online'
+socials:
+  vk:
+    href: https://vk.com/rentabox
+  facebook:
+    href: https://www.facebook.com/rentaboxcompany
+  instagram:
+    href: https://instagram.com/rentabox
+ncp_gateway_default: rfi_bank_online
+state_default: ru

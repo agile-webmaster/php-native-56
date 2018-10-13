@@ -1,0 +1,161 @@
+<?php
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Integrated by BKLV-Robo [RBOX-3]
+ * Version: 3.0.2
+ * Sysmtem URL: http://bklv.ru/robo/
+ * User: webmaster.rentabox@bklv.ru
+ * Date: 23.05.2017
+ * Time: 13:02
+ * Tech support:
+ *  - url: http://bklv.ru/tech_support/
+ *  - email: rbox.support.tech@bklv.ru
+ *  - phone: +7(495)220-17-27
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+#=======================================================================================================================
+$path = $_SERVER['DOCUMENT_ROOT'] . '/.bklv';
+/** @noinspection PhpIncludeInspection */
+include($path);
+#=======================================================================================================================
+
+/** Basic process fix-point class */
+class Proc
+{
+
+    #===================================================================================================================
+    /**
+     * smCallback
+     * @var $app App
+     * @var $scena_key string app->d['process']['scenarios'][...]
+     * @var $section_key string app->d['process']['sections'][...]
+     * @var $values array form data
+     * @return string (Y|N)|NULL
+     */
+    public static function chTXTCntn(App &$app, $scena_key, $section_key, $values)
+    {
+        if ($app->userRole != $app->d['roles']['dir']) {
+            return INI::NO;
+        } else {
+            if ($values['type'] == 'txt') {
+                $row = DB::sqlSelectOne($app, 'tbSiteParams', array(array(
+                    'site' => $values['sind'],
+                    'grup' => 'txt_' . $values['lang'],
+                    'param' => $values['key'],
+                )));
+                if ($row && isset($row['id']) && $row['id']) {
+                    $row['value'] = $values['val'];
+                    DB::sqlUpdateDict($app, __METHOD__, 'tbSiteParams', $row);
+                    return INI::YES;
+                } else {
+                    return INI::NO;
+                }
+            } elseif ($values['type'] == 'txt2') {
+                $arr = array(
+                    'site' => $values['sind'],
+                    'grup' => 'txt2_' . $values['lang'],
+                    'param' => $values['key'],
+                );
+                $row = DB::sqlSelectOne($app, 'tbSiteParams', array($arr));
+                if ($row && isset($row['id']) && $row['id']) {
+                    $row['value'] = $values['val'];
+                    DB::sqlUpdateDict($app, __METHOD__, 'tbSiteParams', $row);
+                } else {
+                    $arr['value'] = $values['val'];
+                    DB::sqlInsertDict($app, __METHOD__, 'tbSiteParams', $arr);
+                }
+                return INI::YES;
+
+            }
+
+
+        }
+        #---------------------------------------------------------------------------------------------------------------
+        $oper = $app->d['process']['operations']['sendmail'];
+        $scena = $app->d['process']['scenarios'][$scena_key];
+        $section = $app->d['process']['sections'][$section_key];
+        $task_grup = implode(INI::DELIMITER_INTER, array($oper, $section, $scena));
+        #---------------------------------------------------------------------------------------------------------------
+        $sm_task_id = Task::makeNew($app, __METHOD__, $task_grup,
+            json_encode(GetParams::taskSMCallback($app, $scena, $values), JSON_UNESCAPED_UNICODE));
+        #---------------------------------------------------------------------------------------------------------------
+        $tm_init = TaskMessages::init($app, __METHOD__, $task_grup, $sm_task_id);
+        if (Oper::smTask($app, $sm_task_id) == INI::YES) {
+            TaskMessages::complete($app, $task_grup, $tm_init);
+            return INI::YES;
+        }
+        TaskMessages::fail($app, $task_grup, $tm_init);
+        return INI::NO;
+    }
+    #===================================================================================================================
+
+    #===================================================================================================================
+    /**
+     * smCallback
+     * @var $app App
+     * @var $scena_key string app->d['process']['scenarios'][...]
+     * @var $section_key string app->d['process']['sections'][...]
+     * @var $values array form data
+     * @return string (Y|N)|NULL
+     */
+    public static function smCallback(App &$app, $scena_key, $section_key, $values)
+    {
+        #---------------------------------------------------------------------------------------------------------------
+        $oper = $app->d['process']['operations']['sendmail'];
+        $scena = $app->d['process']['scenarios'][$scena_key];
+        $section = $app->d['process']['sections'][$section_key];
+        $task_grup = implode(INI::DELIMITER_INTER, array($oper, $section, $scena));
+        #---------------------------------------------------------------------------------------------------------------
+        $sm_task_id = Task::makeNew($app, __METHOD__, $task_grup,
+            json_encode(GetParams::taskSMCallback($app, $scena, $values), JSON_UNESCAPED_UNICODE));
+        #---------------------------------------------------------------------------------------------------------------
+        $tm_init = TaskMessages::init($app, __METHOD__, $task_grup, $sm_task_id);
+        if (Oper::smTask($app, $sm_task_id) == INI::YES) {
+            TaskMessages::complete($app, $task_grup, $tm_init);
+            return INI::YES;
+        }
+        TaskMessages::fail($app, $task_grup, $tm_init);
+        return INI::NO;
+    }
+    #===================================================================================================================
+
+    #===================================================================================================================
+    /**
+     * GrantAASuccess
+     * @var $app App
+     * @var $access array
+     * @var $pid string
+     * @return string array|NULL
+     */
+    public static function GrantAASuccess(App &$app, array $access, $pid)
+    {
+        #---------------------------------------------------------------------------------------------------------------
+        $access['access_account_false_count'] = NULL;
+        $access['access_account_lastfalse_ts'] = NULL;
+        DB::sqlUpdateDict($app, __METHOD__, 'tbAccess', $access);
+        #---------------------------------------------------------------------------------------------------------------
+        $person = DB::sqlSelectOne($app, 'tbPerson', array(array('person_id' => $pid)));
+        #---------------------------------------------------------------------------------------------------------------
+        $app->userPID = $pid;
+        $app->userAAID = $access['access_account_id'];
+        $app->userRole = $person['person_role'];
+        #---------------------------------------------------------------------------------------------------------------
+        $filter = array('t_access_login_owner' => $app->userPID, 'r_login_access_account' => $app->userAAID);
+        $app->userLogins = DB::sqlSelect($app, 'tbLogin', array($filter));
+        #---------------------------------------------------------------------------------------------------------------
+        $filter = array('t_email_owner' => $app->userPID, 'r_email_access_account' => $app->userAAID);
+        $app->userEmails = DB::sqlSelect($app, 'tbEmail', array($filter));
+        $app->userEmail = DB::sqlSelectOne($app, 'tbEmail', array($filter));
+        #---------------------------------------------------------------------------------------------------------------
+        $filter = array('t_mobile_phone_owner' => $app->userPID, 'r_mobile_access_account' => $app->userAAID);
+        $app->userMobiles = DB::sqlSelect($app, 'tbMobile', array($filter));
+        #---------------------------------------------------------------------------------------------------------------
+
+        .............................
+
+    }
+    #===================================================================================================================
+.......................
+}
